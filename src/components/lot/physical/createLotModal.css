@@ -1,0 +1,5 @@
+.visible-modal {
+  display: block;
+  background-color: rgba(22, 22, 22, 0.3);
+  transition: top 1s, opacity 1s !important;
+}
