@@ -8,7 +8,7 @@ class CreateLotModal extends Component {
       selectCountry: "",
       shipmentMethod: "",
       shipmentStatus: "",
-      totalWeight: "",
+      shippingLine: "",
       shipmentDate: "",
       arrivalDate: "",
     };
@@ -22,7 +22,7 @@ class CreateLotModal extends Component {
       selectCountry: "",
       shipmentMethod: "",
       shipmentStatus: "",
-      totalWeight: "",
+      shippingLine: "",
       shipmentDate: "",
       arrivalDate: "",
     });
@@ -80,11 +80,12 @@ class CreateLotModal extends Component {
                       <div className="col">
                         <div className="px-3 m-5">
                           <h2
-                            className="h2-xl mb-5 fw-6"
+                            className="h2-xl mb-3 fw-6 pb-2"
                             style={{
                               color: "white",
                               textTransform: "none",
                               fontSize: "200%",
+                              borderBottom: "2px dotted white",
                             }}
                           >
                             Create New Lot
@@ -92,7 +93,7 @@ class CreateLotModal extends Component {
                           <form
                             onSubmit={this.handleSubmit}
                             noValidate="novalidate"
-                            className="rounded-field"
+                            className="rounded-field mt-4"
                           >
                             <div className="form-row mb-4">
                               <div className="col">
@@ -149,8 +150,14 @@ class CreateLotModal extends Component {
                                   value={this.state.shipmentMethod}
                                 >
                                   <option value="">Shipment Method</option>
-                                  <option value="Air">Air</option>
-                                  <option value="Sea">Sea</option>
+                                  <option value="Air (D2D)">Air (D2D)</option>
+                                  <option value="Sea (D2D)">Sea (D2D)</option>
+                                  <option value="Air (freight)">
+                                    Air (freight)
+                                  </option>
+                                  <option value="Sea (freight)">
+                                    Sea (freight)
+                                  </option>
                                 </select>
                               </div>
                               <div className="col">
@@ -166,7 +173,10 @@ class CreateLotModal extends Component {
                                 >
                                   <option value="">Shipment Status</option>
                                   <option value="Abroad Warehouse">
-                                    Abroad Warehouse
+                                    Abroad Warehouse Received
+                                  </option>
+                                  <option value="Abroad Customs">
+                                    Abroad Customs
                                   </option>
                                   <option value="Ready to Fly">
                                     Ready to Fly
@@ -184,12 +194,12 @@ class CreateLotModal extends Component {
                               <div className="col">
                                 <input
                                   type="text"
-                                  name="totalWeight"
+                                  name="shippingLine"
                                   className="form-control"
-                                  placeholder="Total weight(KG)"
+                                  placeholder="Enter shipping line"
                                   style={{ fontSize: "1rem" }}
                                   onChange={this.handleChange}
-                                  value={this.state.totalWeight}
+                                  value={this.state.shippingLine}
                                 />
                               </div>
                             </div>
