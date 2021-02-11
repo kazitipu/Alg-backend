@@ -1,13 +1,8 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../../common/breadcrumb";
-import Modal from "react-responsive-modal";
 import "react-toastify/dist/ReactToastify.css";
-import data from "../../../assets/data/category";
 import Datatable from "../../common/datatable";
-import {
-  getAllProducts,
-  getAllAliProducts,
-} from "../../../firebase/firebase.utils";
+import { getAllLots, getSingleLot } from "../../../firebase/firebase.utils";
 import { Link } from "react-router-dom";
 import CreateLotModal from "./createLotModal";
 
@@ -16,8 +11,9 @@ export class LotList extends Component {
     super(props);
     this.state = {
       open: false,
-      allProducts: [],
+      allLots: [],
       toggleModal: true,
+      singleLot: null,
     };
   }
   // onOpenModal = () => {
@@ -28,25 +24,34 @@ export class LotList extends Component {
   //     this.setState({ open: false });
   // };
   componentDidMount = async () => {
-    const allProducts = await getAllProducts();
-    const allAliProducts = await getAllAliProducts();
+    const allLots = await getAllLots();
 
-    this.setState({ allProducts: [...allProducts, ...allAliProducts] });
+    this.setState({ allLots });
   };
 
-  startToggleModal = () => {
-    this.setState({ toggleModal: !this.state.toggleModal });
+  startToggleModal = async (lot) => {
+    if (lot == null) {
+      this.setState({ toggleModal: !this.state.toggleModal, singleLot: null });
+    } else {
+      const singleLot = await getSingleLot(lot);
+      console.log(singleLot);
+      this.setState({
+        toggleModal: !this.state.toggleModal,
+        singleLot: singleLot,
+      });
+    }
   };
 
   render() {
-    const { open, allProducts } = this.state;
-    console.log(allProducts);
+    const { open, allLots } = this.state;
+    console.log(allLots);
     console.log(this.props);
     return (
       <Fragment>
         <CreateLotModal
           toggleModal={this.state.toggleModal}
           startToggleModal={this.startToggleModal}
+          singleLot={this.state.singleLot}
         />
         <Breadcrumb title="Lot List" parent="Lot" />
         {/* <!-- Container-fluid starts--> */}
@@ -66,9 +71,7 @@ export class LotList extends Component {
                   <button
                     className="btn btn-primary"
                     type="button"
-                    onClick={() =>
-                      this.setState({ toggleModal: !this.state.toggleModal })
-                    }
+                    onClick={() => this.startToggleModal(null)}
                   >
                     Create Lot
                   </button>
@@ -77,9 +80,10 @@ export class LotList extends Component {
                   <div className="clearfix"></div>
                   <div id="basicScenario" className="product-physical">
                     <Datatable
+                      startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={allProducts}
+                      myData={allLots}
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"

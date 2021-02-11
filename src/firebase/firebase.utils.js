@@ -69,27 +69,20 @@ export const uploadImage = async (file) => {
 
   return imgUrl[0];
 };
-export const uploadProduct = async (productObj, discount) => {
-  const productRef = firestore.doc(`products/${productObj.id}`);
-  const snapShot = await productRef.get();
-  delete productObj.file;
-  const newProductObj = {
-    ...productObj,
-    new: productObj.new === "true" ? true : false,
-    sale: productObj.sale === "true" ? true : false,
-  };
+export const uploadLot = async (lotObj) => {
+  const lotRef = firestore.doc(`lots/${lotObj.lotNo}`);
+  const snapShot = await lotRef.get();
   if (!snapShot.exists) {
     try {
-      productRef.set({
-        ...newProductObj,
-        discount: discount,
+      lotRef.set({
+        ...lotObj,
       });
     } catch (error) {
       alert(error);
     }
   } else {
     alert(
-      "there is already a product with this given prodcut Id, please change the product Id and upload again"
+      "there is already a lot with this given Lot no, please change the Lot no and try again"
     );
   }
 };
@@ -143,6 +136,21 @@ export const getAllProducts = async () => {
     alert(error);
   }
 };
+
+export const getAllLots = async () => {
+  const lotsCollectionRef = firestore.collection("lots");
+  try {
+    const lots = await lotsCollectionRef.get();
+    const lotsArray = [];
+    lots.forEach((doc) => {
+      lotsArray.push(doc.data());
+    });
+    return lotsArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+
 export const getAllProductsTax = async () => {
   const productsCollectionRef = firestore.collection("taxes");
   try {
@@ -240,6 +248,14 @@ export const deleteProduct = async (id) => {
     alert(error);
   }
 };
+export const deleteLot = async (id) => {
+  const lotRef = firestore.doc(`lots/${id}`);
+  try {
+    await lotRef.delete();
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const deleteProductTax = async (id) => {
   const productRef = firestore.doc(`taxes/${id}`);
@@ -249,10 +265,20 @@ export const deleteProductTax = async (id) => {
     alert(error);
   }
 };
+
 export const updateProductTax = async (productObj) => {
   const productRef = firestore.doc(`taxes/${productObj.id}`);
   try {
     await productRef.update({ ...productObj });
+  } catch (error) {
+    alert(error);
+  }
+};
+
+export const updateLot = async (lotObj) => {
+  const lotRef = firestore.doc(`lots/${lotObj.lotNo}`);
+  try {
+    await lotRef.update({ ...lotObj });
   } catch (error) {
     alert(error);
   }
@@ -267,6 +293,16 @@ export const getSingleProductTax = async (id) => {
     alert(error);
   }
 };
+export const getSingleLot = async (id) => {
+  const lotRef = firestore.doc(`lots/${id}`);
+  try {
+    const lot = await lotRef.get();
+    return lot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
+
 export const getSingleProduct = async (id) => {
   const productRef = firestore.doc(`products/${id}`);
   try {

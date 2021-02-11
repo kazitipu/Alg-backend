@@ -14,7 +14,6 @@ import Dashboard from "./components/dashboard";
 import LotList from "./components/lot/physical/lotlist";
 import Sub_category from "./components/lot/physical/sub-category";
 import Product_list from "./components/lot/physical/product-list";
-import Add_product from "./components/lot/physical/add-product";
 import Add_Aliexpress_product from "./components/lot/physical/add-aliexpress-product";
 import Update_product from "./components/lot/physical/update-product";
 import Product_detail from "./components/lot/physical/product-detail";
@@ -120,11 +119,6 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/products/physical/product-detail`}
                   component={Product_detail}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/products/physical/add-product`}
-                  component={Add_product}
                 />
                 <Route
                   exact

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./createLotModal.css";
+import { uploadLot, updateLot } from "../../../firebase/firebase.utils";
 class CreateLotModal extends Component {
   constructor(props) {
     super(props);
@@ -14,9 +15,37 @@ class CreateLotModal extends Component {
     };
   }
 
-  handleSubmit = (event) => {
+  componentWillReceiveProps() {
+    const { singleLot } = this.props;
+    console.log(singleLot);
+    console.log("create Lot modal component will receive props is called");
+    if (singleLot != null) {
+      this.setState(
+        {
+          lotNo: singleLot.lotNo,
+          selectCountry: singleLot.selectCountry,
+          shipmentMethod: singleLot.shipmentMethod,
+          shipmentStatus: singleLot.shipmentStatus,
+          shippingLine: singleLot.shippingLine,
+          shipmentDate: singleLot.shipmentDate,
+          arrivalDate: singleLot.arrivalDate,
+        },
+        () => {
+          console.log(this.state);
+        }
+      );
+    }
+  }
+
+  handleSubmit = async (event) => {
     event.preventDefault();
     console.log(this.state);
+    if (this.props.singleLot === null) {
+      await uploadLot(this.state);
+    } else {
+      await updateLot(this.state);
+    }
+
     this.setState({
       lotNo: "",
       selectCountry: "",
@@ -33,6 +62,7 @@ class CreateLotModal extends Component {
     this.setState({ [name]: value });
   };
   render() {
+    console.log(this.props.singleLot);
     return (
       <>
         <div
@@ -51,11 +81,7 @@ class CreateLotModal extends Component {
             role="document"
           >
             <div
-              className={
-                this.props.toggleModal
-                  ? "modal-content"
-                  : "modal-content visible-modal-content"
-              }
+              className="modal-content visible-modal-content"
               style={{ backgroundColor: "#ff8084" }}
             >
               <div className="modal-body p-0">
@@ -105,6 +131,7 @@ class CreateLotModal extends Component {
                                   style={{ fontSize: "1rem" }}
                                   onChange={this.handleChange}
                                   value={this.state.lotNo}
+                                  required
                                 />
                               </div>
                               <div className="col">
@@ -117,6 +144,7 @@ class CreateLotModal extends Component {
                                   aria-invalid="false"
                                   onChange={this.handleChange}
                                   value={this.state.selectCountry}
+                                  required
                                 >
                                   <option value="">Select Country</option>
                                   <option value="China to Bangladesh">
@@ -148,6 +176,7 @@ class CreateLotModal extends Component {
                                   aria-invalid="false"
                                   onChange={this.handleChange}
                                   value={this.state.shipmentMethod}
+                                  required
                                 >
                                   <option value="">Shipment Method</option>
                                   <option value="Air (D2D)">Air (D2D)</option>
@@ -170,6 +199,7 @@ class CreateLotModal extends Component {
                                   aria-invalid="false"
                                   onChange={this.handleChange}
                                   value={this.state.shipmentStatus}
+                                  required
                                 >
                                   <option value="">Shipment Status</option>
                                   <option value="Abroad Warehouse">
@@ -200,6 +230,7 @@ class CreateLotModal extends Component {
                                   style={{ fontSize: "1rem" }}
                                   onChange={this.handleChange}
                                   value={this.state.shippingLine}
+                                  required
                                 />
                               </div>
                             </div>
@@ -223,6 +254,7 @@ class CreateLotModal extends Component {
                                   style={{ fontSize: "1rem" }}
                                   onChange={this.handleChange}
                                   value={this.state.shipmentDate}
+                                  required
                                 />
                               </div>
                               <div>
@@ -237,6 +269,7 @@ class CreateLotModal extends Component {
                                   style={{ fontSize: "1rem" }}
                                   onChange={this.handleChange}
                                   value={this.state.arrivalDate}
+                                  required
                                 />
                               </div>
                             </div>
@@ -249,13 +282,23 @@ class CreateLotModal extends Component {
                                   justifyContent: "flex-end",
                                 }}
                               >
-                                <button
-                                  type="submit"
-                                  className="btn btn-secondary"
-                                >
-                                  Create Lot
-                                  <i className="icofont-rounded-right"></i>
-                                </button>
+                                {this.props.singleLot == null ? (
+                                  <button
+                                    type="submit"
+                                    className="btn btn-secondary"
+                                  >
+                                    Create Lot
+                                    <i className="icofont-rounded-right"></i>
+                                  </button>
+                                ) : (
+                                  <button
+                                    type="submit"
+                                    className="btn btn-secondary"
+                                  >
+                                    Update Lot
+                                    <i className="icofont-rounded-right"></i>
+                                  </button>
+                                )}
                               </div>
                             </div>
                           </form>
