@@ -43,22 +43,9 @@ export const MENUITEMSFORADMIN = [
     type: "sub",
     active: false,
     children: [
-      { path: "/sales/orders", title: "All Orders", type: "link" },
-      { path: "/sales/order_pending", title: "Pending Orders", type: "link" },
-      {
-        path: "/sales/payment_approved",
-        title: "Payment Approved",
-        type: "link",
-      },
-      { path: "/sales/ordered", title: "Ordered", type: "link" },
-      {
-        path: "/sales/china_warehouse",
-        title: "China Warehouse",
-        type: "link",
-      },
-      { path: "/sales/in-shipping", title: "In Shipment", type: "link" },
-      { path: "/sales/in_stock", title: "In stock", type: "link" },
-      { path: "/sales/delivered", title: "Delivered", type: "link" },
+      { path: "/sales/orders", title: "Door to Door", type: "link" },
+      { path: "/sales/orders", title: "Freight", type: "link" },
+      { path: "/sales/order_pending", title: "Express", type: "link" },
     ],
   },
   {
@@ -185,22 +172,9 @@ export const MENUITEMSFORAGENT = [
     type: "sub",
     active: false,
     children: [
-      { path: "/sales/orders", title: "All Orders", type: "link" },
-      { path: "/sales/order_pending", title: "Pending Orders", type: "link" },
-      {
-        path: "/sales/payment_approved",
-        title: "Payment Approved",
-        type: "link",
-      },
-      { path: "/sales/ordered", title: "Ordered", type: "link" },
-      {
-        path: "/sales/china_warehouse",
-        title: "China Warehouse",
-        type: "link",
-      },
-      { path: "/sales/in-shipping", title: "In Shipment", type: "link" },
-      { path: "/sales/in_stock", title: "In stock", type: "link" },
-      { path: "/sales/delivered", title: "Delivered", type: "link" },
+      { path: "/sales/orders", title: "Door to Door", type: "link" },
+      { path: "/sales/orders", title: "Freight", type: "link" },
+      { path: "/sales/order_pending", title: "Express", type: "link" },
     ],
   },
   {

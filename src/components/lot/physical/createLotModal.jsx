@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import "./createLotModal.css";
 import { uploadLot, updateLot } from "../../../firebase/firebase.utils";
+import { uploadLotRedux, updateLotRedux } from "../../../actions/index";
+import { connect } from "react-redux";
+import { toast } from "react-toastify";
 class CreateLotModal extends Component {
   constructor(props) {
     super(props);
@@ -15,35 +18,48 @@ class CreateLotModal extends Component {
     };
   }
 
-  componentWillReceiveProps() {
-    const { singleLot } = this.props;
+  componentWillReceiveProps = (nextProps) => {
+    const { singleLot } = nextProps;
     console.log(singleLot);
     console.log("create Lot modal component will receive props is called");
     if (singleLot != null) {
       this.setState(
         {
-          lotNo: singleLot.lotNo,
-          selectCountry: singleLot.selectCountry,
-          shipmentMethod: singleLot.shipmentMethod,
-          shipmentStatus: singleLot.shipmentStatus,
-          shippingLine: singleLot.shippingLine,
-          shipmentDate: singleLot.shipmentDate,
-          arrivalDate: singleLot.arrivalDate,
+          lotNo: singleLot.Lot,
+          selectCountry: singleLot.Country,
+          shipmentMethod: singleLot.Shipment_Method,
+          shipmentStatus: singleLot.Shipment_Status,
+          shippingLine: singleLot.Shipping_Line,
+          shipmentDate: singleLot.Shipment_Date,
+          arrivalDate: singleLot.Arrival_Date,
         },
         () => {
           console.log(this.state);
         }
       );
+    } else {
+      this.setState({
+        lotNo: "",
+        selectCountry: "",
+        shipmentMethod: "",
+        shipmentStatus: "",
+        shippingLine: "",
+        shipmentDate: "",
+        arrivalDate: "",
+      });
     }
-  }
+  };
 
   handleSubmit = async (event) => {
     event.preventDefault();
     console.log(this.state);
+    console.log(this.props.singleLot);
     if (this.props.singleLot === null) {
-      await uploadLot(this.state);
+      await this.props.uploadLotRedux(this.state);
+      toast.success("Successfully created new lot");
     } else {
-      await updateLot(this.state);
+      await this.props.updateLotRedux(this.state);
+      toast.success("successfully updated new lot");
     }
 
     this.setState({
@@ -55,7 +71,7 @@ class CreateLotModal extends Component {
       shipmentDate: "",
       arrivalDate: "",
     });
-    this.props.startToggleModal();
+    this.props.startToggleModal(null);
   };
   handleChange = (e) => {
     const { name, value } = e.target;
@@ -88,7 +104,7 @@ class CreateLotModal extends Component {
                 <section className="pos-rel bg-light-gray">
                   <div className="container-fluid p-3">
                     <a
-                      onClick={() => this.props.startToggleModal()}
+                      onClick={() => this.props.startToggleModal(null)}
                       className="close"
                       data-dismiss="modal"
                       aria-label="Close"
@@ -114,7 +130,9 @@ class CreateLotModal extends Component {
                               borderBottom: "2px dotted white",
                             }}
                           >
-                            Create New Lot
+                            {!this.props.singleLot
+                              ? "Create New Lot"
+                              : "Update Lot"}
                           </h2>
                           <form
                             onSubmit={this.handleSubmit}
@@ -132,12 +150,13 @@ class CreateLotModal extends Component {
                                   onChange={this.handleChange}
                                   value={this.state.lotNo}
                                   required
+                                  readOnly={this.props.singleLot ? true : false}
                                 />
                               </div>
                               <div className="col">
                                 <select
                                   title="Please choose a package"
-                                  required=""
+                                  required
                                   name="selectCountry"
                                   className="custom-select"
                                   aria-required="true"
@@ -169,7 +188,7 @@ class CreateLotModal extends Component {
                               <div className="col">
                                 <select
                                   title="Please choose a package"
-                                  required=""
+                                  required
                                   name="shipmentMethod"
                                   className="custom-select"
                                   aria-required="true"
@@ -192,7 +211,7 @@ class CreateLotModal extends Component {
                               <div className="col">
                                 <select
                                   title="Please choose a package"
-                                  required=""
+                                  required
                                   name="shipmentStatus"
                                   className="custom-select"
                                   aria-required="true"
@@ -315,4 +334,7 @@ class CreateLotModal extends Component {
     );
   }
 }
-export default CreateLotModal;
+
+export default connect(null, { uploadLotRedux, updateLotRedux })(
+  CreateLotModal
+);

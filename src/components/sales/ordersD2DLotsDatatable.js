@@ -3,7 +3,8 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deleteUser } from "./../../firebase/firebase.utils";
+import { deleteLot } from "../../firebase/firebase.utils";
+import { withRouter } from "react-router-dom";
 
 export class Datatable extends Component {
   constructor(props) {
@@ -42,24 +43,21 @@ export class Datatable extends Component {
     const { myData } = this.props;
     if (myData.length > 0) {
       const newData = [];
-      myData.forEach((user) => {
+      myData.forEach((lot) => {
         //  this is not affecting my output see line 104
         newData.push({
-          Id: user.id,
-          Name: user.displayName,
-          Company: user.company,
-          Address: user.address,
-          Mobile: user.mobileNo,
-          Email: user.email,
-          Status: user.status,
-          Created: this.toDateTime(user.createdAt.seconds),
+          Lot: lot ? lot.lotNo : "",
+          Country: lot ? lot.selectCountry : "",
+          Method: lot ? lot.shipmentMethod : "",
+          Status: lot ? lot.shipmentStatus : "",
+          Line: lot ? lot.shippingLine : "",
+          Shipment_Date: lot ? lot.shipmentDate : "",
+          Arrival_Date: lot ? lot.arrivalDate : "",
         });
       });
       return (
         <div
           style={{ backgroundColor: "#fafafa" }}
-          contentEditable
-          suppressContentEditableWarning
           onBlur={(e) => {
             const data = [...newData];
             data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
@@ -79,10 +77,14 @@ export class Datatable extends Component {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  toDateTime = (secs) => {
-    var t = new Date(1970, 0, 1); // Epoch
-    t.setSeconds(secs);
-    return t;
+  getStatus = (productQuantity) => {
+    if (productQuantity < 10) {
+      return <i className="fa fa-circle font-danger f-12" />;
+    } else if (productQuantity > 50) {
+      return <i className="fa fa-circle font-success f-12" />;
+    } else {
+      return <i className="fa fa-circle font-warning f-12" />;
+    }
   };
 
   render() {
@@ -92,17 +94,15 @@ export class Datatable extends Component {
     console.log(myData);
     const newData = [];
     if (myData.length > 0) {
-      myData.forEach((user) => {
-        console.log(user.createdAt);
+      myData.forEach((lot) => {
         newData.push({
-          Id: user.id,
-          Name: user.displayName,
-          Company: user.company,
-          Address: user.address,
-          Mobile: user.mobileNo,
-          Email: user.email,
-          Status: user.status,
-          Created: this.toDateTime(user.createdAt.seconds),
+          Lot: lot ? lot.lotNo : "",
+          Country: lot ? lot.selectCountry : "",
+          Method: lot ? lot.shipmentMethod : "",
+          Status: lot ? lot.shipmentStatus : "",
+          Line: lot ? lot.shippingLine : "",
+          Shipment_Date: lot ? lot.shipmentDate : "",
+          Arrival_Date: lot ? lot.arrivalDate : "",
         });
       });
     }
@@ -134,6 +134,71 @@ export class Datatable extends Component {
         },
       });
     }
+
+    if (multiSelectOption == true) {
+      columns.push({
+        Header: (
+          <button
+            className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
+            onClick={(e) => {
+              if (window.confirm("Are you sure you wish to delete this item?"))
+                this.handleRemoveRow();
+            }}
+          >
+            Delete
+          </button>
+        ),
+        id: "delete",
+        accessor: (str) => "delete",
+        sortable: false,
+        style: {
+          textAlign: "center",
+        },
+        Cell: (row) => (
+          <div>
+            <span>
+              <input
+                type="checkbox"
+                name={row.original.id}
+                defaultChecked={this.state.checkedValues.includes(
+                  row.original.id
+                )}
+                onChange={(e) => this.selectRow(e, row.original.id)}
+              />
+            </span>
+          </div>
+        ),
+        accessor: key,
+        style: {
+          textAlign: "center",
+        },
+      });
+    } else {
+      columns.push({
+        Header: <b>Inspect</b>,
+        id: "delete",
+        accessor: (str) => "delete",
+        Cell: (row) => (
+          <div>
+            <button
+              className="btn btn-secondary"
+              onClick={() =>
+                this.props.history.push(
+                  `${process.env.PUBLIC_URL}/orders/d2d/${row.original.Lot}`
+                )
+              }
+            >
+              view
+            </button>
+          </div>
+        ),
+        style: {
+          textAlign: "center",
+        },
+        sortable: false,
+      });
+    }
+
     return (
       <Fragment>
         <ReactTable
@@ -149,4 +214,4 @@ export class Datatable extends Component {
   }
 }
 
-export default Datatable;
+export default withRouter(Datatable);

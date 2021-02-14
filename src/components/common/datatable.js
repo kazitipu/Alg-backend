@@ -46,13 +46,13 @@ export class Datatable extends Component {
       myData.forEach((lot) => {
         //  this is not affecting my output see line 104
         newData.push({
-          Lot: lot.lotNo,
-          Country: lot.selectCountry,
-          Shipment_Method: lot.shipmentMethod,
-          Shipment_Status: lot.shipmentStatus,
-          Shipping_Line: lot.shippingLine,
-          Shipment_Date: lot.shipmentDate,
-          Arrival_Date: lot.arrivalDate,
+          Lot: lot ? lot.lotNo : "",
+          Country: lot ? lot.selectCountry : "",
+          Shipment_Method: lot ? lot.shipmentMethod : "",
+          Shipment_Status: lot ? lot.shipmentStatus : "",
+          Shipping_Line: lot ? lot.shippingLine : "",
+          Shipment_Date: lot ? lot.shipmentDate : "",
+          Arrival_Date: lot ? lot.arrivalDate : "",
         });
       });
       return (
@@ -96,13 +96,13 @@ export class Datatable extends Component {
     if (myData.length > 0) {
       myData.forEach((lot) => {
         newData.push({
-          Lot: lot.lotNo,
-          Country: lot.selectCountry,
-          Shipment_Method: lot.shipmentMethod,
-          Shipment_Status: lot.shipmentStatus,
-          Shipping_Line: lot.shippingLine,
-          Shipment_Date: lot.shipmentDate,
-          Arrival_Date: lot.arrivalDate,
+          Lot: lot ? lot.lotNo : "",
+          Country: lot ? lot.selectCountry : "",
+          Shipment_Method: lot ? lot.shipmentMethod : "",
+          Shipment_Status: lot ? lot.shipmentStatus : "",
+          Shipping_Line: lot ? lot.shippingLine : "",
+          Shipment_Date: lot ? lot.shipmentDate : "",
+          Arrival_Date: lot ? lot.arrivalDate : "",
         });
       });
     }
@@ -205,7 +205,7 @@ export class Datatable extends Component {
 
             <span
               style={{ cursor: "pointer" }}
-              onClick={() => this.props.startToggleModal(row.original.Lot)}
+              onClick={() => this.props.startToggleModal(row.original)}
             >
               <i
                 className="fa fa-pencil"

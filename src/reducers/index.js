@@ -1,15 +1,18 @@
-import { combineReducers } from 'redux';
-import setAdminsReducer from './admins';
-import setOrdersReducer from './orders'
-import setPaymentsReducer from './payments'
-import setProductsReducer from './products'
-
+import { combineReducers } from "redux";
+import setAdminsReducer from "./admins";
+import setOrdersReducer from "./orders";
+import setPaymentsReducer from "./payments";
+import setProductsReducer from "./products";
+import setLotsReducer from "./lots";
+import setOrdersAlgReducer from "./ordersAlg";
 
 const rootReducer = combineReducers({
-    orders:setOrdersReducer,
-    payments:setPaymentsReducer,
-    admins:setAdminsReducer,
-    products:setProductsReducer
+  lots: setLotsReducer,
+  orders: setOrdersReducer,
+  payments: setPaymentsReducer,
+  admins: setAdminsReducer,
+  products: setProductsReducer,
+  ordersAlg: setOrdersAlgReducer,
 });
 
 export default rootReducer;

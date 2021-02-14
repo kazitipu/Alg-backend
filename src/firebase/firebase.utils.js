@@ -74,9 +74,12 @@ export const uploadLot = async (lotObj) => {
   const snapShot = await lotRef.get();
   if (!snapShot.exists) {
     try {
-      lotRef.set({
+      await lotRef.set({
         ...lotObj,
       });
+      console.log(snapShot.data());
+      const uploadedSnapShot = await lotRef.get();
+      return uploadedSnapShot.data();
     } catch (error) {
       alert(error);
     }
@@ -86,6 +89,31 @@ export const uploadLot = async (lotObj) => {
     );
   }
 };
+
+export const uploadOrderD2D = async (orderObj) => {
+  const orderRef = firestore.doc(
+    `ordersD2D/${orderObj.lotNo + "-" + orderObj.cartonNo}`
+  );
+  const snapShot = await orderRef.get();
+  if (!snapShot.exists) {
+    try {
+      await orderRef.set({
+        ...orderObj,
+      });
+
+      const uploadedSnapShot = await orderRef.get();
+      console.log(uploadedSnapShot.data());
+      return uploadedSnapShot.data();
+    } catch (error) {
+      alert(error);
+    }
+  } else {
+    alert(
+      "there is already a order with this given Tracking no, please change the Tracking no and try again"
+    );
+  }
+};
+
 export const uploadProductTax = async (productObj) => {
   const productRef = firestore.doc(`taxes/${productObj.id}`);
   const snapShot = await productRef.get();
@@ -146,6 +174,19 @@ export const getAllLots = async () => {
       lotsArray.push(doc.data());
     });
     return lotsArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+export const getAllOrdersD2D = async () => {
+  const ordersD2DCollectionRef = firestore.collection("ordersD2D");
+  try {
+    const ordersD2D = await ordersD2DCollectionRef.get();
+    const ordersD2DArray = [];
+    ordersD2D.forEach((doc) => {
+      ordersD2DArray.push(doc.data());
+    });
+    return ordersD2DArray;
   } catch (error) {
     alert(error);
   }
@@ -279,6 +320,8 @@ export const updateLot = async (lotObj) => {
   const lotRef = firestore.doc(`lots/${lotObj.lotNo}`);
   try {
     await lotRef.update({ ...lotObj });
+    const snapShot = await lotRef.get();
+    return snapShot.data();
   } catch (error) {
     alert(error);
   }

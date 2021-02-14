@@ -1,17 +1,20 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../../common/breadcrumb";
 import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 import Datatable from "../../common/datatable";
 import { getAllLots, getSingleLot } from "../../../firebase/firebase.utils";
+import { getAllLotsRedux } from "../../../actions/index";
 import { Link } from "react-router-dom";
 import CreateLotModal from "./createLotModal";
+import { connect } from "react-redux";
 
 export class LotList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-      allLots: [],
+
       toggleModal: true,
       singleLot: null,
     };
@@ -24,27 +27,24 @@ export class LotList extends Component {
   //     this.setState({ open: false });
   // };
   componentDidMount = async () => {
-    const allLots = await getAllLots();
-
-    this.setState({ allLots });
+    this.props.getAllLotsRedux();
   };
 
-  startToggleModal = async (lot) => {
-    if (lot == null) {
+  startToggleModal = async (lotObj) => {
+    if (lotObj == null) {
       this.setState({ toggleModal: !this.state.toggleModal, singleLot: null });
     } else {
-      const singleLot = await getSingleLot(lot);
-      console.log(singleLot);
+      console.log(lotObj);
       this.setState({
         toggleModal: !this.state.toggleModal,
-        singleLot: singleLot,
+        singleLot: lotObj,
       });
     }
   };
 
   render() {
-    const { open, allLots } = this.state;
-    console.log(allLots);
+    const { open } = this.state;
+
     console.log(this.props);
     return (
       <Fragment>
@@ -83,7 +83,7 @@ export class LotList extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={allLots}
+                      myData={this.props.allLots}
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"
@@ -94,10 +94,17 @@ export class LotList extends Component {
             </div>
           </div>
         </div>
+        <ToastContainer />
         {/* <!-- Container-fluid Ends--> */}
       </Fragment>
     );
   }
 }
 
-export default LotList;
+const mapStateToProps = (state) => {
+  return {
+    allLots: state.lots.lots,
+  };
+};
+
+export default connect(mapStateToProps, { getAllLotsRedux })(LotList);

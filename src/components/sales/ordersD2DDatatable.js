@@ -3,7 +3,7 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deleteUser } from "./../../firebase/firebase.utils";
+import { deleteOrder } from "../../firebase/firebase.utils";
 
 export class Datatable extends Component {
   constructor(props) {
@@ -42,17 +42,16 @@ export class Datatable extends Component {
     const { myData } = this.props;
     if (myData.length > 0) {
       const newData = [];
-      myData.forEach((user) => {
+      myData.forEach((order) => {
         //  this is not affecting my output see line 104
         newData.push({
-          Id: user.id,
-          Name: user.displayName,
-          Company: user.company,
-          Address: user.address,
-          Mobile: user.mobileNo,
-          Email: user.email,
-          Status: user.status,
-          Created: this.toDateTime(user.createdAt.seconds),
+          Customer: order.customer,
+          Lot: order.lotNo,
+          Carton: order.cartonNo,
+          Product: order.productName,
+          Quantity: order.quantity,
+          CBM: order.totalCbm,
+          grossWeight: order.grossWeight,
         });
       });
       return (
@@ -79,12 +78,6 @@ export class Datatable extends Component {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  toDateTime = (secs) => {
-    var t = new Date(1970, 0, 1); // Epoch
-    t.setSeconds(secs);
-    return t;
-  };
-
   render() {
     const { pageSize, myClass, multiSelectOption, pagination } = this.props;
     console.log(this.props);
@@ -92,17 +85,15 @@ export class Datatable extends Component {
     console.log(myData);
     const newData = [];
     if (myData.length > 0) {
-      myData.forEach((user) => {
-        console.log(user.createdAt);
+      myData.forEach((order) => {
         newData.push({
-          Id: user.id,
-          Name: user.displayName,
-          Company: user.company,
-          Address: user.address,
-          Mobile: user.mobileNo,
-          Email: user.email,
-          Status: user.status,
-          Created: this.toDateTime(user.createdAt.seconds),
+          Customer: order.customer,
+          Lot: order.lotNo,
+          Carton: order.cartonNo,
+          Product: order.productName,
+          Quantity: order.quantity,
+          CBM: order.totalCbm,
+          grossWeight: order.grossWeight,
         });
       });
     }
@@ -128,12 +119,89 @@ export class Datatable extends Component {
       columns.push({
         Header: <b>{this.Capitalize(key.toString())}</b>,
         accessor: key,
-        Cell: editable,
+        Cell: null,
         style: {
           textAlign: "center",
         },
       });
     }
+
+    if (multiSelectOption == true) {
+      columns.push({
+        Header: (
+          <button
+            className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
+            onClick={(e) => {
+              if (window.confirm("Are you sure you wish to delete this order?"))
+                this.handleRemoveRow();
+            }}
+          >
+            Delete
+          </button>
+        ),
+        id: "delete",
+        accessor: (str) => "delete",
+        sortable: false,
+        style: {
+          textAlign: "center",
+        },
+        Cell: (row) => (
+          <div>
+            <span>
+              <input
+                type="checkbox"
+                name={row.original.orderId}
+                defaultChecked={this.state.checkedValues.includes(
+                  row.original.orderId
+                )}
+                onChange={(e) => this.selectRow(e, row.original.orderId)}
+              />
+            </span>
+          </div>
+        ),
+        accessor: key,
+        style: {
+          textAlign: "center",
+        },
+      });
+    } else {
+      columns.push({
+        Header: <b>Action</b>,
+        id: "delete",
+        accessor: (str) => "delete",
+        Cell: (row) => (
+          <div>
+            <span
+              onClick={() => {
+                let data = myData;
+                data.splice(row.index, 1);
+                this.setState({ myData: data });
+                console.log(row);
+                deleteOrder(row.original.orderId);
+
+                toast.success("Successfully Deleted !");
+              }}
+            >
+              <i
+                className="fa fa-trash"
+                style={{
+                  width: 35,
+                  fontSize: 20,
+                  padding: 11,
+                  color: "#e4566e",
+                  cursor: "pointer",
+                }}
+              ></i>
+            </span>
+          </div>
+        ),
+        style: {
+          textAlign: "center",
+        },
+        sortable: false,
+      });
+    }
+
     return (
       <Fragment>
         <ReactTable
