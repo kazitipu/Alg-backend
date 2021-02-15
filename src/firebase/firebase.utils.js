@@ -178,6 +178,21 @@ export const getAllLots = async () => {
     alert(error);
   }
 };
+
+export const getAllExpressOrders = async () => {
+  const expressOrdersCollectionRef = firestore.collection("ordersExpress");
+  try {
+    const ordersExpress = await expressOrdersCollectionRef.get();
+    const ordersExpressArray = [];
+    ordersExpress.forEach((doc) => {
+      ordersExpressArray.push(doc.data());
+    });
+    return ordersExpressArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+
 export const getAllOrdersD2D = async () => {
   const ordersD2DCollectionRef = firestore.collection("ordersD2D");
   try {

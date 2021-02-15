@@ -11,6 +11,8 @@ const setOrdersAlgReducer = (state = INITIAL_STATE, action) => {
         (lot) => lot.lotNo !== action.payload.lotNo
       );
       return { ...state, lots: [...filteredLot, action.payload] };
+    case "GET_ALL_EXPRESS_ORDERS":
+      return { ...state, ordersExpress: [...action.payload] };
     default:
       return { ...state };
   }

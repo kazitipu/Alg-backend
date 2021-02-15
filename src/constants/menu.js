@@ -43,9 +43,9 @@ export const MENUITEMSFORADMIN = [
     type: "sub",
     active: false,
     children: [
-      { path: "/sales/orders", title: "Door to Door", type: "link" },
-      { path: "/sales/orders", title: "Freight", type: "link" },
-      { path: "/sales/order_pending", title: "Express", type: "link" },
+      { path: "/orders/door-to-door", title: "Door to Door", type: "link" },
+      { path: "/orders/freight", title: "Freight", type: "link" },
+      { path: "/orders/express", title: "Express", type: "link" },
     ],
   },
   {
@@ -172,9 +172,9 @@ export const MENUITEMSFORAGENT = [
     type: "sub",
     active: false,
     children: [
-      { path: "/sales/orders", title: "Door to Door", type: "link" },
-      { path: "/sales/orders", title: "Freight", type: "link" },
-      { path: "/sales/order_pending", title: "Express", type: "link" },
+      { path: "/orders/door-to-door", title: "Door to Door", type: "link" },
+      { path: "/orders/freight", title: "Freight", type: "link" },
+      { path: "/orders/express", title: "Express", type: "link" },
     ],
   },
   {

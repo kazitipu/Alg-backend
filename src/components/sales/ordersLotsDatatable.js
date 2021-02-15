@@ -96,13 +96,13 @@ export class Datatable extends Component {
     if (myData.length > 0) {
       myData.forEach((lot) => {
         newData.push({
-          Lot: lot ? lot.lotNo : "",
-          Country: lot ? lot.selectCountry : "",
-          Method: lot ? lot.shipmentMethod : "",
-          Status: lot ? lot.shipmentStatus : "",
-          Line: lot ? lot.shippingLine : "",
-          Shipment_Date: lot ? lot.shipmentDate : "",
-          Arrival_Date: lot ? lot.arrivalDate : "",
+          Lot: lot.lotNo,
+          Country: lot.selectCountry,
+          Method: lot.shipmentMethod,
+          Status: lot.shipmentStatus,
+          Line: lot.shippingLine,
+          Shipment_Date: lot.shipmentDate,
+          Arrival_Date: lot.arrivalDate,
         });
       });
     }

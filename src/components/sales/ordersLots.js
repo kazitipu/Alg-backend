@@ -1,17 +1,18 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../common/breadcrumb";
 import data from "../../assets/data/orders";
-import Datatable from "./ordersD2DLotsDatatable";
+import Datatable from "./ordersLotsDatatable";
 import { getAllLotsRedux } from "../../actions/index";
 import CreateOrderModal from "./createOrderModal";
 import SelectLotModal from "./selectLotModal";
 import { connect } from "react-redux";
 
-export class OrdersD2DLots extends Component {
+export class OrdersLots extends Component {
   constructor(props) {
     super(props);
     this.state = {
       allLotsD2D: [],
+      allLotsFreight: [],
       toggleModalSelectLot: true,
       toggleModalCreateOrder: true,
       singleLot: null,
@@ -19,12 +20,21 @@ export class OrdersD2DLots extends Component {
   }
 
   componentDidMount = async () => {
+    console.log(this.props);
     await this.props.getAllLotsRedux();
-    this.setState({ allLotsD2D: this.props.allLotsD2D });
+    if (this.props.match.params.shipmentMethod === "door-to-door") {
+      this.setState({ allLotsD2D: this.props.allLotsD2D });
+    } else {
+      this.setState({ allLotsFreight: this.props.allLotsFreight });
+    }
   };
 
   componentWillReceiveProps = (nextProps) => {
-    this.setState({ allLotsD2D: nextProps.allLotsD2D });
+    if (nextProps.match.params.shipmentMethod == "door-to-door") {
+      this.setState({ allLotsD2D: nextProps.allLotsD2D });
+    } else {
+      this.setState({ allLotsFreight: nextProps.allLotsFreight });
+    }
   };
 
   startToggleModalCreateOrder = async (lotObj) => {
@@ -52,7 +62,7 @@ export class OrdersD2DLots extends Component {
   };
 
   render() {
-    const { allLotsD2D } = this.state;
+    const { allLotsD2D, allLotsFreight } = this.state;
     return (
       <Fragment>
         <CreateOrderModal
@@ -95,7 +105,11 @@ export class OrdersD2DLots extends Component {
                 <div className="card-body order-datatable">
                   <Datatable
                     multiSelectOption={false}
-                    myData={allLotsD2D}
+                    myData={
+                      this.props.match.params.shipmentMethod == "door-to-door"
+                        ? allLotsD2D
+                        : allLotsFreight
+                    }
                     pageSize={10}
                     pagination={true}
                     class="-striped -highlight"
@@ -115,7 +129,10 @@ const mapStateToProps = (state) => {
     allLotsD2D: state.lots.lots.filter((lot) =>
       lot.shipmentMethod.includes("D2D")
     ),
+    allLotsFreight: state.lots.lots.filter((lot) =>
+      lot.shipmentMethod.includes("freight")
+    ),
   };
 };
 
-export default connect(mapStateToProps, { getAllLotsRedux })(OrdersD2DLots);
+export default connect(mapStateToProps, { getAllLotsRedux })(OrdersLots);

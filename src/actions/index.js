@@ -4,6 +4,7 @@ import {
   getAllLots,
   uploadOrderD2D,
   getAllOrdersD2D,
+  getAllExpressOrders,
 } from "../firebase/firebase.utils";
 
 export const setAllOrders = (ordersArray) => ({
@@ -70,4 +71,10 @@ export const getAllOrdersD2DRedux = () => async (dispatch) => {
 export const uploadOrderD2DRedux = (orderObj) => async (dispatch) => {
   const uploadedOrderObj = await uploadOrderD2D(orderObj);
   dispatch({ type: "UPLOAD_ORDERS_D2D", payload: uploadedOrderObj });
+};
+
+// Express
+export const getAllExpressOrdersRedux = () => async (dispatch) => {
+  const ordersArrayExpress = await getAllExpressOrders();
+  dispatch({ type: "GET_ALL_EXPRESS_ORDERS", payload: ordersArrayExpress });
 };
