@@ -63,14 +63,19 @@ export const MENUITEMSFORADMIN = [
     ],
   },
   {
-    title: "Product to order",
+    title: "Express Rates",
     icon: Clipboard,
     type: "sub",
     active: false,
     children: [
       {
-        path: "/pages/product-to-order",
-        title: "Product to order",
+        path: "/express-rates/document",
+        title: "Document",
+        type: "link",
+      },
+      {
+        path: "/express-rates/parcel",
+        title: "Parcel",
         type: "link",
       },
     ],
@@ -192,14 +197,19 @@ export const MENUITEMSFORAGENT = [
     ],
   },
   {
-    title: "Product to order",
+    title: "Express Rates",
     icon: Clipboard,
     type: "sub",
     active: false,
     children: [
       {
-        path: "/pages/product-to-order",
-        title: "Product to order",
+        path: "/express-rates/document",
+        title: "Document",
+        type: "link",
+      },
+      {
+        path: "/express-rates/parcel",
+        title: "Parcel",
         type: "link",
       },
     ],

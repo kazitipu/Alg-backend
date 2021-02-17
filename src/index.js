@@ -31,7 +31,9 @@ import InShipment from "./components/sales/inShipment";
 import InStock from "./components/sales/inStock";
 import Delivered from "./components/sales/delivered";
 import UpdateOrder from "./components/sales/updateOrder";
-
+// Express Rates
+import Document from "./components/express-rates/document/document";
+import Parcel from "./components/express-rates/parcel/parcel";
 //Coupons
 import UnverifiedPayments from "./components/payments/unVerifiedPayments";
 import VerifiedPayments from "./components/payments/verifiedPayments";
@@ -57,7 +59,6 @@ import Invoice from "./components/invoice";
 import Datatable from "./components/common/datatable";
 import Login from "./components/auth/login";
 import SearchedOrder from "./components/searched-order/searched-order";
-import CreateLotModal from "./components/lot/physical/createLotModal";
 
 class Root extends Component {
   constructor(props) {
@@ -153,6 +154,16 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/orders/d2d/:lotNo`}
                   component={OrdersD2D}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/express-rates/document`}
+                  component={Document}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/express-rates/parcel`}
+                  component={Parcel}
                 />
                 <Route
                   exact

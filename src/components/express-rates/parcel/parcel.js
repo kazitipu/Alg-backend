@@ -2,19 +2,17 @@ import React, { Component, Fragment } from "react";
 import Breadcrumb from "../../common/breadcrumb";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import Datatable from "../../common/datatable";
-import { getAllLots, getSingleLot } from "../../../firebase/firebase.utils";
-import { getAllLotsRedux } from "../../../actions/index";
+import Datatable from "./parcelDatatable";
+import { getAllExpressRatesParcelRedux } from "../../../actions/index";
 import { Link } from "react-router-dom";
-import CreateLotModal from "./createLotModal";
+import CreateParcelModal from "./createParcelModal";
 import { connect } from "react-redux";
 
-export class LotList extends Component {
+export class Parcel extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-
       toggleModal: true,
       singleLot: null,
     };
@@ -27,7 +25,7 @@ export class LotList extends Component {
   //     this.setState({ open: false });
   // };
   componentDidMount = async () => {
-    this.props.getAllLotsRedux();
+    this.props.getAllExpressRatesParcelRedux();
   };
 
   startToggleModal = async (lotObj) => {
@@ -48,12 +46,12 @@ export class LotList extends Component {
     console.log(this.props);
     return (
       <Fragment>
-        <CreateLotModal
+        <CreateParcelModal
           toggleModal={this.state.toggleModal}
           startToggleModal={this.startToggleModal}
           singleLot={this.state.singleLot}
         />
-        <Breadcrumb title="Lot List" parent="Lot" />
+        <Breadcrumb title="document" parent="express-rates" />
         {/* <!-- Container-fluid starts--> */}
         <div className="container-fluid">
           <div className="row">
@@ -68,24 +66,22 @@ export class LotList extends Component {
                   }}
                 >
                   <h5>
-                    {" "}
                     <i
-                      className="icofont-truck-loaded"
+                      className="icofont-money"
                       style={{
-                        fontSize: "180%",
+                        fontSize: "130%",
                         marginRight: "5px",
-                        marginTop: "5px",
                         color: "#ff8084",
                       }}
                     ></i>
-                    Lot List
+                    Parcel Rates
                   </h5>
                   <button
                     className="btn btn-primary"
                     type="button"
                     onClick={() => this.startToggleModal(null)}
                   >
-                    Create Lot
+                    Create Rate
                   </button>
                 </div>
                 <div className="card-body">
@@ -95,7 +91,7 @@ export class LotList extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.props.allLots}
+                      myData={this.props.allExpressRatesParcel}
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"
@@ -115,8 +111,10 @@ export class LotList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    allLots: state.lots.lots,
+    allExpressRatesParcel: state.expressRatesParcel.expressRatesParcel,
   };
 };
 
-export default connect(mapStateToProps, { getAllLotsRedux })(LotList);
+export default connect(mapStateToProps, { getAllExpressRatesParcelRedux })(
+  Parcel
+);

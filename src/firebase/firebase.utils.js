@@ -89,6 +89,48 @@ export const uploadLot = async (lotObj) => {
     );
   }
 };
+export const uploadExpressRatesDocuments = async (countryObj) => {
+  const countryRef = firestore.doc(
+    `expressRatesDocuments/${countryObj.country}`
+  );
+  const snapShot = await countryRef.get();
+  if (!snapShot.exists) {
+    try {
+      await countryRef.set({
+        ...countryObj,
+      });
+      console.log(snapShot.data());
+      const uploadedSnapShot = await countryRef.get();
+      return uploadedSnapShot.data();
+    } catch (error) {
+      alert(error);
+    }
+  } else {
+    alert(
+      "there is already a country with similar name, please change the country name and try again"
+    );
+  }
+};
+export const uploadExpressRatesParcel = async (countryObj) => {
+  const countryRef = firestore.doc(`expressRatesParcel/${countryObj.country}`);
+  const snapShot = await countryRef.get();
+  if (!snapShot.exists) {
+    try {
+      await countryRef.set({
+        ...countryObj,
+      });
+      console.log(snapShot.data());
+      const uploadedSnapShot = await countryRef.get();
+      return uploadedSnapShot.data();
+    } catch (error) {
+      alert(error);
+    }
+  } else {
+    alert(
+      "there is already a country with similar name, please change the country name and try again"
+    );
+  }
+};
 
 export const uploadOrderD2D = async (orderObj) => {
   const orderRef = firestore.doc(
@@ -178,6 +220,36 @@ export const getAllLots = async () => {
     alert(error);
   }
 };
+export const getAllDocumentExpressRates = async () => {
+  const expressRatesDocumentsCollectionRef = firestore.collection(
+    "expressRatesDocuments"
+  );
+  try {
+    const expressRatesDocuments = await expressRatesDocumentsCollectionRef.get();
+    const expressRatesDocumentsArray = [];
+    expressRatesDocuments.forEach((doc) => {
+      expressRatesDocumentsArray.push(doc.data());
+    });
+    return expressRatesDocumentsArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+export const getAllExpressRatesParcel = async () => {
+  const expressRatesParcelCollectionRef = firestore.collection(
+    "expressRatesParcel"
+  );
+  try {
+    const expressRatesParcel = await expressRatesParcelCollectionRef.get();
+    const expressRatesParcelArray = [];
+    expressRatesParcel.forEach((doc) => {
+      expressRatesParcelArray.push(doc.data());
+    });
+    return expressRatesParcelArray;
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const getAllExpressOrders = async () => {
   const expressOrdersCollectionRef = firestore.collection("ordersExpress");
@@ -186,6 +258,20 @@ export const getAllExpressOrders = async () => {
     const ordersExpressArray = [];
     ordersExpress.forEach((doc) => {
       ordersExpressArray.push(doc.data());
+    });
+    return ordersExpressArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+export const updateExpressOrder = async (orderId) => {
+  const expressOrdersCollectionRef = firestore.collection("ordersExpress");
+  try {
+    const ordersExpress = await expressOrdersCollectionRef.get();
+    const ordersExpressArray = [];
+    ordersExpress.forEach((doc) => {
+      if (doc.data().id === orderId) {
+      }
     });
     return ordersExpressArray;
   } catch (error) {
@@ -312,6 +398,26 @@ export const deleteLot = async (id) => {
     alert(error);
   }
 };
+export const deleteExpressRatesDocuments = async (id) => {
+  const countryRef = firestore.doc(`expressRatesDocuments/${id}`);
+  const snapShot = await countryRef.get();
+  console.log(snapShot.data());
+  try {
+    await countryRef.delete();
+  } catch (error) {
+    alert(error);
+  }
+};
+export const deleteExpressRatesParcel = async (id) => {
+  const countryRef = firestore.doc(`expressRatesParcel/${id}`);
+  const snapShot = await countryRef.get();
+  console.log(snapShot.data());
+  try {
+    await countryRef.delete();
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const deleteProductTax = async (id) => {
   const productRef = firestore.doc(`taxes/${id}`);
@@ -336,6 +442,28 @@ export const updateLot = async (lotObj) => {
   try {
     await lotRef.update({ ...lotObj });
     const snapShot = await lotRef.get();
+    return snapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
+export const updateExpressRatesDocuments = async (countryObj) => {
+  const countryRef = firestore.doc(
+    `expressRatesDocuments/${countryObj.country}`
+  );
+  try {
+    await countryRef.update({ ...countryObj });
+    const snapShot = await countryRef.get();
+    return snapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
+export const updateExpressRatesParcel = async (countryObj) => {
+  const countryRef = firestore.doc(`expressRatesParcel/${countryObj.country}`);
+  try {
+    await countryRef.update({ ...countryObj });
+    const snapShot = await countryRef.get();
     return snapShot.data();
   } catch (error) {
     alert(error);

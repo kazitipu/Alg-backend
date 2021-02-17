@@ -3,11 +3,12 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deleteLot } from "../../firebase/firebase.utils";
+import { updateExpressOrderStatusRedux } from "../../actions/index";
 import { withRouter } from "react-router-dom";
 import "./pendingOrdersDatatable.css";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
+import { connect } from "react-redux";
 
 export class Datatable extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export class Datatable extends Component {
     this.state = {
       checkedValues: [],
       myData: this.props.myData,
+      orderStatus: "",
     };
   }
 
@@ -89,6 +91,16 @@ export class Datatable extends Component {
     }
   };
 
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  handleSubmit = (event, id, month) => {
+    event.preventDefault();
+    this.props.updateExpressOrderStatusRedux(id, month);
+  };
+
   render() {
     const { pageSize, myClass, multiSelectOption, pagination } = this.props;
     console.log(this.props);
@@ -136,35 +148,259 @@ export class Datatable extends Component {
       });
     }
 
-    columns.push({
-      Header: <b>details</b>,
-      id: "orderDetails",
-      accessor: (str) => "orderDetails",
-      Cell: (row) => (
-        <OverlayTrigger
-          trigger="click"
-          placement="bottom"
-          overlay={
-            <Popover
-              id={`popover-positioned-bottom`}
-              style={{ minWidth: "30%" }}
-            >
-              <Popover.Title as="h3">{`Order Id: ${row.original.Id}`}</Popover.Title>
-              <Popover.Content className="popover-body-container">
-                <h3>Pick Up</h3>
-                <h3>Delivery</h3>
-              </Popover.Content>
-            </Popover>
-          }
-        >
-          <button className="btn btn-primary">show</button>
-        </OverlayTrigger>
-      ),
-      style: {
-        textAlign: "center",
+    columns.push(
+      {
+        Header: <b>details</b>,
+        id: "orderDetails",
+        accessor: (str) => "orderDetails",
+        Cell: (row) => (
+          <OverlayTrigger
+            trigger="click"
+            placement="bottom"
+            overlay={
+              <Popover
+                id={`popover-positioned-bottom`}
+                style={{ minWidth: "35%" }}
+              >
+                <Popover.Title
+                  style={{ backgroundColor: "#ff8084", color: "white" }}
+                  as="h3"
+                >{`Order Id: ${row.original.Id}`}</Popover.Title>
+                <Popover.Content className="popover-body-container">
+                  <div
+                    style={{
+                      paddingBottom: "10px",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      borderBottom: "2px solid gainsboro",
+                    }}
+                  >
+                    <div>
+                      <h3>Pick Up</h3>
+                      <p style={{ marginBottom: "0px" }}>
+                        Pick Up By:&nbsp;
+                        <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                          {myData.length > 0
+                            ? myData.find(
+                                (order) => order.id === row.original.Id
+                              ).pickUpBy
+                            : ""}
+                        </span>
+                      </p>
+                      <p style={{ marginBottom: "0px" }}>
+                        Tracking No:&nbsp;{" "}
+                        <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                          {myData.length > 0
+                            ? myData.find(
+                                (order) => order.id === row.original.Id
+                              ).pickUpTrackingNo
+                            : ""}
+                        </span>
+                      </p>
+                      <p style={{ marginBottom: "0px" }}>
+                        Pick Up Cost:&nbsp;{" "}
+                        <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                          {myData.length > 0
+                            ? myData.find(
+                                (order) => order.id === row.original.Id
+                              ).pickUpCost
+                            : ""}
+                          tk
+                        </span>
+                      </p>
+                    </div>
+                    <div
+                      style={{
+                        minHeight: "100%",
+                        borderRight: "2px solid gainsboro",
+                      }}
+                    ></div>
+                    <div>
+                      <h3>Delivery</h3>
+                      <p style={{ marginBottom: "0px" }}>
+                        Delivery By:&nbsp;
+                        <span
+                          style={{ color: "rgb(18 201 202)", fontSize: "130%" }}
+                        >
+                          {myData.length > 0
+                            ? myData.find(
+                                (order) => order.id === row.original.Id
+                              ).deliveryBy
+                            : ""}
+                        </span>
+                      </p>
+                      <p style={{ marginBottom: "0px" }}>
+                        Tracking No:&nbsp;
+                        <span
+                          style={{ color: "rgb(18 201 202)", fontSize: "130%" }}
+                        >
+                          {myData.length > 0
+                            ? myData.find(
+                                (order) => order.id === row.original.Id
+                              ).deliveryTrackingNo
+                            : ""}
+                        </span>
+                      </p>
+                      <p style={{ marginBottom: "0px" }}>
+                        Delivery Cost:&nbsp;
+                        <span
+                          style={{ color: "rgb(18 201 202)", fontSize: "130%" }}
+                        >
+                          {myData.length > 0
+                            ? myData.find(
+                                (order) => order.id === row.original.Id
+                              ).deliveryCost
+                            : ""}
+                          tk
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: "20px" }}>
+                    <h4
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        color: "gray",
+                      }}
+                    >
+                      Total Shipping Cost:{" "}
+                      <span
+                        style={{
+                          color: "#ff8084",
+                        }}
+                      >
+                        &nbsp;
+                        {myData.length > 0
+                          ? myData.find((order) => order.id === row.original.Id)
+                              .totalCost
+                          : ""}
+                        Tk
+                      </span>
+                    </h4>
+                  </div>
+                </Popover.Content>
+              </Popover>
+            }
+          >
+            <button className="btn btn-primary">show</button>
+          </OverlayTrigger>
+        ),
+        style: {
+          textAlign: "center",
+        },
+        sortable: false,
       },
-      sortable: false,
-    });
+      {
+        Header: <b>Status</b>,
+        id: "orderDetails",
+        accessor: (str) => "orderDetails",
+        Cell: (row) => (
+          <OverlayTrigger
+            trigger="click"
+            placement="bottom"
+            overlay={
+              <Popover
+                id={`popover-positioned-bottom`}
+                style={{ minWidth: "25%" }}
+              >
+                <Popover.Title
+                  style={{ backgroundColor: "#13c9ca", color: "white" }}
+                  as="h3"
+                >
+                  OrderId: {row.original.Id}
+                </Popover.Title>
+                <Popover.Content className="popover-body-container">
+                  <div style={{ marginBottom: "5px" }}>
+                    <h4 style={{ marginBottom: "0px", color: "gray" }}>
+                      Order Status
+                    </h4>
+                    <div
+                      style={{
+                        fontSize: "250%",
+                        color: "#13c9ca",
+                        padding: "0px",
+                      }}
+                    >
+                      {
+                        myData.find((order) => order.id === row.original.Id)
+                          .order_status
+                      }
+                    </div>
+                  </div>
+
+                  <form
+                    onSubmit={(event) =>
+                      this.handleSubmit(
+                        event,
+                        row.original.Id,
+                        row.original.Month
+                      )
+                    }
+                    noValidate="novalidate"
+                    className="rounded-field mt-0"
+                  >
+                    <div className="form-row mb-4">
+                      <div className="col">
+                        <label
+                          style={{
+                            color: "black",
+                            marginBottom: "0px",
+                            fontSize: "130%",
+                            color: "gray",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          Update Status
+                        </label>
+                        <select
+                          title="Please choose a package"
+                          required
+                          name="customer"
+                          className="custom-select"
+                          aria-required="true"
+                          aria-invalid="false"
+                          onChange={this.handleChange}
+                          value={this.state.customer}
+                          required
+                        >
+                          <option value="">Select Order Status</option>
+                          <option value="Wait For Pickup">
+                            Wait For Pickup
+                          </option>
+                          <option value="Local Warehouse">
+                            Local Warehouse
+                          </option>
+                          <option value="Ready to Fly">Ready to Fly</option>
+                          <option value="Shipping">Shipping</option>
+                          <option value="Abroad Customs">Abroad Customs</option>
+                          <option value="Delivered">Delivered</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="form-row mb-3">
+                      <div
+                        className="col"
+                        style={{ display: "flex", justifyContent: "center" }}
+                      >
+                        <button className="btn btn-secondary">Update</button>
+                      </div>
+                    </div>
+                  </form>
+                </Popover.Content>
+              </Popover>
+            }
+          >
+            <button className="btn btn-secondary">status</button>
+          </OverlayTrigger>
+        ),
+        style: {
+          textAlign: "center",
+        },
+        sortable: false,
+      }
+    );
 
     if (multiSelectOption == true) {
       columns.push({
@@ -204,30 +440,6 @@ export class Datatable extends Component {
           textAlign: "center",
         },
       });
-    } else {
-      columns.push({
-        Header: <b>Inspect</b>,
-        id: "delete",
-        accessor: (str) => "delete",
-        Cell: (row) => (
-          <div>
-            <button
-              className="btn btn-secondary"
-              onClick={() =>
-                this.props.history.push(
-                  `${process.env.PUBLIC_URL}/expressOrder/${row.original.Month}`
-                )
-              }
-            >
-              view
-            </button>
-          </div>
-        ),
-        style: {
-          textAlign: "center",
-        },
-        sortable: false,
-      });
     }
 
     return (
@@ -245,4 +457,11 @@ export class Datatable extends Component {
   }
 }
 
-export default withRouter(Datatable);
+const mapStateToProps = (state) => {
+  return {
+    orderStatus: state,
+  };
+};
+export default withRouter(
+  connect(mapStateToProps, { updateExpressOrderStatusRedux })(Datatable)
+);

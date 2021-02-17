@@ -13,6 +13,10 @@ const setOrdersAlgReducer = (state = INITIAL_STATE, action) => {
       return { ...state, lots: [...filteredLot, action.payload] };
     case "GET_ALL_EXPRESS_ORDERS":
       return { ...state, ordersExpress: [...action.payload] };
+    // case "UPDATE_EXPRESS_ORDER_STATUS":
+    //   const filteredExpressOrder = state.orderExpress.find(order=>order.month === payload.month)
+    //   const c
+    //   return {...state, ordersExpress:[]}
     default:
       return { ...state };
   }
