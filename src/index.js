@@ -34,6 +34,10 @@ import UpdateOrder from "./components/sales/updateOrder";
 // Express Rates
 import Document from "./components/express-rates/document/document";
 import Parcel from "./components/express-rates/parcel/parcel";
+
+// D2D Rates
+import D2DRates from "./components/d2d-rates/d2dRates";
+
 //Coupons
 import UnverifiedPayments from "./components/payments/unVerifiedPayments";
 import VerifiedPayments from "./components/payments/verifiedPayments";
@@ -165,6 +169,12 @@ class Root extends Component {
                   path={`${process.env.PUBLIC_URL}/express-rates/parcel`}
                   component={Parcel}
                 />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/d2d-rates/:country`}
+                  component={D2DRates}
+                />
+
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/sales/orders/update-status/:orderId`}

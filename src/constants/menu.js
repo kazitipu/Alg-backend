@@ -15,6 +15,16 @@ import {
   LogIn,
 } from "react-feather";
 
+const countries = [
+  "china",
+  "india",
+  "thailand",
+  "singapore",
+  "dubai",
+  "hongkong",
+  "malaysia",
+  "pakistan",
+];
 export const MENUITEMSFORADMIN = [
   {
     path: "/dashboard",
@@ -80,6 +90,82 @@ export const MENUITEMSFORADMIN = [
       },
     ],
   },
+  {
+    title: "D2D Rates",
+    icon: Box,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        title: "Air",
+        type: "sub",
+        active: false,
+        children: countries.map((country) => {
+          return {
+            path: `/d2d-rates/air-${country}`,
+            title: country,
+            type: "link",
+          };
+        }),
+      },
+      {
+        title: "Sea",
+        type: "sub",
+        active: false,
+        children: countries.map((country) => {
+          return {
+            path: `/d2d-rates/sea-${country}`,
+            title: country,
+            type: "link",
+          };
+        }),
+      },
+    ],
+  },
+  // {
+  //   title: "D2D Rates",
+  //   icon: DollarSign,
+  //   type: "sub",
+  //   active: false,
+  //   children: [
+  //     {
+  //       title: "Air",
+  //       icon: DollarSign,
+  //       type: "sub",
+  //       active: false,
+  //       childern: [
+  //         {
+  //           path: "/express-rates/document",
+  //           title: "Document",
+  //           type: "link",
+  //         },
+  //         {
+  //           path: "/express-rates/parcel",
+  //           title: "Parcel",
+  //           type: "link",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       title: "Sea",
+  //       icon: DollarSign,
+  //       type: "sub",
+  //       active: false,
+  //       childern: [
+  //         {
+  //           path: "/express-rates/document",
+  //           title: "Document",
+  //           type: "link",
+  //         },
+  //         {
+  //           path: "/express-rates/parcel",
+  //           title: "Parcel",
+  //           type: "link",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
 
   {
     title: "Users",
@@ -211,6 +297,38 @@ export const MENUITEMSFORAGENT = [
         path: "/express-rates/parcel",
         title: "Parcel",
         type: "link",
+      },
+    ],
+  },
+  {
+    title: "D2D Rates",
+    icon: Box,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        title: "Air",
+        type: "sub",
+        active: false,
+        children: countries.map((country) => {
+          return {
+            path: `/d2d-rates/air-${country}`,
+            title: country,
+            type: "link",
+          };
+        }),
+      },
+      {
+        title: "Sea",
+        type: "sub",
+        active: false,
+        children: countries.map((country) => {
+          return {
+            path: `/d2d-rates/sea-${country}`,
+            title: country,
+            type: "link",
+          };
+        }),
       },
     ],
   },

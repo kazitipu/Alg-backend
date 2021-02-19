@@ -14,6 +14,10 @@ import {
   uploadExpressRatesParcel,
   updateExpressRatesParcel,
   deleteExpressRatesParcel,
+  getAllD2DRates,
+  updateD2DRates,
+  uploadD2DRates,
+  deleteD2DRates,
 } from "../firebase/firebase.utils";
 
 export const setAllOrders = (ordersArray) => ({
@@ -181,5 +185,59 @@ export const deleteExpressRatesParcelRedux = (countryId) => async (
   dispatch({
     type: "DELETE_EXPRESS_RATES_PARCEL",
     payload: countryId,
+  });
+};
+
+// D2D Rates
+export const getAllD2DRatesRedux = (freightType, country) => async (
+  dispatch
+) => {
+  const allD2DRatesAirArray = await getAllD2DRates(freightType, country);
+  dispatch({
+    type: "GET_ALL_D2D_RATES",
+    payload: allD2DRatesAirArray,
+  });
+};
+
+export const uploadD2DRatesRedux = (
+  freightType,
+  country,
+  productTypeObj
+) => async (dispatch) => {
+  const uploadedD2DRatesObj = await uploadD2DRates(
+    freightType,
+    country,
+    productTypeObj
+  );
+  dispatch({
+    type: "UPLOAD_D2D_RATES",
+    payload: uploadedD2DRatesObj,
+  });
+};
+
+export const updateD2DRatesRedux = (
+  freightType,
+  country,
+  productTypeObj
+) => async (dispatch) => {
+  const updatedD2DRatesObj = await updateD2DRates(
+    freightType,
+    country,
+    productTypeObj
+  );
+  dispatch({
+    type: "UPDATE_D2D_RATES",
+    payload: updatedD2DRatesObj,
+  });
+};
+export const deleteD2DRatesRedux = (
+  freightType,
+  country,
+  productTypeId
+) => async (dispatch) => {
+  await deleteD2DRates(freightType, country, productTypeId);
+  dispatch({
+    type: "DELETE_D2D_RATES",
+    payload: { freightType, country, productTypeId },
   });
 };

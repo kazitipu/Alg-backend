@@ -131,6 +131,28 @@ export const uploadExpressRatesParcel = async (countryObj) => {
     );
   }
 };
+export const uploadD2DRates = async (freightType, country, typeObj) => {
+  const productTypeRef = firestore.doc(
+    `d2d-rates-${freightType}-${country}/${typeObj.id}`
+  );
+  const snapShot = await productTypeRef.get();
+  if (!snapShot.exists) {
+    try {
+      await productTypeRef.set({
+        ...typeObj,
+      });
+      console.log(snapShot.data());
+      const uploadedSnapShot = await productTypeRef.get();
+      return uploadedSnapShot.data();
+    } catch (error) {
+      alert(error);
+    }
+  } else {
+    alert(
+      "there is already a product type with similar name, please change the product type name and try again"
+    );
+  }
+};
 
 export const uploadOrderD2D = async (orderObj) => {
   const orderRef = firestore.doc(
@@ -246,6 +268,21 @@ export const getAllExpressRatesParcel = async () => {
       expressRatesParcelArray.push(doc.data());
     });
     return expressRatesParcelArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+export const getAllD2DRates = async (freightType, country) => {
+  const d2dRatesCollectionRef = firestore.collection(
+    `d2d-rates-${freightType}-${country}`
+  );
+  try {
+    const d2dRates = await d2dRatesCollectionRef.get();
+    const d2dRatesArray = [];
+    d2dRates.forEach((doc) => {
+      d2dRatesArray.push(doc.data());
+    });
+    return d2dRatesArray;
   } catch (error) {
     alert(error);
   }
@@ -418,6 +455,18 @@ export const deleteExpressRatesParcel = async (id) => {
     alert(error);
   }
 };
+export const deleteD2DRates = async (freightType, country, id) => {
+  const productTypeRef = firestore.doc(
+    `d2d-rates-${freightType}-${country}/${id}`
+  );
+  const snapShot = await productTypeRef.get();
+  console.log(snapShot.data());
+  try {
+    await productTypeRef.delete();
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const deleteProductTax = async (id) => {
   const productRef = firestore.doc(`taxes/${id}`);
@@ -464,6 +513,18 @@ export const updateExpressRatesParcel = async (countryObj) => {
   try {
     await countryRef.update({ ...countryObj });
     const snapShot = await countryRef.get();
+    return snapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
+export const updateD2DRates = async (freightType, country, productTypeObj) => {
+  const productTypeRef = firestore.doc(
+    `d2d-rates-${freightType}-${country}/${productTypeObj.id}`
+  );
+  try {
+    await productTypeRef.update({ ...productTypeObj });
+    const snapShot = await productTypeRef.get();
     return snapShot.data();
   } catch (error) {
     alert(error);

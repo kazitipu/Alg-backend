@@ -7,7 +7,7 @@ import setLotsReducer from "./lots";
 import setOrdersAlgReducer from "./ordersAlg";
 import setExpressRatesDocumentsReducer from "./expressRatesDocuments";
 import setExpressRatesParcelReducer from "./expressRatesParcel";
-
+import setD2DRatesReducer from "./d2dRates";
 const rootReducer = combineReducers({
   lots: setLotsReducer,
   orders: setOrdersReducer,
@@ -17,6 +17,7 @@ const rootReducer = combineReducers({
   ordersAlg: setOrdersAlgReducer,
   expressRatesDocuments: setExpressRatesDocumentsReducer,
   expressRatesParcel: setExpressRatesParcelReducer,
+  d2dRates: setD2DRatesReducer,
 });
 
 export default rootReducer;
