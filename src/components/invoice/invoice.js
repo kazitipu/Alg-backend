@@ -1,9 +1,14 @@
 import React, { Component, Fragment } from "react";
-import Breadcrumb from "../components/common/breadcrumb";
-import data from "../assets/data/invoice";
-import Datatable from "../components/common/datatable";
-
+import Breadcrumb from "../../components/common/breadcrumb";
+import data from "../../assets/data/invoice";
+import Datatable from "../../components/invoice/invoiceDatatable";
+import { getAllLotsRedux } from "../../actions/index";
+import { connect } from "react-redux";
 export class Invoice extends Component {
+  componentDidMount = async () => {
+    this.props.getAllLotsRedux();
+  };
+
   render() {
     return (
       <Fragment>
@@ -19,7 +24,7 @@ export class Invoice extends Component {
                   <div id="basicScenario" className="product-list">
                     <Datatable
                       multiSelectOption={false}
-                      myData={data}
+                      myData={this.props.allLots}
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"
@@ -35,4 +40,9 @@ export class Invoice extends Component {
   }
 }
 
-export default Invoice;
+const mapStateToProps = (state) => {
+  return {
+    allLots: state.lots.lots,
+  };
+};
+export default connect(mapStateToProps, { getAllLotsRedux })(Invoice);

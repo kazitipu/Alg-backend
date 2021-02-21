@@ -8,6 +8,7 @@ import { getAllLotsRedux } from "../../../actions/index";
 import { Link } from "react-router-dom";
 import CreateLotModal from "./createLotModal";
 import { connect } from "react-redux";
+import { Search } from "react-feather";
 
 export class LotList extends Component {
   constructor(props) {
@@ -80,13 +81,72 @@ export class LotList extends Component {
                     ></i>
                     Lot List
                   </h5>
-                  <button
-                    className="btn btn-primary"
-                    type="button"
-                    onClick={() => this.startToggleModal(null)}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                    }}
                   >
-                    Create Lot
-                  </button>
+                    {" "}
+                    <li
+                      style={{
+                        border: "1px solid gainsboro",
+                        borderRadius: "5rem",
+                        padding: "0px 20px",
+                        background: "whitesmoke",
+                        marginRight: "20px",
+                      }}
+                    >
+                      <form
+                        className="form-inline search-form"
+                        onSubmit={this.handleSubmit}
+                      >
+                        <div
+                          // className="form-group"
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-around",
+                          }}
+                        >
+                          <input
+                            className={
+                              "form-control-plaintext " +
+                              (this.state.searchbar ? "open" : "")
+                            }
+                            name="searchFor"
+                            value={this.state.searchFor}
+                            type="search"
+                            placeholder="Search lot"
+                            onChange={this.handleChange}
+                          />
+                          <span
+                            // className="d-sm-none mobile-search"
+                            onClick={() => this.handleSearchClick()}
+                          >
+                            <Search
+                              style={{
+                                marginTop: "5px",
+                                borderLeft: "1px solid gainsboro",
+                                paddingLeft: "7px",
+                                color: "gray",
+                              }}
+                            />
+                          </span>
+                        </div>
+                      </form>
+                    </li>
+                    <li>
+                      <button
+                        className="btn btn-primary"
+                        type="button"
+                        onClick={() => this.startToggleModal(null)}
+                      >
+                        Create Lot
+                      </button>
+                    </li>
+                  </div>
                 </div>
                 <div className="card-body">
                   <div className="clearfix"></div>

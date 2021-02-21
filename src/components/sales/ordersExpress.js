@@ -6,7 +6,7 @@ import { getAllExpressOrdersRedux } from "../../actions/index";
 import CreateOrderModal from "./createOrderModal";
 import SelectLotModal from "./selectLotModal";
 import { connect } from "react-redux";
-
+import { Search } from "react-feather";
 export class OrdersExpress extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +43,76 @@ export class OrdersExpress extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-                  <h5>Manage Orders</h5>
+                  <h5>
+                    {" "}
+                    <i
+                      className="icofont-shopping-cart"
+                      style={{
+                        fontSize: "180%",
+                        marginRight: "5px",
+                        marginTop: "5px",
+                        color: "#ff8084",
+                      }}
+                    ></i>
+                    Manage Orders
+                  </h5>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    {" "}
+                    <li
+                      style={{
+                        border: "1px solid gainsboro",
+                        borderRadius: "5rem",
+                        padding: "0px 20px",
+                        background: "whitesmoke",
+                        marginRight: "20px",
+                      }}
+                    >
+                      <form
+                        className="form-inline search-form"
+                        onSubmit={this.handleSubmit}
+                      >
+                        <div
+                          // className="form-group"
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-around",
+                          }}
+                        >
+                          <input
+                            className={
+                              "form-control-plaintext " +
+                              (this.state.searchbar ? "open" : "")
+                            }
+                            name="searchFor"
+                            value={this.state.searchFor}
+                            type="search"
+                            placeholder="Search Express Order"
+                            onChange={this.handleChange}
+                          />
+                          <span
+                            // className="d-sm-none mobile-search"
+                            onClick={() => this.handleSearchClick()}
+                          >
+                            <Search
+                              style={{
+                                marginTop: "5px",
+                                borderLeft: "1px solid gainsboro",
+                                paddingLeft: "7px",
+                                color: "gray",
+                              }}
+                            />
+                          </span>
+                        </div>
+                      </form>
+                    </li>
+                  </div>
                 </div>
 
                 <div className="card-body order-datatable">
