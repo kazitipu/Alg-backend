@@ -53,8 +53,8 @@ export const MENUITEMSFORADMIN = [
     type: "sub",
     active: false,
     children: [
-      { path: "/orders/door-to-door", title: "Door to Door", type: "link" },
-      { path: "/orders/freight", title: "Freight", type: "link" },
+      { path: "/orders/D2D", title: "Door to Door", type: "link" },
+      { path: "/orders/Freight", title: "Freight", type: "link" },
       { path: "/orders/express", title: "Express", type: "link" },
     ],
   },
@@ -263,8 +263,8 @@ export const MENUITEMSFORAGENT = [
     type: "sub",
     active: false,
     children: [
-      { path: "/orders/door-to-door", title: "Door to Door", type: "link" },
-      { path: "/orders/freight", title: "Freight", type: "link" },
+      { path: "/orders/D2D", title: "Door to Door", type: "link" },
+      { path: "/orders/Freight", title: "Freight", type: "link" },
       { path: "/orders/express", title: "Express", type: "link" },
     ],
   },

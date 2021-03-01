@@ -2,16 +2,38 @@ import React, { Component, Fragment } from "react";
 import Breadcrumb from "../../components/common/breadcrumb";
 import data from "../../assets/data/invoice";
 import Datatable from "../../components/invoice/invoiceDatatable";
-import { getAllLotsRedux } from "../../actions/index";
+import { getSingleOrderRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import "./css/invoice-by-order.css";
 import Alg from "./alg.png";
 export class InvoiceByOrder extends Component {
   componentDidMount = async () => {
-    this.props.getAllLotsRedux();
+    const [
+      shipmentMethod,
+      lotNo,
+      cartonNo,
+    ] = this.props.match.params.orderId.split("-");
+
+    if (shipmentMethod.includes("D2D")) {
+      await this.props.getSingleOrderRedux({
+        shipmentMethod: "D2D",
+        orderId: `${lotNo}-${cartonNo}`,
+      });
+    } else {
+      await this.props.getSingleOrderRedux({
+        shipmentMethod: "Freight",
+        orderId: `${lotNo}-${cartonNo}`,
+      });
+    }
+    console.log(this.props.orderObj);
   };
 
   render() {
+    const [
+      shipmentMethod,
+      lotNo,
+      cartonNo,
+    ] = this.props.match.params.orderId.split("-");
     return (
       <Fragment>
         <Breadcrumb title="Invoice" parent="Invoice" />
@@ -20,7 +42,9 @@ export class InvoiceByOrder extends Component {
             <div className="col-sm-12">
               <div className="card">
                 <div className="card-header">
-                  <h5>Invoice #{this.props.match.params.orderId}</h5>
+                  <h5>
+                    Invoice #{lotNo}-{cartonNo}
+                  </h5>
                 </div>
                 <div
                   className="card-body"
@@ -32,14 +56,14 @@ export class InvoiceByOrder extends Component {
                       style={{ maxWidth: "1200px", borderRadius: ".2rem" }}
                     >
                       <section id="memo" style={{ height: "165px" }}>
-                        <div class="logo">
+                        <div className="logo">
                           <img
                             style={{ width: "70px", height: "70px" }}
                             src={Alg}
                           />
                         </div>
 
-                        <div class="company-info">
+                        <div className="company-info">
                           <div>Alg Cargos & Logistics ltd</div>
                           <br />
                           <span>
@@ -58,16 +82,16 @@ export class InvoiceByOrder extends Component {
                           INVOICE
                         </span>
                         <span id="number" style={{ fontSize: "200%" }}>
-                          #{this.props.match.params.orderId}
+                          #{lotNo}-{cartonNo}
                         </span>
                       </section>
 
-                      <div class="clearfix"></div>
+                      <div className="clearfix"></div>
 
                       <section id="client-info">
                         <span>TO:</span>
                         <div>
-                          <span class="bold">GlobalBuyBd.com</span>
+                          <span className="bold">GlobalBuyBd.com</span>
                         </div>
 
                         <div>
@@ -87,112 +111,116 @@ export class InvoiceByOrder extends Component {
                         </div>
                       </section>
 
-                      <div class="clearfix"></div>
+                      <div className="clearfix"></div>
 
                       <section id="items">
-                        <table cellpadding="0" cellspacing="0">
-                          <tr>
-                            <th>#</th>
-                            <th style={{ maxWidth: "50px" }}>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>CTN no</th>
-                            <th>Tracking no</th>
-                            <th>Weight</th>
-                            <th>In Total</th>
-                          </tr>
+                        <table cellPadding="0" cellSpacing="0">
+                          <tbody>
+                            <tr>
+                              <th>#</th>
+                              <th style={{ maxWidth: "50px" }}>Product</th>
+                              <th>Quantity</th>
+                              <th>Price</th>
+                              <th>CTN no</th>
+                              <th>Tracking no</th>
+                              <th>Weight</th>
+                              <th>In Total</th>
+                            </tr>
 
-                          <tr data-iterate="item">
-                            <td>1</td>
-                            <td style={{ maxWidth: "50px" }}>Ladies Bag</td>
-                            <td>3</td>
-                            <td>120tk</td>
-                            <td>55</td>
-                            <td>a850ghohroh</td>
+                            <tr data-iterate="item">
+                              <td>1</td>
+                              <td style={{ maxWidth: "50px" }}>Ladies Bag</td>
+                              <td>3</td>
+                              <td>120tk</td>
+                              <td>55</td>
+                              <td>a850ghohroh</td>
 
-                            <td>3kg</td>
-                            <td>360tk</td>
-                          </tr>
-                          <tr data-iterate="item">
-                            <td>2</td>
-                            <td style={{ maxWidth: "50px" }}>Watch</td>
-                            <td>10</td>
-                            <td>150tk</td>
-                            <td>55</td>
-                            <td>al04304723047</td>
-                            <td>2kg</td>
-                            <td>1400tk</td>
-                          </tr>
-                          <tr data-iterate="item">
-                            <td>3</td>
-                            <td style={{ maxWidth: "50px" }}>Bags</td>
-                            <td>8</td>
-                            <td>130tk</td>
-                            <td>55</td>
-                            <td>153483040</td>
-                            <td>4kg</td>
-                            <td>1040tk</td>
-                          </tr>
-                          <tr data-iterate="item">
-                            <td>4</td>
-                            <td style={{ maxWidth: "50px" }}>Shoes</td>
-                            <td>3</td>
-                            <td>120tk</td>
-                            <td>55</td>
-                            <td>03740730fajl</td>
-                            <td>1kg</td>
-                            <td>760tk</td>
-                          </tr>
-                          <tr data-iterate="item">
-                            <td>5</td>
-                            <td style={{ maxWidth: "50px" }}>Mixed</td>
-                            <td>45</td>
-                            <td>120tk</td>
-                            <td>55</td>
-                            <td>93694639463</td>
-                            <td>5kg</td>
-                            <td>3600tk</td>
-                          </tr>
+                              <td>3kg</td>
+                              <td>360tk</td>
+                            </tr>
+                            <tr data-iterate="item">
+                              <td>2</td>
+                              <td style={{ maxWidth: "50px" }}>Watch</td>
+                              <td>10</td>
+                              <td>150tk</td>
+                              <td>55</td>
+                              <td>al04304723047</td>
+                              <td>2kg</td>
+                              <td>1400tk</td>
+                            </tr>
+                            <tr data-iterate="item">
+                              <td>3</td>
+                              <td style={{ maxWidth: "50px" }}>Bags</td>
+                              <td>8</td>
+                              <td>130tk</td>
+                              <td>55</td>
+                              <td>153483040</td>
+                              <td>4kg</td>
+                              <td>1040tk</td>
+                            </tr>
+                            <tr data-iterate="item">
+                              <td>4</td>
+                              <td style={{ maxWidth: "50px" }}>Shoes</td>
+                              <td>3</td>
+                              <td>120tk</td>
+                              <td>55</td>
+                              <td>03740730fajl</td>
+                              <td>1kg</td>
+                              <td>760tk</td>
+                            </tr>
+                            <tr data-iterate="item">
+                              <td>5</td>
+                              <td style={{ maxWidth: "50px" }}>Mixed</td>
+                              <td>45</td>
+                              <td>120tk</td>
+                              <td>55</td>
+                              <td>93694639463</td>
+                              <td>5kg</td>
+                              <td>3600tk</td>
+                            </tr>
+                          </tbody>
                         </table>
                       </section>
 
                       <section id="sums">
-                        <table cellpadding="0" cellspacing="0">
-                          <tr>
-                            <th>Subtotal</th>
-                            <td>36,000tk</td>
-                          </tr>
+                        <table cellPadding="0" cellSpacing="0">
+                          <tbody>
+                            <tr>
+                              <th>Subtotal</th>
+                              <td>36,000tk</td>
+                            </tr>
 
-                          <tr data-iterate="tax">
-                            <th>Packing Charge</th>
-                            <td>2000tk</td>
-                          </tr>
-                          <tr data-iterate="tax">
-                            <th>Insurance</th>
-                            <td>5000tk</td>
-                          </tr>
-                          <tr class="amount-total">
-                            <th>TOTAL</th>
-                            <td>43,000tk</td>
-                          </tr>
+                            <tr data-iterate="tax">
+                              <th>Packing Charge</th>
+                              <td>2000tk</td>
+                            </tr>
+                            <tr data-iterate="tax">
+                              <th>Insurance</th>
+                              <td>5000tk</td>
+                            </tr>
+                            <tr className="amount-total">
+                              <th>TOTAL</th>
+                              <td>43,000tk</td>
+                            </tr>
 
-                          {/* <!-- You can use attribute data-hide-on-quote="true" to hide specific information on quotes.
+                            {/* <!-- You can use attribute data-hide-on-quote="true" to hide specific information on quotes.
                For example Invoicebus doesn't need amount paid and amount due on quotes  --> */}
-                          <tr data-hide-on-quote="true">
-                            <th>paid</th>
-                            <td>430tk</td>
-                          </tr>
+                            <tr data-hide-on-quote="true">
+                              <th>paid</th>
+                              <td>430tk</td>
+                            </tr>
 
-                          <tr data-hide-on-quote="true">
-                            <th>AMOUNT DUE</th>
-                            <td>0tk</td>
-                          </tr>
+                            <tr data-hide-on-quote="true">
+                              <th>AMOUNT DUE</th>
+                              <td>0tk</td>
+                            </tr>
+                          </tbody>
                         </table>
 
-                        <div class="clearfix"></div>
+                        <div className="clearfix"></div>
                       </section>
 
-                      <div class="clearfix"></div>
+                      <div className="clearfix"></div>
 
                       <section id="invoice-info">
                         <div>
@@ -211,7 +239,7 @@ export class InvoiceByOrder extends Component {
                       </section>
 
                       <section id="terms">
-                        <div class="notes">
+                        <div className="notes">
                           Fahim, thank you very much.We really appreciate your
                           buisness. <br />
                           Please send the payments before due date.
@@ -219,7 +247,7 @@ export class InvoiceByOrder extends Component {
 
                         <br />
 
-                        <div class="payment-info">
+                        <div className="payment-info">
                           <div>Payments details</div>
                           <div>DBBL 123006705</div>
                           <div>CITY BANK 40580387070</div>
@@ -228,16 +256,16 @@ export class InvoiceByOrder extends Component {
                         </div>
                       </section>
 
-                      <div class="clearfix"></div>
+                      <div className="clearfix"></div>
 
                       <div
-                        class="thank-you"
+                        className="thank-you"
                         style={{ backgroundColor: "#8a0368" }}
                       >
                         THANKS!
                       </div>
 
-                      <div class="clearfix"></div>
+                      <div className="clearfix"></div>
                     </div>
                   </div>
                 </div>
@@ -250,9 +278,11 @@ export class InvoiceByOrder extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    allLots: state.lots.lots,
+    orderObj: state.ordersAlg.orderObj,
   };
 };
-export default connect(mapStateToProps, { getAllLotsRedux })(InvoiceByOrder);
+export default connect(mapStateToProps, { getSingleOrderRedux })(
+  InvoiceByOrder
+);

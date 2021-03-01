@@ -2,8 +2,10 @@ import {
   uploadLot,
   updateLot,
   getAllLots,
-  uploadOrderD2D,
-  getAllOrdersD2D,
+  uploadOrder,
+  getAllOrdersOfSingleLot,
+  deleteSingleOrder,
+  getSingleOrder,
   getAllExpressOrders,
   updateExpressOrder,
   getAllDocumentExpressRates,
@@ -18,8 +20,16 @@ import {
   updateD2DRates,
   uploadD2DRates,
   deleteD2DRates,
+  getAllUsers,
 } from "../firebase/firebase.utils";
 
+export const getAllUsersRedux = () => async (dispatch) => {
+  const allUsers = await getAllUsers();
+  dispatch({
+    type: "GET_ALL_USERS",
+    payload: allUsers,
+  });
+};
 export const setAllOrders = (ordersArray) => ({
   type: "SET_ALL_ORDERS",
   payload: ordersArray,
@@ -76,14 +86,23 @@ export const updateProfileImageRedux = (imgUrl) => {
 
 // Orders
 
-export const getAllOrdersD2DRedux = () => async (dispatch) => {
-  const ordersArrayD2D = await getAllOrdersD2D();
-  dispatch({ type: "GET_ALL_ORDERS_D2D", payload: ordersArrayD2D });
+export const getAllOrdersOfSingleLotRedux = (lotObj) => async (dispatch) => {
+  const ordersArray = await getAllOrdersOfSingleLot(lotObj);
+  dispatch({ type: "GET_ALL_ORDERS", payload: ordersArray });
+};
+export const deleteSingleOrderRedux = (orderObj) => async (dispatch) => {
+  await deleteSingleOrder(orderObj);
+  dispatch({ type: "DELETE_SINGLE_ORDER", payload: orderObj });
+};
+export const getSingleOrderRedux = (orderObj) => async (dispatch) => {
+  const resultOrderObj = await getSingleOrder(orderObj);
+  dispatch({ type: "GET_SINGLE_ORDER", payload: resultOrderObj });
 };
 
-export const uploadOrderD2DRedux = (orderObj) => async (dispatch) => {
-  const uploadedOrderObj = await uploadOrderD2D(orderObj);
-  dispatch({ type: "UPLOAD_ORDERS_D2D", payload: uploadedOrderObj });
+export const uploadOrderRedux = (orderObj) => async (dispatch) => {
+  const uploadedOrderObj = await uploadOrder(orderObj);
+  dispatch({ type: "UPLOAD_ORDER", payload: uploadedOrderObj });
+  return uploadedOrderObj;
 };
 
 // Express

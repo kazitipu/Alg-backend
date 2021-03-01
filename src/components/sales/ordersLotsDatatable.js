@@ -184,7 +184,7 @@ export class Datatable extends Component {
               className="btn btn-secondary"
               onClick={() =>
                 this.props.history.push(
-                  `${process.env.PUBLIC_URL}/orders/d2d/${row.original.Lot}`
+                  `${process.env.PUBLIC_URL}/orders/d2d-freight/${this.props.match.params.shipmentMethod}-${row.original.Lot}`
                 )
               }
             >

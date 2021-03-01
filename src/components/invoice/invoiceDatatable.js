@@ -184,7 +184,7 @@ export class Datatable extends Component {
               className="btn btn-secondary"
               onClick={() =>
                 this.props.history.push(
-                  `${process.env.PUBLIC_URL}/invoice/${row.original.Lot}`
+                  `${process.env.PUBLIC_URL}/invoice/${row.original.Method}-${row.original.Lot}`
                 )
               }
             >

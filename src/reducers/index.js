@@ -8,8 +8,10 @@ import setOrdersAlgReducer from "./ordersAlg";
 import setExpressRatesDocumentsReducer from "./expressRatesDocuments";
 import setExpressRatesParcelReducer from "./expressRatesParcel";
 import setD2DRatesReducer from "./d2dRates";
+import setUsersReducer from "./users";
 const rootReducer = combineReducers({
   lots: setLotsReducer,
+  users: setUsersReducer,
   orders: setOrdersReducer,
   payments: setPaymentsReducer,
   admins: setAdminsReducer,

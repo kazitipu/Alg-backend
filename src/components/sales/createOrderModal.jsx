@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import "./createOrderModal.css";
-import { uploadOrderD2DRedux } from "../../actions/index";
+import { uploadOrderRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+
 class CreateOrderModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       customer: "",
+      customerUid: "",
       shippingMark: "",
       cartonNo: "",
       productName: "",
@@ -18,6 +20,7 @@ class CreateOrderModal extends Component {
       cbm_length: "",
       productType: "",
       trackingNo: "",
+      showSuggestion: true,
     };
   }
 
@@ -32,15 +35,20 @@ class CreateOrderModal extends Component {
     console.log(this.props.singleLot.lotNo);
 
     const { cbm_height, cbm_width, cbm_length } = this.state;
-    await this.props.uploadOrderD2DRedux({
+    const uploadedOrder = await this.props.uploadOrderRedux({
+      shipmentMethod: this.props.singleLot.shipmentMethod.includes("D2D")
+        ? "D2D"
+        : "Freight",
       lotNo: this.props.singleLot.lotNo,
       ...this.state,
       totalCbm: (cbm_height * cbm_width * cbm_length) / 1000000,
     });
-    toast.success("Successfully added order");
-
+    if (uploadedOrder) {
+      toast.success("Successfully added order");
+    }
     this.setState({
       cartonNo: "",
+      showSuggestion: true,
     });
     // this.props.startToggleModalCreateOrder(null);
   };
@@ -78,6 +86,7 @@ class CreateOrderModal extends Component {
                         this.setState({
                           lotNo: "",
                           customer: "",
+                          customerUid: "",
                           shippingMark: "",
                           cartonNo: "",
                           productName: "",
@@ -89,6 +98,7 @@ class CreateOrderModal extends Component {
                           total_cbm: "",
                           productType: "",
                           trackingNo: "",
+                          showSuggestion: true,
                         });
                         this.props.startToggleModalCreateOrder(null);
                       }}
@@ -126,7 +136,6 @@ class CreateOrderModal extends Component {
                           </h2>
                           <form
                             onSubmit={this.handleSubmit}
-                            noValidate="novalidate"
                             className="rounded-field mt-4"
                           >
                             <div className="form-row mb-4">
@@ -138,26 +147,58 @@ class CreateOrderModal extends Component {
                                     fontSize: "130%",
                                   }}
                                 >
-                                  Customer:
+                                  Select Customer:
                                 </label>
-                                <select
+                                <input
                                   title="Please choose a package"
-                                  required
+                                  type="text"
                                   name="customer"
-                                  className="custom-select"
+                                  className="form-control"
+                                  placeholder="Enter customer Id"
                                   aria-required="true"
                                   aria-invalid="false"
                                   onChange={this.handleChange}
                                   value={this.state.customer}
                                   required
+                                  autoComplete="off"
+                                />
+
+                                <ul
+                                  className="below-searchbar-recommendation"
+                                  style={{
+                                    display: this.state.showSuggestion
+                                      ? "flex"
+                                      : "none",
+                                  }}
                                 >
-                                  <option value="">Select Customer</option>
-                                  <option value="Nibir">Nibir</option>
-                                  <option value="Fahim">Fahim</option>
-                                  <option value="Shohel">Shohel</option>
-                                  <option value="Sagor">Sagor</option>
-                                  <option value="Mahin">Mahin</option>
-                                </select>
+                                  {this.state.customer
+                                    ? this.props.allUsers
+                                        .filter((user) =>
+                                          user.userId.includes(
+                                            this.state.customer
+                                          )
+                                        )
+                                        .slice(0, 5)
+                                        .map((user) => (
+                                          <li
+                                            key={user.userId}
+                                            onClick={() =>
+                                              this.setState({
+                                                customer: user.userId,
+                                                shippingMark: `${user.userId}-${user.displayName}`,
+                                                customerUid: user.uid,
+                                                showSuggestion: false,
+                                              })
+                                            }
+                                          >
+                                            {user.userId} &nbsp;{" "}
+                                            {user.displayName
+                                              ? user.displayName.slice(0, 13)
+                                              : ""}
+                                          </li>
+                                        ))
+                                    : null}
+                                </ul>
                               </div>
                               <div className="col">
                                 <label
@@ -457,4 +498,9 @@ class CreateOrderModal extends Component {
   }
 }
 
-export default connect(null, { uploadOrderD2DRedux })(CreateOrderModal);
+const mapStateToProps = (state) => {
+  return {
+    allUsers: state.users.users,
+  };
+};
+export default connect(mapStateToProps, { uploadOrderRedux })(CreateOrderModal);

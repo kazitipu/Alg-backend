@@ -20,7 +20,7 @@ import Product_detail from "./components/lot/physical/product-detail";
 
 //Sales
 import OrdersLots from "./components/sales/ordersLots";
-import OrdersD2D from "./components/sales/ordersD2D";
+import OrdersD2DFreight from "./components/sales/ordersD2DFreight";
 import OrdersExpressMonth from "./components/sales/ordersExpressMonth";
 import OrdersExpress from "./components/sales/ordersExpress";
 import PendingOrders from "./components/sales/pendingOrders";
@@ -158,13 +158,13 @@ class Root extends Component {
 
                 <Route
                   exact
-                  path={`${process.env.PUBLIC_URL}/orders/d2d/:lotNo`}
-                  component={OrdersD2D}
+                  path={`${process.env.PUBLIC_URL}/orders/d2d-freight/:shipmentMethodLotNo`}
+                  component={OrdersD2DFreight}
                 />
 
                 <Route
                   exact
-                  path={`${process.env.PUBLIC_URL}/invoice/:lotNo`}
+                  path={`${process.env.PUBLIC_URL}/invoice/:shipmentMethodLotNo`}
                   component={InvoiceOrderList}
                 />
                 <Route

@@ -3,8 +3,9 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deleteOrder } from "../../firebase/firebase.utils";
-
+import { deleteSingleOrderRedux } from "../../actions/index";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 export class Datatable extends Component {
   constructor(props) {
     super(props);
@@ -45,13 +46,12 @@ export class Datatable extends Component {
       myData.forEach((order) => {
         //  this is not affecting my output see line 104
         newData.push({
-          Customer: order.customer,
-          Lot: order.lotNo,
+          Customer: order.shippingMark,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,
           CBM: order.totalCbm,
-          grossWeight: order.grossWeight,
+          grossWeight: `${order.grossWeight}kg`,
         });
       });
       return (
@@ -87,13 +87,12 @@ export class Datatable extends Component {
     if (myData.length > 0) {
       myData.forEach((order) => {
         newData.push({
-          Customer: order.customer,
-          Lot: order.lotNo,
+          Customer: order.shippingMark,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,
           CBM: order.totalCbm,
-          grossWeight: order.grossWeight,
+          grossWeight: `${order.grossWeight}kg`,
         });
       });
     }
@@ -177,7 +176,12 @@ export class Datatable extends Component {
                 data.splice(row.index, 1);
                 this.setState({ myData: data });
                 console.log(row);
-                deleteOrder(row.original.orderId);
+                this.props.deleteSingleOrderRedux({
+                  lotNo: this.props.match.params.shipmentMethodLotNo.split(
+                    "-"
+                  )[1],
+                  cartonNo: row.original.Carton,
+                });
 
                 toast.success("Successfully Deleted !");
               }}
@@ -217,4 +221,4 @@ export class Datatable extends Component {
   }
 }
 
-export default Datatable;
+export default withRouter(connect(null, { deleteSingleOrderRedux })(Datatable));

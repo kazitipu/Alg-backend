@@ -3,25 +3,40 @@ import "./createOrderModal.css";
 import { uploadLotRedux, updateLotRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import "./selectLotModal.css";
+
 class SelectLotModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       lotNo: "",
+      showSuggestion: true,
     };
   }
 
-  componentWillReceiveProps = (nextProps) => {};
+  componentDidMount = () => {
+    if (this.props.fixedLot) {
+      this.setState({ lotNo: this.props.fixedLot });
+    }
+  };
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.fixedLot) {
+      this.setState({ lotNo: nextProps.fixedLot });
+    }
+  };
 
   handleSubmit = async (event) => {
     event.preventDefault();
     this.props.startToggleModalSelectLot(null);
-    this.props.startToggleModalCreateOrder(this.state);
+    const lotObj = this.props.allLots.find(
+      (lot) => lot.lotNo === this.state.lotNo
+    );
+    this.props.startToggleModalCreateOrder(lotObj);
   };
 
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, showSuggestion: true });
   };
 
   render() {
@@ -88,24 +103,50 @@ class SelectLotModal extends Component {
                           >
                             <div className="form-row mb-4">
                               <div className="col">
-                                <select
+                                <input
                                   title="Please choose a package"
                                   required
                                   name="lotNo"
-                                  className="custom-select"
+                                  className="form-control"
                                   aria-required="true"
                                   aria-invalid="false"
                                   onChange={this.handleChange}
                                   value={this.state.lotNo}
+                                  placeholder="Enter lot No"
                                   required
+                                  autoComplete="off"
+                                  readOnly={this.props.fixedLot ? true : false}
+                                />
+                                <ul
+                                  className="below-searchbar-recommendation"
+                                  style={{
+                                    display: this.state.showSuggestion
+                                      ? "flex"
+                                      : "none",
+                                  }}
                                 >
-                                  <option value="">Select Lot No</option>
-                                  <option value="ALG551">ALG551</option>
-                                  <option value="ALG552">ALG552</option>
-                                  <option value="ALG553">ALG553</option>
-                                  <option value="ALG554">ALG554</option>
-                                  <option value="ALG555">ALG555</option>
-                                </select>
+                                  {this.state.lotNo
+                                    ? this.props.allLots
+                                        .filter((lot) =>
+                                          lot.lotNo.includes(this.state.lotNo)
+                                        )
+                                        .slice(0, 5)
+                                        .map((lot) => (
+                                          <li
+                                            style={{ minWidth: "400px" }}
+                                            key={lot.lotNo}
+                                            onClick={() =>
+                                              this.setState({
+                                                lotNo: lot.lotNo,
+                                                showSuggestion: false,
+                                              })
+                                            }
+                                          >
+                                            {lot.lotNo}
+                                          </li>
+                                        ))
+                                    : null}
+                                </ul>
                               </div>
                             </div>
 
@@ -144,7 +185,11 @@ class SelectLotModal extends Component {
     );
   }
 }
-
-export default connect(null, { uploadLotRedux, updateLotRedux })(
+const mapStateToProps = (state) => {
+  return {
+    allLots: state.lots.lots,
+  };
+};
+export default connect(mapStateToProps, { uploadLotRedux, updateLotRedux })(
   SelectLotModal
 );

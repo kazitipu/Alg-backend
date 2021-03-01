@@ -45,13 +45,12 @@ export class Datatable extends Component {
       myData.forEach((order) => {
         //  this is not affecting my output see line 104
         newData.push({
-          Customer: order.customer,
-          Lot: order.lotNo,
+          Customer: order.shippingMark,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,
           CBM: order.totalCbm,
-          grossWeight: order.grossWeight,
+          grossWeight: `${order.grossWeight}kg`,
         });
       });
       return (
@@ -87,13 +86,12 @@ export class Datatable extends Component {
     if (myData.length > 0) {
       myData.forEach((order) => {
         newData.push({
-          Customer: order.customer,
-          Lot: order.lotNo,
+          Customer: order.shippingMark,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,
           CBM: order.totalCbm,
-          grossWeight: order.grossWeight,
+          grossWeight: `${order.grossWeight}kg`,
         });
       });
     }
@@ -173,11 +171,16 @@ export class Datatable extends Component {
           <div>
             <button
               className="btn btn-secondary"
-              onClick={() =>
+              onClick={() => {
+                const [
+                  shipmentMethod,
+                  lotNo,
+                ] = this.props.match.params.shipmentMethodLotNo.split("-");
+
                 this.props.history.push(
-                  `${process.env.PUBLIC_URL}/invoice-by-orderId/${row.original.Lot}-${row.original.Carton}`
-                )
-              }
+                  `${process.env.PUBLIC_URL}/invoice-by-orderId/${shipmentMethod}-${lotNo}-${row.original.Carton}`
+                );
+              }}
             >
               invoice
             </button>

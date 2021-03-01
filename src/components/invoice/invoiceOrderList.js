@@ -1,14 +1,14 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../common/breadcrumb";
 import Datatable from "./invoiceOrderListDatatable";
-import { getAllOrdersD2DRedux } from "../../actions/index";
+import { getAllOrdersOfSingleLotRedux } from "../../actions/index";
 import { connect } from "react-redux";
 
 export class OrdersD2D extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      allOrdersD2D: [],
+      allOrders: [],
       toggleModalSelectLot: true,
       toggleModalCreateOrder: true,
       singleLot: null,
@@ -16,16 +16,28 @@ export class OrdersD2D extends Component {
   }
 
   componentDidMount = async () => {
-    await this.props.getAllOrdersD2DRedux();
-    this.setState({ allOrdersD2D: this.props.ordersD2D });
+    const [
+      shipmentMethod,
+      lotNo,
+    ] = this.props.match.params.shipmentMethodLotNo.split("-");
+    let shippingMethod;
+    if (shipmentMethod.includes("D2D")) {
+      shippingMethod = "D2D";
+    } else {
+      shippingMethod = "Freight";
+    }
+    await this.props.getAllOrdersOfSingleLotRedux({
+      shipmentMethod: shippingMethod,
+      lotNo,
+    });
+    this.setState({ allOrders: this.props.orders });
   };
-
   componentWillReceiveProps = (nextProps) => {
-    this.setState({ allOrdersD2D: nextProps.ordersD2D });
+    this.setState({ allOrders: nextProps.orders });
   };
 
   render() {
-    const { allOrdersD2D } = this.state;
+    const { allOrders } = this.state;
     return (
       <Fragment>
         <Breadcrumb title="Orders" parent="Sales" />
@@ -51,7 +63,7 @@ export class OrdersD2D extends Component {
                 <div className="card-body order-datatable">
                   <Datatable
                     multiSelectOption={false}
-                    myData={allOrdersD2D}
+                    myData={allOrders}
                     pageSize={10}
                     pagination={true}
                     class="-striped -highlight"
@@ -68,8 +80,10 @@ export class OrdersD2D extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ordersD2D: state.ordersAlg.ordersD2D,
+    orders: state.ordersAlg.orders,
   };
 };
 
-export default connect(mapStateToProps, { getAllOrdersD2DRedux })(OrdersD2D);
+export default connect(mapStateToProps, { getAllOrdersOfSingleLotRedux })(
+  OrdersD2D
+);

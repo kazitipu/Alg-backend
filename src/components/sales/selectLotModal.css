@@ -9,3 +9,16 @@
   background-size: cover;
   box-shadow: rgb(233, 109, 109) 1px 5px 24px 0px;
 }
+
+.below-searchbar-recommendation {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 5;
+}
+
+.below-searchbar-recommendation li {
+  background-color: white;
+  padding: 8px;
+  cursor: pointer;
+}

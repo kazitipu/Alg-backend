@@ -23,7 +23,7 @@ export class OrdersLots extends Component {
   componentDidMount = async () => {
     console.log(this.props);
     await this.props.getAllLotsRedux();
-    if (this.props.match.params.shipmentMethod === "door-to-door") {
+    if (this.props.match.params.shipmentMethod === "D2D") {
       this.setState({ allLotsD2D: this.props.allLotsD2D });
     } else {
       this.setState({ allLotsFreight: this.props.allLotsFreight });
@@ -31,7 +31,7 @@ export class OrdersLots extends Component {
   };
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.match.params.shipmentMethod == "door-to-door") {
+    if (nextProps.match.params.shipmentMethod == "D2D") {
       this.setState({ allLotsD2D: nextProps.allLotsD2D });
     } else {
       this.setState({ allLotsFreight: nextProps.allLotsFreight });
@@ -53,8 +53,11 @@ export class OrdersLots extends Component {
     }
   };
 
-  startToggleModalSelectLot = async (button) => {
-    this.setState({ toggleModalSelectLot: !this.state.toggleModalSelectLot });
+  startToggleModalSelectLot = async (fixedLot) => {
+    this.setState({
+      toggleModalSelectLot: !this.state.toggleModalSelectLot,
+      fixedLot,
+    });
     // if (button !== "close") {
     //   this.setState({
     //     toggleModalCreateOrder: !this.state.toggleModalCreateOrder,
@@ -65,131 +68,138 @@ export class OrdersLots extends Component {
   render() {
     const { allLotsD2D, allLotsFreight } = this.state;
     return (
-      <Fragment>
-        <CreateOrderModal
-          toggleModalCreateOrder={this.state.toggleModalCreateOrder}
-          startToggleModalCreateOrder={this.startToggleModalCreateOrder}
-          singleLot={this.state.singleLot}
-        />
-        <SelectLotModal
-          toggleModalSelectLot={this.state.toggleModalSelectLot}
-          startToggleModalSelectLot={this.startToggleModalSelectLot}
-          startToggleModalCreateOrder={this.startToggleModalCreateOrder}
-          singleLot={this.state.singleLot}
-        />
-        <Breadcrumb title="Orders" parent="Sales" />
+      <>
+        {this.props.match.params.shipmentMethod !== "express" ? (
+          <Fragment>
+            <CreateOrderModal
+              toggleModalCreateOrder={this.state.toggleModalCreateOrder}
+              startToggleModalCreateOrder={this.startToggleModalCreateOrder}
+              singleLot={this.state.singleLot}
+            />
+            <SelectLotModal
+              toggleModalSelectLot={this.state.toggleModalSelectLot}
+              startToggleModalSelectLot={this.startToggleModalSelectLot}
+              startToggleModalCreateOrder={this.startToggleModalCreateOrder}
+              singleLot={this.state.singleLot}
+              fixedLot={this.state.fixedLot}
+            />
+            <Breadcrumb title="Orders" parent="Sales" />
 
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-sm-12">
-              <div className="card">
-                <div
-                  className="card-header"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <h5>
-                    {" "}
-                    <i
-                      className="icofont-shopping-cart"
+            <div className="container-fluid">
+              <div className="row">
+                <div className="col-sm-12">
+                  <div className="card">
+                    <div
+                      className="card-header"
                       style={{
-                        fontSize: "180%",
-                        marginRight: "5px",
-                        marginTop: "5px",
-                        color: "#ff8084",
-                      }}
-                    ></i>
-                    Manage Orders
-                  </h5>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    {" "}
-                    <li
-                      style={{
-                        border: "1px solid gainsboro",
-                        borderRadius: "5rem",
-                        padding: "0px 20px",
-                        background: "whitesmoke",
-                        marginRight: "20px",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
                       }}
                     >
-                      <form
-                        className="form-inline search-form"
-                        onSubmit={this.handleSubmit}
-                      >
-                        <div
-                          // className="form-group"
+                      <h5>
+                        {" "}
+                        <i
+                          className="icofont-shopping-cart"
                           style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-around",
+                            fontSize: "180%",
+                            marginRight: "5px",
+                            marginTop: "5px",
+                            color: "#ff8084",
+                          }}
+                        ></i>
+                        Manage Orders
+                      </h5>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-around",
+                        }}
+                      >
+                        {" "}
+                        <li
+                          style={{
+                            border: "1px solid gainsboro",
+                            borderRadius: "5rem",
+                            padding: "0px 20px",
+                            background: "whitesmoke",
+                            marginRight: "20px",
                           }}
                         >
-                          <input
-                            className={
-                              "form-control-plaintext " +
-                              (this.state.searchbar ? "open" : "")
-                            }
-                            name="searchFor"
-                            value={this.state.searchFor}
-                            type="search"
-                            placeholder="Search Order"
-                            onChange={this.handleChange}
-                          />
-                          <span
-                            // className="d-sm-none mobile-search"
-                            onClick={() => this.handleSearchClick()}
+                          <form
+                            className="form-inline search-form"
+                            onSubmit={this.handleSubmit}
                           >
-                            <Search
+                            <div
+                              // className="form-group"
                               style={{
-                                marginTop: "5px",
-                                borderLeft: "1px solid gainsboro",
-                                paddingLeft: "7px",
-                                color: "gray",
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-around",
                               }}
-                            />
-                          </span>
-                        </div>
-                      </form>
-                    </li>
-                    <li>
-                      <button
-                        className="btn btn-primary"
-                        type="button"
-                        onClick={() => this.startToggleModalSelectLot(null)}
-                      >
-                        Create Order
-                      </button>
-                    </li>
-                  </div>
-                </div>
+                            >
+                              <input
+                                className={
+                                  "form-control-plaintext " +
+                                  (this.state.searchbar ? "open" : "")
+                                }
+                                name="searchFor"
+                                value={this.state.searchFor}
+                                type="search"
+                                placeholder="Search Lot"
+                                onChange={this.handleChange}
+                              />
+                              <span
+                                // className="d-sm-none mobile-search"
+                                onClick={() => this.handleSearchClick()}
+                              >
+                                <Search
+                                  style={{
+                                    marginTop: "5px",
+                                    borderLeft: "1px solid gainsboro",
+                                    paddingLeft: "7px",
+                                    color: "gray",
+                                  }}
+                                />
+                              </span>
+                            </div>
+                          </form>
+                        </li>
+                        <li>
+                          <button
+                            className="btn btn-primary"
+                            type="button"
+                            onClick={() => this.startToggleModalSelectLot(null)}
+                          >
+                            Create Order
+                          </button>
+                        </li>
+                      </div>
+                    </div>
 
-                <div className="card-body order-datatable">
-                  <Datatable
-                    multiSelectOption={false}
-                    myData={
-                      this.props.match.params.shipmentMethod == "door-to-door"
-                        ? allLotsD2D
-                        : allLotsFreight
-                    }
-                    pageSize={10}
-                    pagination={true}
-                    class="-striped -highlight"
-                  />
+                    <div className="card-body order-datatable">
+                      <Datatable
+                        multiSelectOption={false}
+                        myData={
+                          this.props.match.params.shipmentMethod == "D2D"
+                            ? allLotsD2D
+                            : allLotsFreight
+                        }
+                        pageSize={10}
+                        pagination={true}
+                        class="-striped -highlight"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </Fragment>
+          </Fragment>
+        ) : (
+          ""
+        )}
+      </>
     );
   }
 }

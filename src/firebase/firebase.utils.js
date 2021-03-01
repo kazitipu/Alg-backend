@@ -154,28 +154,60 @@ export const uploadD2DRates = async (freightType, country, typeObj) => {
   }
 };
 
-export const uploadOrderD2D = async (orderObj) => {
-  const orderRef = firestore.doc(
-    `ordersD2D/${orderObj.lotNo + "-" + orderObj.cartonNo}`
+export const uploadOrder = async (orderObj) => {
+  const lotOrdersRef = firestore.doc(
+    `orders${orderObj.shipmentMethod}/${orderObj.lotNo}`
   );
-  const snapShot = await orderRef.get();
+  const snapShot = await lotOrdersRef.get();
   if (!snapShot.exists) {
     try {
-      await orderRef.set({
-        ...orderObj,
+      await lotOrdersRef.set({
+        lotNo: orderObj.lotNo,
+        orders: [orderObj],
       });
-
-      const uploadedSnapShot = await orderRef.get();
+      const uploadedSnapShot = await lotOrdersRef.get();
       console.log(uploadedSnapShot.data());
+      updateToMyParcelOfUser(orderObj);
       return uploadedSnapShot.data();
     } catch (error) {
       alert(error);
     }
   } else {
-    alert(
-      "there is already a order with this given Tracking no, please change the Tracking no and try again"
-    );
+    try {
+      if (
+        snapShot
+          .data()
+          .orders.find((order) => order.cartonNo == orderObj.cartonNo)
+      ) {
+        alert(
+          "this carton no already exist in this lot. please change the carton no and try again."
+        );
+      } else {
+        await lotOrdersRef.update({
+          lotNo: orderObj.lotNo,
+          orders: [...snapShot.data().orders, orderObj],
+        });
+        const updatedSnapShot = await lotOrdersRef.get();
+        updateToMyParcelOfUser(orderObj);
+        return updatedSnapShot.data();
+      }
+    } catch (error) {
+      alert(error);
+    }
   }
+};
+
+export const updateToMyParcelOfUser = async (orderObj) => {
+  console.log("update to my parcel of user is called");
+  console.log(orderObj.customerUid);
+  const userRef = firestore.doc(`users/${orderObj.customerUid}`);
+  try {
+    const snapShot = await userRef.get();
+    console.log(snapShot.data());
+    userRef.update({
+      parcelArray: [...snapShot.data().parcelArray, orderObj],
+    });
+  } catch (error) {}
 };
 
 export const uploadProductTax = async (productObj) => {
@@ -316,15 +348,17 @@ export const updateExpressOrder = async (orderId) => {
   }
 };
 
-export const getAllOrdersD2D = async () => {
-  const ordersD2DCollectionRef = firestore.collection("ordersD2D");
+export const getAllOrdersOfSingleLot = async (lotObj) => {
+  const ordersDocumentRef = firestore.doc(
+    `orders${lotObj.shipmentMethod}/${lotObj.lotNo}`
+  );
   try {
-    const ordersD2D = await ordersD2DCollectionRef.get();
-    const ordersD2DArray = [];
-    ordersD2D.forEach((doc) => {
-      ordersD2DArray.push(doc.data());
-    });
-    return ordersD2DArray;
+    const snapShot = await ordersDocumentRef.get();
+    if (snapShot.exists) {
+      return snapShot.data().orders;
+    } else {
+      return [];
+    }
   } catch (error) {
     alert(error);
   }
@@ -674,13 +708,36 @@ export const deleteOrder = async (id) => {
   }
 };
 
-export const getSingleOrder = async (id) => {
-  const orderRef = firestore.doc(`orders/${id}`);
+export const deleteSingleOrder = async (orderObj) => {
+  const singleLotOrdersRef = firestore.doc(`ordersD2D/${orderObj.lotNo}`);
   try {
-    const order = await orderRef.get();
-    return order.data();
+    const snapShot = await singleLotOrdersRef.get();
+    const filteredArray = snapShot
+      .data()
+      .orders.filter((order) => order.cartonNo !== orderObj.cartonNo);
+    singleLotOrdersRef.update({
+      lotNo: snapShot.data().lotNo,
+      orders: [...filteredArray],
+    });
   } catch (error) {
     alert(error);
+  }
+};
+
+export const getSingleOrder = async (orderObj) => {
+  const [lotNo, cartonNo] = orderObj.orderId.split("-");
+  console.log(orderObj.shipmentMethod);
+  console.log(lotNo);
+  console.log("get single order is getting is called");
+  const lotOrdersRef = firestore.doc(
+    `orders${orderObj.shipmentMethod}/${lotNo}`
+  );
+  try {
+    const snapShot = await lotOrdersRef.get();
+    return snapShot.data().orders.find((order) => order.cartonNo == cartonNo);
+  } catch (error) {
+    alert(error);
+    return null;
   }
 };
 
