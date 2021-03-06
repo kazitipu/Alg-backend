@@ -5,14 +5,31 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { deleteOrder } from "../../firebase/firebase.utils";
 import { withRouter } from "react-router-dom";
+import InvoiceModal from "./invoiceModal";
 export class Datatable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       checkedValues: [],
       myData: this.props.myData,
+      toggleModalInvoice: true,
+      parcelObj: null,
     };
   }
+
+  startToggleModalInvoice = async (parcelObj) => {
+    if (parcelObj) {
+      this.setState({
+        toggleModalInvoice: !this.state.toggleModalInvoice,
+        parcelObj,
+      });
+    } else {
+      this.setState({
+        toggleModalInvoice: !this.state.toggleModalInvoice,
+        parcelObj: null,
+      });
+    }
+  };
 
   selectRow = (e, i) => {
     if (!e.target.checked) {
@@ -76,6 +93,56 @@ export class Datatable extends Component {
   Capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+
+  renderButton = (row, array) => {
+    if (array.length > 0) {
+      const lotNo = this.props.match.params.shipmentMethodLotNo.split("-")[1];
+      const parcelId = `${lotNo}-${row.original.Carton}`;
+      const parcelObj = array.find((parcel) => parcel.parcelId == parcelId);
+
+      if (parcelObj.invoiceGenerated) {
+        return (
+          <div>
+            <div
+              style={{
+                cursor: "pointer",
+                padding: "7px 5px",
+                color: "white",
+                backgroundColor: "darkgreen",
+                border: "1px solid white",
+                borderRadius: "1rem",
+              }}
+              onClick={() => {
+                this.startToggleModalInvoice(parcelObj);
+              }}
+            >
+              <i className="icofont-tick-mark">&nbsp;ready to pay</i>
+            </div>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <div
+              style={{
+                cursor: "pointer",
+                padding: "7px 5px",
+                color: "white",
+                backgroundColor: "darkorange",
+                border: "1px solid white",
+                borderRadius: "1rem",
+              }}
+              onClick={() => {
+                this.startToggleModalInvoice(parcelObj);
+              }}
+            >
+              <i className="icofont-spinner">&nbsp;generate</i>
+            </div>
+          </div>
+        );
+      }
+    }
+  };
 
   render() {
     const { pageSize, myClass, multiSelectOption, pagination } = this.props;
@@ -164,28 +231,10 @@ export class Datatable extends Component {
       });
     } else {
       columns.push({
-        Header: <b>Inspect</b>,
+        Header: <b>Invoice</b>,
         id: "delete",
         accessor: (str) => "delete",
-        Cell: (row) => (
-          <div>
-            <button
-              className="btn btn-secondary"
-              onClick={() => {
-                const [
-                  shipmentMethod,
-                  lotNo,
-                ] = this.props.match.params.shipmentMethodLotNo.split("-");
-
-                this.props.history.push(
-                  `${process.env.PUBLIC_URL}/invoice-by-orderId/${shipmentMethod}-${lotNo}-${row.original.Carton}`
-                );
-              }}
-            >
-              invoice
-            </button>
-          </div>
-        ),
+        Cell: (row) => this.renderButton(row, myData),
         style: {
           textAlign: "center",
         },
@@ -203,6 +252,10 @@ export class Datatable extends Component {
           showPagination={pagination}
         />
         <ToastContainer />
+        <InvoiceModal
+          startToggleModalInvoice={this.startToggleModalInvoice}
+          parcelObj={this.state.parcelObj}
+        />
       </Fragment>
     );
   }

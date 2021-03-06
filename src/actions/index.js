@@ -4,6 +4,8 @@ import {
   getAllLots,
   uploadOrder,
   updateOrder,
+  updateOrderBeforeInvoice,
+  updateOrderAfterInvoice,
   getAllOrdersOfSingleLot,
   deleteSingleOrder,
   getSingleOrder,
@@ -107,6 +109,16 @@ export const uploadOrderRedux = (orderObj) => async (dispatch) => {
 };
 export const updateOrderRedux = (orderObj) => async (dispatch) => {
   const updatedOrderObj = await updateOrder(orderObj);
+  dispatch({ type: "UPDATE_ORDER", payload: updatedOrderObj });
+  return updatedOrderObj;
+};
+export const updateOrderBeforeInvoiceRedux = (orderObj) => async (dispatch) => {
+  const updatedOrderObj = await updateOrderBeforeInvoice(orderObj);
+  dispatch({ type: "UPDATE_ORDER", payload: updatedOrderObj });
+  return updatedOrderObj;
+};
+export const updateOrderAfterInvoiceRedux = (orderObj) => async (dispatch) => {
+  const updatedOrderObj = await updateOrderAfterInvoice(orderObj);
   dispatch({ type: "UPDATE_ORDER", payload: updatedOrderObj });
   return updatedOrderObj;
 };

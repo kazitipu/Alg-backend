@@ -2,11 +2,18 @@ import React, { Component, Fragment } from "react";
 import Breadcrumb from "../../components/common/breadcrumb";
 import data from "../../assets/data/invoice";
 import Datatable from "../../components/invoice/invoiceDatatable";
-import { getSingleOrderRedux } from "../../actions/index";
+import {
+  getSingleOrderRedux,
+  updateOrderAfterInvoiceRedux,
+} from "../../actions/index";
 import { connect } from "react-redux";
 import "./css/invoice-by-order.css";
 import Alg from "./alg.png";
+
 export class InvoiceByOrder extends Component {
+  state = {
+    userObj: null,
+  };
   componentDidMount = async () => {
     const [
       shipmentMethod,
@@ -28,12 +35,52 @@ export class InvoiceByOrder extends Component {
     console.log(this.props.orderObj);
   };
 
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.orderObj) {
+      this.setState({
+        userObj: this.props.users.find(
+          (user) => user.uid == nextProps.orderObj.customerUid
+        ),
+      });
+    }
+  };
+
+  handleClick = async () => {
+    const { orderObj } = this.props;
+    const { userObj } = this.state;
+    if (userObj && orderObj) {
+      const updatedOrder = await this.props.updateOrderAfterInvoiceRedux({
+        ...orderObj,
+        invoiceGenerated: true,
+      });
+      if (updatedOrder) {
+        this.props.history.push(
+          `${process.env.PUBLIC_URL}/invoice/${orderObj.shipmentMethod}-${orderObj.lotNo}`
+        );
+      }
+    }
+  };
+
   render() {
     const [
       shipmentMethod,
       lotNo,
       cartonNo,
     ] = this.props.match.params.orderId.split("-");
+    const { orderObj } = this.props;
+    const { userObj } = this.state;
+    let total;
+    if (orderObj) {
+      total = Math.round(
+        parseInt(orderObj.grossWeight * orderObj.ratePerKg) +
+          parseInt(
+            orderObj.productsValue ? (orderObj.productsValue * 3) / 100 : 0
+          ) +
+          parseInt(orderObj.packagingCost) +
+          parseInt(orderObj.localDeliveryCost)
+      );
+    }
+    console.log(userObj);
     return (
       <Fragment>
         <Breadcrumb title="Invoice" parent="Invoice" />
@@ -53,7 +100,7 @@ export class InvoiceByOrder extends Component {
                   <div id="basicScenario" className="product-list">
                     <div
                       id="container"
-                      style={{ maxWidth: "1200px", borderRadius: ".2rem" }}
+                      style={{ maxWidth: "1000px", borderRadius: ".2rem" }}
                     >
                       <section id="memo" style={{ height: "165px" }}>
                         <div className="logo">
@@ -91,23 +138,27 @@ export class InvoiceByOrder extends Component {
                       <section id="client-info">
                         <span>TO:</span>
                         <div>
-                          <span className="bold">GlobalBuyBd.com</span>
+                          <span className="bold">
+                            {userObj ? userObj.displayName : null}
+                          </span>
+                        </div>
+                        {userObj && userObj.address ? (
+                          <div>
+                            <span>{userObj.address}</span>
+                          </div>
+                        ) : null}
+                        {userObj && userObj.city ? (
+                          <div>
+                            <span>{userObj.city}</span>
+                          </div>
+                        ) : null}
+
+                        <div>
+                          <span>{userObj && userObj.mobileNo}</span>
                         </div>
 
                         <div>
-                          <span>3C,4th floor,449/2</span>
-                        </div>
-
-                        <div>
-                          <span>Jatrabari,Dhaka-1200</span>
-                        </div>
-
-                        <div>
-                          <span>+8801521331295</span>
-                        </div>
-
-                        <div>
-                          <span>khaledhasanfahim@gmail.com</span>
+                          <span>{userObj && userObj.email}</span>
                         </div>
                       </section>
 
@@ -129,54 +180,22 @@ export class InvoiceByOrder extends Component {
 
                             <tr data-iterate="item">
                               <td>1</td>
-                              <td style={{ maxWidth: "50px" }}>Ladies Bag</td>
-                              <td>3</td>
-                              <td>120tk</td>
-                              <td>55</td>
-                              <td>a850ghohroh</td>
+                              <td style={{ maxWidth: "50px" }}>
+                                {orderObj && orderObj.productName}
+                              </td>
+                              <td>{orderObj && orderObj.quantity}</td>
+                              <td>{orderObj && orderObj.ratePerKg}Tk</td>
+                              <td>{orderObj && orderObj.cartonNo}</td>
+                              <td>{orderObj && orderObj.trackingNo}</td>
 
-                              <td>3kg</td>
-                              <td>360tk</td>
-                            </tr>
-                            <tr data-iterate="item">
-                              <td>2</td>
-                              <td style={{ maxWidth: "50px" }}>Watch</td>
-                              <td>10</td>
-                              <td>150tk</td>
-                              <td>55</td>
-                              <td>al04304723047</td>
-                              <td>2kg</td>
-                              <td>1400tk</td>
-                            </tr>
-                            <tr data-iterate="item">
-                              <td>3</td>
-                              <td style={{ maxWidth: "50px" }}>Bags</td>
-                              <td>8</td>
-                              <td>130tk</td>
-                              <td>55</td>
-                              <td>153483040</td>
-                              <td>4kg</td>
-                              <td>1040tk</td>
-                            </tr>
-                            <tr data-iterate="item">
-                              <td>4</td>
-                              <td style={{ maxWidth: "50px" }}>Shoes</td>
-                              <td>3</td>
-                              <td>120tk</td>
-                              <td>55</td>
-                              <td>03740730fajl</td>
-                              <td>1kg</td>
-                              <td>760tk</td>
-                            </tr>
-                            <tr data-iterate="item">
-                              <td>5</td>
-                              <td style={{ maxWidth: "50px" }}>Mixed</td>
-                              <td>45</td>
-                              <td>120tk</td>
-                              <td>55</td>
-                              <td>93694639463</td>
-                              <td>5kg</td>
-                              <td>3600tk</td>
+                              <td>{orderObj && orderObj.grossWeight}</td>
+                              <td>
+                                {orderObj &&
+                                  Math.round(
+                                    orderObj.grossWeight * orderObj.ratePerKg
+                                  )}
+                                Tk
+                              </td>
                             </tr>
                           </tbody>
                         </table>
@@ -187,32 +206,53 @@ export class InvoiceByOrder extends Component {
                           <tbody>
                             <tr>
                               <th>Subtotal</th>
-                              <td>36,000tk</td>
+                              <td>
+                                {orderObj &&
+                                  Math.round(
+                                    orderObj.grossWeight * orderObj.ratePerKg
+                                  )}
+                                Tk
+                              </td>
                             </tr>
 
                             <tr data-iterate="tax">
-                              <th>Packing Charge</th>
-                              <td>2000tk</td>
+                              <th>Packaging Charge</th>
+                              <td>{orderObj && orderObj.packagingCost}Tk</td>
                             </tr>
                             <tr data-iterate="tax">
                               <th>Insurance</th>
-                              <td>5000tk</td>
+                              <td>
+                                {orderObj && orderObj.productsValue
+                                  ? Math.round(
+                                      (orderObj.productsValue * 3) / 100
+                                    )
+                                  : 0}
+                                Tk
+                              </td>
+                            </tr>
+                            <tr data-iterate="tax">
+                              <th>Local Delivery</th>
+                              <td>
+                                {orderObj &&
+                                  Math.round(orderObj.localDeliveryCost)}
+                                Tk
+                              </td>
                             </tr>
                             <tr className="amount-total">
                               <th>TOTAL</th>
-                              <td>43,000tk</td>
+                              <td>{total}tk</td>
                             </tr>
 
                             {/* <!-- You can use attribute data-hide-on-quote="true" to hide specific information on quotes.
                For example Invoicebus doesn't need amount paid and amount due on quotes  --> */}
                             <tr data-hide-on-quote="true">
                               <th>paid</th>
-                              <td>430tk</td>
+                              <td>0tk</td>
                             </tr>
 
                             <tr data-hide-on-quote="true">
                               <th>AMOUNT DUE</th>
-                              <td>0tk</td>
+                              <td>{total}tk</td>
                             </tr>
                           </tbody>
                         </table>
@@ -240,19 +280,32 @@ export class InvoiceByOrder extends Component {
 
                       <section id="terms">
                         <div className="notes">
-                          Fahim, thank you very much.We really appreciate your
+                          <span
+                            style={{ fontWeight: "bold", color: "darkorange" }}
+                          >
+                            {userObj && userObj.displayName}
+                          </span>
+                          , thank you very much.We really appreciate your
                           buisness. <br />
-                          Please send the payments before due date.
+                          Pay through ALG wallet to get amazing discount.
                         </div>
 
                         <br />
 
                         <div className="payment-info">
-                          <div>Payments details</div>
-                          <div>DBBL 123006705</div>
-                          <div>CITY BANK 40580387070</div>
-                          <div>ISLAMI BANK 05873047304730</div>
-                          <div>EBL 5037403740730</div>
+                          <div>Packaging</div>
+                          <div>
+                            {orderObj && orderObj.packagingChosed
+                              ? orderObj.packagingChosed
+                              : "None"}
+                          </div>
+                          <br />
+                          <div>Delivery Address</div>
+                          <div>
+                            {orderObj && orderObj.deliveryAddress
+                              ? orderObj.deliveryAddress
+                              : "Alg Office"}
+                          </div>
                         </div>
                       </section>
 
@@ -269,6 +322,21 @@ export class InvoiceByOrder extends Component {
                     </div>
                   </div>
                 </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    backgroundColor: "#e4e3e1",
+                    padding: "0px 20px 20px 0px",
+                  }}
+                >
+                  <button
+                    className="btn btn-secondary"
+                    onClick={this.handleClick}
+                  >
+                    Ready for Pay
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -281,8 +349,10 @@ export class InvoiceByOrder extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     orderObj: state.ordersAlg.orderObj,
+    users: state.users.users,
   };
 };
-export default connect(mapStateToProps, { getSingleOrderRedux })(
-  InvoiceByOrder
-);
+export default connect(mapStateToProps, {
+  getSingleOrderRedux,
+  updateOrderAfterInvoiceRedux,
+})(InvoiceByOrder);

@@ -3,7 +3,7 @@ import Breadcrumb from "../common/breadcrumb";
 import Datatable from "./invoiceOrderListDatatable";
 import { getAllOrdersOfSingleLotRedux } from "../../actions/index";
 import { connect } from "react-redux";
-
+import { Search } from "react-feather";
 export class OrdersD2D extends Component {
   constructor(props) {
     super(props);
@@ -54,10 +54,62 @@ export class OrdersD2D extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-                  <h5>Manage Orders</h5>
-                  <button className="btn btn-primary" type="button">
-                    Create Order
-                  </button>
+                  <h5>Invoice Orders</h5>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    <li
+                      style={{
+                        border: "1px solid gainsboro",
+                        borderRadius: "5rem",
+                        padding: "0px 20px",
+                        background: "whitesmoke",
+                        marginRight: "20px",
+                      }}
+                    >
+                      <form
+                        className="form-inline search-form"
+                        onSubmit={this.handleSubmit}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <input
+                            className={
+                              "form-control-plaintext " +
+                              (this.state.searchbar ? "open" : "")
+                            }
+                            name="searchFor"
+                            value={this.state.searchFor}
+                            type="search"
+                            placeholder="Search Order"
+                            onChange={this.handleChange}
+                          />
+                          <span
+                            // className="d-sm-none mobile-search"
+                            onClick={() => this.handleSearchClick()}
+                          >
+                            <Search
+                              style={{
+                                marginTop: "5px",
+                                borderLeft: "1px solid gainsboro",
+                                paddingLeft: "7px",
+                                color: "gray",
+                              }}
+                            />
+                          </span>
+                        </div>
+                      </form>
+                    </li>
+                  </div>
                 </div>
 
                 <div className="card-body order-datatable">

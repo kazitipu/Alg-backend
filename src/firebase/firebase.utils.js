@@ -221,6 +221,49 @@ export const updateOrder = async (orderObj) => {
     alert(error);
   }
 };
+export const updateOrderBeforeInvoice = async (orderObj) => {
+  const lotOrdersRef = firestore.doc(
+    `orders${orderObj.shipmentMethod}/${orderObj.lotNo}`
+  );
+
+  try {
+    const snapShot = await lotOrdersRef.get();
+    const filteredParcelArray = snapShot
+      .data()
+      .orders.filter((parcel) => parcel.parcelId !== orderObj.parcelId);
+    await lotOrdersRef.update({
+      lotNo: orderObj.lotNo,
+      orders: [...filteredParcelArray, orderObj],
+    });
+    const updatedSnapShot = await lotOrdersRef.get();
+    updateToMyParcelOfUserBeforeInvoice(orderObj);
+    return updatedSnapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
+export const updateOrderAfterInvoice = async (orderObj) => {
+  const lotOrdersRef = firestore.doc(
+    `orders${orderObj.shipmentMethod}/${orderObj.lotNo}`
+  );
+
+  try {
+    const snapShot = await lotOrdersRef.get();
+    console.log(snapShot.data());
+    const filteredParcelArray = snapShot
+      .data()
+      .orders.filter((parcel) => parcel.parcelId !== orderObj.parcelId);
+    await lotOrdersRef.update({
+      lotNo: orderObj.lotNo,
+      orders: [...filteredParcelArray, orderObj],
+    });
+    const updatedSnapShot = await lotOrdersRef.get();
+    updateToMyParcelOfUserAfterInvoice(orderObj);
+    return updatedSnapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const updateToMyParcelOfUser = async (orderObj) => {
   console.log("update to my parcel of user is called");
@@ -232,7 +275,9 @@ export const updateToMyParcelOfUser = async (orderObj) => {
     userRef.update({
       parcelArray: [...snapShot.data().parcelArray, orderObj],
     });
-  } catch (error) {}
+  } catch (error) {
+    alert(error);
+  }
 };
 export const updateToMyParcelOfUserEditApproved = async (orderObj) => {
   const userRef = firestore.doc(`users/${orderObj.customerUid}`);
@@ -245,11 +290,44 @@ export const updateToMyParcelOfUserEditApproved = async (orderObj) => {
     parcelObj.editApproved = true;
     const filteredArray = snapShot
       .data()
-      .find((parcel) => parcel.parcelId !== orderObj.parcelId);
+      .parcelArray.filter((parcel) => parcel.parcelId !== orderObj.parcelId);
     userRef.update({
       parcelArray: [...filteredArray, parcelObj],
     });
-  } catch (error) {}
+  } catch (error) {
+    alert(error);
+  }
+};
+export const updateToMyParcelOfUserBeforeInvoice = async (orderObj) => {
+  const userRef = firestore.doc(`users/${orderObj.customerUid}`);
+  try {
+    const snapShot = await userRef.get();
+    console.log(snapShot.data());
+    const filteredArray = snapShot
+      .data()
+      .parcelArray.filter((parcel) => parcel.parcelId !== orderObj.parcelId);
+    userRef.update({
+      parcelArray: [...filteredArray, orderObj],
+    });
+  } catch (error) {
+    alert(error);
+  }
+};
+export const updateToMyParcelOfUserAfterInvoice = async (orderObj) => {
+  const userRef = firestore.doc(`users/${orderObj.customerUid}`);
+  console.log("updateToMyParcelOfUserAfterInvoice is getting called");
+  try {
+    const snapShot = await userRef.get();
+    console.log(snapShot.data());
+    const filteredArray = snapShot
+      .data()
+      .parcelArray.filter((parcel) => parcel.parcelId !== orderObj.parcelId);
+    userRef.update({
+      parcelArray: [...filteredArray, orderObj],
+    });
+  } catch (error) {
+    alert(error);
+  }
 };
 
 export const uploadProductTax = async (productObj) => {
@@ -778,7 +856,7 @@ export const getSingleOrder = async (orderObj) => {
     const snapShot = await lotOrdersRef.get();
     return snapShot.data().orders.find((order) => order.cartonNo == cartonNo);
   } catch (error) {
-    alert(error);
+    // alert(error);
     return null;
   }
 };
