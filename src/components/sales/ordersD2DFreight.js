@@ -6,6 +6,7 @@ import Datatable from "./ordersD2DFreightDatatable";
 import { getAllOrdersOfSingleLotRedux, get } from "../../actions/index";
 import CreateOrderModal from "./createOrderModal";
 import SelectLotModal from "./selectLotModal";
+import AdditionalInfoModal from "./additionalInfoModal";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
 
@@ -16,7 +17,9 @@ export class OrdersD2DFreight extends Component {
       allOrders: [],
       toggleModalSelectLot: true,
       toggleModalCreateOrder: true,
+      toggleModalAdditionalInfo: true,
       singleLot: null,
+      parcelObj: null,
     };
   }
 
@@ -50,6 +53,19 @@ export class OrdersD2DFreight extends Component {
       });
     }
   };
+  startToggleModalAdditionalInfo = async (parcelObj) => {
+    if (parcelObj) {
+      this.setState({
+        toggleModalAdditionalInfo: !this.state.toggleModalAdditionalInfo,
+        parcelObj,
+      });
+    } else {
+      this.setState({
+        toggleModalAdditionalInfo: !this.state.toggleModalAdditionalInfo,
+        parcelObj: null,
+      });
+    }
+  };
 
   startToggleModalSelectLot = async (fixedLot) => {
     this.setState(
@@ -70,6 +86,11 @@ export class OrdersD2DFreight extends Component {
           toggleModalCreateOrder={this.state.toggleModalCreateOrder}
           startToggleModalCreateOrder={this.startToggleModalCreateOrder}
           singleLot={this.state.singleLot}
+        />
+        <AdditionalInfoModal
+          toggleModalAdditionalInfo={this.state.toggleModalAdditionalInfo}
+          startToggleModalAdditionalInfo={this.startToggleModalAdditionalInfo}
+          parcelObj={this.state.parcelObj}
         />
         <SelectLotModal
           toggleModalSelectLot={this.state.toggleModalSelectLot}
@@ -177,6 +198,9 @@ export class OrdersD2DFreight extends Component {
 
                 <div className="card-body order-datatable">
                   <Datatable
+                    startToggleModalAdditionalInfo={
+                      this.startToggleModalAdditionalInfo
+                    }
                     multiSelectOption={false}
                     myData={allOrders}
                     pageSize={10}

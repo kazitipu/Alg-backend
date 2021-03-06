@@ -3,6 +3,7 @@ import {
   updateLot,
   getAllLots,
   uploadOrder,
+  updateOrder,
   getAllOrdersOfSingleLot,
   deleteSingleOrder,
   getSingleOrder,
@@ -103,6 +104,11 @@ export const uploadOrderRedux = (orderObj) => async (dispatch) => {
   const uploadedOrderObj = await uploadOrder(orderObj);
   dispatch({ type: "UPLOAD_ORDER", payload: uploadedOrderObj });
   return uploadedOrderObj;
+};
+export const updateOrderRedux = (orderObj) => async (dispatch) => {
+  const updatedOrderObj = await updateOrder(orderObj);
+  dispatch({ type: "UPDATE_ORDER", payload: updatedOrderObj });
+  return updatedOrderObj;
 };
 
 // Express

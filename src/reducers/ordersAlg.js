@@ -9,6 +9,11 @@ const setOrdersAlgReducer = (state = INITIAL_STATE, action) => {
         ...state,
         orders: action.payload ? [...action.payload.orders] : [...state.orders],
       };
+    case "UPDATE_ORDER":
+      return {
+        ...state,
+        orders: action.payload ? [...action.payload.orders] : [...state.orders],
+      };
     case "UPDATE_ORDERS_D2D":
       const filteredLot = state.lots.filter(
         (lot) => lot.lotNo !== action.payload.lotNo

@@ -196,6 +196,31 @@ export const uploadOrder = async (orderObj) => {
     }
   }
 };
+export const updateOrder = async (orderObj) => {
+  const lotOrdersRef = firestore.doc(
+    `orders${orderObj.shipmentMethod}/${orderObj.lotNo}`
+  );
+
+  try {
+    const snapShot = await lotOrdersRef.get();
+    const parcelObj = snapShot
+      .data()
+      .orders.find((parcel) => parcel.parcelId == orderObj.parcelId);
+    parcelObj.editApproved = true;
+    const filteredParcelArray = snapShot
+      .data()
+      .orders.filter((parcel) => parcel.parcelId !== orderObj.parcelId);
+    await lotOrdersRef.update({
+      lotNo: orderObj.lotNo,
+      orders: [...filteredParcelArray, parcelObj],
+    });
+    const updatedSnapShot = await lotOrdersRef.get();
+    updateToMyParcelOfUserEditApproved(orderObj);
+    return updatedSnapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const updateToMyParcelOfUser = async (orderObj) => {
   console.log("update to my parcel of user is called");
@@ -206,6 +231,23 @@ export const updateToMyParcelOfUser = async (orderObj) => {
     console.log(snapShot.data());
     userRef.update({
       parcelArray: [...snapShot.data().parcelArray, orderObj],
+    });
+  } catch (error) {}
+};
+export const updateToMyParcelOfUserEditApproved = async (orderObj) => {
+  const userRef = firestore.doc(`users/${orderObj.customerUid}`);
+  try {
+    const snapShot = await userRef.get();
+    console.log(snapShot.data());
+    const parcelObj = snapShot
+      .data()
+      .find((parcel) => parcel.parcelId == orderObj.parcelId);
+    parcelObj.editApproved = true;
+    const filteredArray = snapShot
+      .data()
+      .find((parcel) => parcel.parcelId !== orderObj.parcelId);
+    userRef.update({
+      parcelArray: [...filteredArray, parcelObj],
     });
   } catch (error) {}
 };
@@ -738,20 +780,6 @@ export const getSingleOrder = async (orderObj) => {
   } catch (error) {
     alert(error);
     return null;
-  }
-};
-
-export const updateOrder = async (orderObj) => {
-  const orderRef = firestore.doc(`orders/${orderObj.orderId}`);
-  const order = await orderRef.get();
-  try {
-    await orderRef.update({
-      ...order.data(),
-      status: orderObj.status,
-      paymentStatus: { ...order.data().paymentStatus, paid: orderObj.paid },
-    });
-  } catch (error) {
-    alert(error);
   }
 };
 

@@ -21,6 +21,8 @@ class CreateOrderModal extends Component {
       productType: "",
       trackingNo: "",
       showSuggestion: true,
+      packaging: "",
+      packagingCost: 0,
     };
   }
 
@@ -40,6 +42,7 @@ class CreateOrderModal extends Component {
         ? "D2D"
         : "Freight",
       lotNo: this.props.singleLot.lotNo,
+      parcelId: `${this.props.singleLot.lotNo}-${this.state.cartonNo}`,
       ...this.state,
       totalCbm: (cbm_height * cbm_width * cbm_length) / 1000000,
     });
@@ -99,6 +102,8 @@ class CreateOrderModal extends Component {
                           productType: "",
                           trackingNo: "",
                           showSuggestion: true,
+                          packaging: "",
+                          packagingCost: 0,
                         });
                         this.props.startToggleModalCreateOrder(null);
                       }}
@@ -461,6 +466,60 @@ class CreateOrderModal extends Component {
                                   style={{ fontSize: "1rem" }}
                                   onChange={this.handleChange}
                                   value={this.state.trackingNo}
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div className="form-row mb-3">
+                              <div className="col">
+                                <label
+                                  style={{
+                                    color: "white",
+                                    marginBottom: "0px",
+                                    fontSize: "130%",
+                                  }}
+                                >
+                                  Packaging Type:
+                                </label>
+                                <select
+                                  title="Please choose a package"
+                                  required
+                                  name="packaging"
+                                  className="custom-select"
+                                  aria-required="true"
+                                  aria-invalid="false"
+                                  onChange={this.handleChange}
+                                  value={this.state.packaging}
+                                  required
+                                >
+                                  <option value="">
+                                    Select Packaging Type
+                                  </option>
+                                  <option value="Wooden Box">Wooden Box</option>
+                                  <option value="Shoes">Oven Wrapping</option>
+                                  <option value="Polythene Bag">
+                                    Polythene Bag
+                                  </option>
+                                </select>
+                              </div>
+                              <div>
+                                <label
+                                  style={{
+                                    color: "white",
+                                    marginBottom: "0px",
+                                    fontSize: "130%",
+                                  }}
+                                >
+                                  Packaging Cost:
+                                </label>
+                                <input
+                                  type="text"
+                                  name="packagingCost"
+                                  className="form-control"
+                                  placeholder="Enter Packaging Cost"
+                                  style={{ fontSize: "1rem" }}
+                                  onChange={this.handleChange}
+                                  value={this.state.packagingCost}
                                   required
                                 />
                               </div>

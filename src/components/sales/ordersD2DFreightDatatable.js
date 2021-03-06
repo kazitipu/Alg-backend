@@ -78,6 +78,61 @@ export class Datatable extends Component {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  renderButton = (row, array) => {
+    if (array.length > 0) {
+      const lotNo = this.props.match.params.shipmentMethodLotNo.split("-")[1];
+      const parcelId = `${lotNo}-${row.original.Carton}`;
+      const parcelObj = array.find((parcel) => parcel.parcelId === parcelId);
+      if (parcelObj.editRequested) {
+        if (parcelObj.editApproved) {
+          return (
+            <div
+              style={{
+                padding: "8px 0px",
+                backgroundColor: "green",
+                color: "white",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                this.props.startToggleModalAdditionalInfo(parcelObj);
+              }}
+            >
+              <i className="icofont-tick-mark"></i>&nbsp; Approved
+            </div>
+          );
+        } else {
+          return (
+            <div
+              style={{
+                padding: "8px 0px",
+                backgroundColor: "darkorange",
+                color: "white",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                this.props.startToggleModalAdditionalInfo(parcelObj);
+              }}
+            >
+              <i className="icofont-spinner"></i>&nbsp; Requested
+            </div>
+          );
+        }
+      } else {
+        return (
+          <div
+            style={{
+              padding: "8px 0px",
+              backgroundColor: "red",
+              color: "white",
+            }}
+          >
+            <i className="icofont-close"></i>&nbsp; Not Added
+          </div>
+        );
+      }
+    }
+  };
+
   render() {
     const { pageSize, myClass, multiSelectOption, pagination } = this.props;
     console.log(this.props);
@@ -124,6 +179,17 @@ export class Datatable extends Component {
         },
       });
     }
+
+    columns.push({
+      Header: <b>Additional Info</b>,
+      id: "delete",
+      accessor: (str) => "delete",
+      Cell: (row) => this.renderButton(row, myData),
+      style: {
+        textAlign: "center",
+      },
+      sortable: false,
+    });
 
     if (multiSelectOption == true) {
       columns.push({
