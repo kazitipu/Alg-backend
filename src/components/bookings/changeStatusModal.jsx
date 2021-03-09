@@ -1,50 +1,39 @@
 import React, { Component } from "react";
-import "./createOrderModal.css";
-import { uploadLotRedux, updateLotRedux } from "../../actions/index";
+import "./changeStatusModal.css";
+import { updateBookingRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-import "./selectLotModal.css";
-
-class SelectLotModal extends Component {
+class ChangeStatusModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lotNo: "",
-      showSuggestion: true,
+      bookingStatus: "",
+      chinaOffice: "",
     };
   }
 
-  componentDidMount = () => {
-    if (this.props.fixedLot) {
-      this.setState({ lotNo: this.props.fixedLot });
-    }
-  };
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.fixedLot) {
-      this.setState({ lotNo: nextProps.fixedLot });
-    }
-  };
-
   handleSubmit = async (event) => {
     event.preventDefault();
-    this.props.startToggleModalSelectLot(null);
-    const lotObj = this.props.allLots.find(
-      (lot) => lot.lotNo === this.state.lotNo
+    await this.props.bookingIdArray.forEach((bookingId) =>
+      this.props.updateBookingRedux({ bookingId: bookingId, ...this.state })
     );
-    this.props.startToggleModalCreateOrder(lotObj);
+    toast.success("successfully updated booking status");
+    this.setState({
+      bookingStatus: "",
+      chinaOffice: "",
+    });
+    this.props.startToggleModal(null);
   };
-
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value, showSuggestion: true });
+    this.setState({ [name]: value });
   };
-
   render() {
     return (
       <>
         <div
           className={
-            this.props.toggleModalSelectLot
+            this.props.toggleModal
               ? "modal fade show"
               : "modal fade show visible-modal"
           }
@@ -65,10 +54,7 @@ class SelectLotModal extends Component {
                 <section className="pos-rel bg-light-gray">
                   <div className="container-fluid p-3">
                     <a
-                      onClick={() => {
-                        this.setState({ lotNo: "" });
-                        this.props.startToggleModalSelectLot(null);
-                      }}
+                      onClick={() => this.props.startToggleModal(null)}
                       className="close"
                       data-dismiss="modal"
                       aria-label="Close"
@@ -94,7 +80,7 @@ class SelectLotModal extends Component {
                               borderBottom: "2px dotted white",
                             }}
                           >
-                            Select Lot No
+                            Change Status
                           </h2>
                           <form
                             onSubmit={this.handleSubmit}
@@ -103,50 +89,59 @@ class SelectLotModal extends Component {
                           >
                             <div className="form-row mb-4">
                               <div className="col">
-                                <input
+                                <label
+                                  style={{
+                                    color: "white",
+                                    marginBottom: "5px",
+                                  }}
+                                >
+                                  Update Booking Staus
+                                </label>
+                                <select
                                   title="Please choose a package"
                                   required
-                                  name="lotNo"
-                                  className="form-control"
+                                  name="bookingStatus"
+                                  className="custom-select"
                                   aria-required="true"
                                   aria-invalid="false"
                                   onChange={this.handleChange}
-                                  value={this.state.lotNo}
-                                  placeholder="Enter lot No"
+                                  value={this.state.bookingStatus}
                                   required
-                                  autoComplete="off"
-                                  readOnly={this.props.fixedLot ? true : false}
-                                />
-                                <ul
-                                  className="below-searchbar-recommendation"
+                                >
+                                  <option value="">Select Status</option>
+                                  <option value="Success">Success</option>
+                                  <option value="Reject">Reject</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="form-row mb-4">
+                              <div className="col">
+                                <label
                                   style={{
-                                    display: this.state.showSuggestion
-                                      ? "flex"
-                                      : "none",
+                                    color: "white",
+                                    marginBottom: "5px",
                                   }}
                                 >
-                                  {this.state.lotNo
-                                    ? this.props.allLots
-                                        .filter((lot) =>
-                                          lot.lotNo.includes(this.state.lotNo)
-                                        )
-                                        .slice(0, 5)
-                                        .map((lot) => (
-                                          <li
-                                            style={{ minWidth: "400px" }}
-                                            key={lot.lotNo}
-                                            onClick={() =>
-                                              this.setState({
-                                                lotNo: lot.lotNo,
-                                                showSuggestion: false,
-                                              })
-                                            }
-                                          >
-                                            {lot.lotNo}
-                                          </li>
-                                        ))
-                                    : null}
-                                </ul>
+                                  Select China Office
+                                </label>
+                                <select
+                                  title="Please choose a package"
+                                  required
+                                  name="chinaOffice"
+                                  className="custom-select"
+                                  aria-required="true"
+                                  aria-invalid="false"
+                                  onChange={this.handleChange}
+                                  value={this.state.chinaOffice}
+                                  required
+                                >
+                                  <option value="">Select Address</option>
+                                  <option value="Address-1">Address-1</option>
+                                  <option value="Address-2">Address-2</option>
+                                  <option value="Address-3">Address-3</option>
+                                  <option value="Address-4">Address-4</option>
+                                  <option value="Address-5">Address-5</option>
+                                </select>
                               </div>
                             </div>
 
@@ -161,12 +156,8 @@ class SelectLotModal extends Component {
                                 <button
                                   type="submit"
                                   className="btn btn-secondary"
-                                  style={{
-                                    display:
-                                      this.state.lotNo == "" ? "none" : "block",
-                                  }}
                                 >
-                                  Submit
+                                  Update
                                   <i className="icofont-rounded-right"></i>
                                 </button>
                               </div>
@@ -185,11 +176,5 @@ class SelectLotModal extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
-  return {
-    allLots: state.lots.lots,
-  };
-};
-export default connect(mapStateToProps, { uploadLotRedux, updateLotRedux })(
-  SelectLotModal
-);
+
+export default connect(null, { updateBookingRedux })(ChangeStatusModal);

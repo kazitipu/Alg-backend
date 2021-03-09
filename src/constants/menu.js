@@ -35,6 +35,24 @@ export const MENUITEMSFORADMIN = [
     active: false,
   },
   {
+    title: "Booking Request",
+    icon: Clipboard,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/booking-request/Pending",
+        title: "Requested",
+        type: "link",
+      },
+      {
+        path: "/booking-request/Success",
+        title: "Approved",
+        type: "link",
+      },
+    ],
+  },
+  {
     title: "Lot",
     icon: Box,
     type: "sub",
@@ -243,6 +261,24 @@ export const MENUITEMSFORAGENT = [
     type: "link",
     badgeType: "primary",
     active: false,
+  },
+  {
+    title: "Booking Request",
+    icon: Clipboard,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/booking-request/Pending",
+        title: "Requested",
+        type: "link",
+      },
+      {
+        path: "/booking-request/Success",
+        title: "Approved",
+        type: "link",
+      },
+    ],
   },
   {
     title: "Lot",

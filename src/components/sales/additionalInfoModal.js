@@ -163,8 +163,8 @@ class CreateOrderModal extends Component {
                                     <input
                                       className="form-control"
                                       value={
-                                        parcelObj.packagingChoosed
-                                          ? parcelObj.packagingChoosed
+                                        parcelObj.packagingChosed
+                                          ? parcelObj.packagingChosed
                                           : "No Packaging"
                                       }
                                       readOnly

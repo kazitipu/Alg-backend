@@ -1,4 +1,6 @@
 import {
+  getAllBookings,
+  updateBooking,
   uploadLot,
   updateLot,
   getAllLots,
@@ -64,6 +66,17 @@ export const rechargeAdminredux = (adminIdArray, balance) => {
     },
   };
 };
+
+// bookings
+export const getAllBookingsRedux = () => async (dispatch) => {
+  const bookingsArray = await getAllBookings();
+  dispatch({ type: "GET_ALL_BOOKINGS", payload: bookingsArray });
+};
+export const updateBookingRedux = (bookingObj) => async (dispatch) => {
+  const updatedBookingObj = await updateBooking(bookingObj);
+  dispatch({ type: "UPDATE_BOOKING", payload: updatedBookingObj });
+};
+
 //  lots
 export const getAllLotsRedux = () => async (dispatch) => {
   const lotsArray = await getAllLots();

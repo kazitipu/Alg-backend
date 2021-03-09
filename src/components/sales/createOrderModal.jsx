@@ -36,7 +36,25 @@ class CreateOrderModal extends Component {
     event.preventDefault();
     console.log(this.props.singleLot.lotNo);
 
-    const { cbm_height, cbm_width, cbm_length } = this.state;
+    const { cbm_height, cbm_width, cbm_length, packaging } = this.state;
+    if (packaging) {
+      if (packaging === "Green Bag") {
+        this.setState({
+          packagingCost: 50,
+        });
+      }
+      if (packaging === "Green Bag with Polythene") {
+        this.setState({
+          packagingCost: 100,
+        });
+      }
+      if (packaging === "Wooden Box") {
+        this.setState({
+          packagingCost: 2480,
+        });
+      }
+    }
+    console.log(this.state.packagingCost);
     const uploadedOrder = await this.props.uploadOrderRedux({
       shipmentMethod: this.props.singleLot.shipmentMethod.includes("D2D")
         ? "D2D"
@@ -59,6 +77,35 @@ class CreateOrderModal extends Component {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   };
+
+  renderShowSuggestion = () => {
+    if (this.state.customer) {
+      let suggestionArray;
+      const suggestionById = this.props.allUsers.filter((user) =>
+        user.userId.includes(this.state.customer)
+      );
+      const suggestionByName = this.props.allUsers.filter((user) =>
+        user.displayName.includes(this.state.customer)
+      );
+      suggestionArray = [...suggestionByName, ...suggestionById];
+      return suggestionArray.slice(0, 10).map((user) => (
+        <li
+          key={user.userId}
+          onClick={() =>
+            this.setState({
+              customer: user.userId,
+              customerUid: user.uid,
+              showSuggestion: false,
+            })
+          }
+        >
+          {user.userId}-{user.displayName ? user.displayName.slice(0, 13) : ""}
+        </li>
+      ));
+    } else {
+      return null;
+    }
+  };
   render() {
     return (
       <>
@@ -78,8 +125,8 @@ class CreateOrderModal extends Component {
             role="document"
           >
             <div
-              className="modal-content visible-modal-content"
-              style={{ backgroundColor: "#ff8084" }}
+              className="modal-content visible-modal-content-2"
+              style={{ backgroundColor: "rgb(68 0 97)" }}
             >
               <div className="modal-body p-0">
                 <section className="pos-rel bg-light-gray">
@@ -152,6 +199,30 @@ class CreateOrderModal extends Component {
                                     fontSize: "130%",
                                   }}
                                 >
+                                  Tracking No:
+                                </label>
+                                <input
+                                  type="text"
+                                  name="trackingNo"
+                                  className="form-control"
+                                  placeholder="Enter tracking No"
+                                  style={{ fontSize: "1rem" }}
+                                  onChange={this.handleChange}
+                                  value={this.state.trackingNo}
+                                  required
+                                />
+                              </div>
+                            </div>
+
+                            <div className="form-row mb-4">
+                              <div className="col">
+                                <label
+                                  style={{
+                                    color: "white",
+                                    marginBottom: "0px",
+                                    fontSize: "130%",
+                                  }}
+                                >
                                   Select Customer:
                                 </label>
                                 <input
@@ -176,33 +247,7 @@ class CreateOrderModal extends Component {
                                       : "none",
                                   }}
                                 >
-                                  {this.state.customer
-                                    ? this.props.allUsers
-                                        .filter((user) =>
-                                          user.userId.includes(
-                                            this.state.customer
-                                          )
-                                        )
-                                        .slice(0, 5)
-                                        .map((user) => (
-                                          <li
-                                            key={user.userId}
-                                            onClick={() =>
-                                              this.setState({
-                                                customer: user.userId,
-                                                shippingMark: `${user.userId}-${user.displayName}`,
-                                                customerUid: user.uid,
-                                                showSuggestion: false,
-                                              })
-                                            }
-                                          >
-                                            {user.userId} &nbsp;{" "}
-                                            {user.displayName
-                                              ? user.displayName.slice(0, 13)
-                                              : ""}
-                                          </li>
-                                        ))
-                                    : null}
+                                  {this.renderShowSuggestion()}
                                 </ul>
                               </div>
                               <div className="col">
@@ -324,7 +369,7 @@ class CreateOrderModal extends Component {
                                   fontSize: "130%",
                                 }}
                               >
-                                CBM centimeter:
+                                Carton Size:
                               </label>
                             </div>
                             <div
@@ -394,28 +439,30 @@ class CreateOrderModal extends Component {
                               </div>
                             </div>
                             <div className="form-row mb-3">
-                              <label
-                                style={{
-                                  color: "white",
-                                  marginBottom: "0px",
-                                  fontSize: "130%",
-                                }}
-                              >
-                                Total CBM:
-                              </label>
-                              <input
-                                type="number"
-                                name="total_cbm"
-                                className="form-control"
-                                placeholder="Total CBM"
-                                value={
-                                  (this.state.cbm_height *
-                                    this.state.cbm_width *
-                                    this.state.cbm_length) /
-                                  1000000
-                                }
-                                readOnly
-                              />
+                              <div className="col">
+                                <label
+                                  style={{
+                                    color: "white",
+                                    marginBottom: "0px",
+                                    fontSize: "130%",
+                                  }}
+                                >
+                                  Total CBM:
+                                </label>
+                                <input
+                                  type="number"
+                                  name="total_cbm"
+                                  className="form-control"
+                                  placeholder="Total CBM"
+                                  value={
+                                    (this.state.cbm_height *
+                                      this.state.cbm_width *
+                                      this.state.cbm_length) /
+                                    1000000
+                                  }
+                                  readOnly
+                                />
+                              </div>
                             </div>
 
                             <div className="form-row mb-3">
@@ -441,36 +488,13 @@ class CreateOrderModal extends Component {
                                   required
                                 >
                                   <option value="">Select Product Type</option>
-                                  <option value="Bags">Bags</option>
-                                  <option value="Shoes">Shoes</option>
-                                  <option value="Toys">Toys</option>
-                                  <option value="Mixed">Mixed</option>
-                                  <option value="Others">Others</option>
+                                  <option value="Liquid">Liquid</option>
+                                  <option value="Battery">Battery</option>
+                                  <option value="Powder">Powder</option>
+                                  <option value="Copy">Copy</option>
+                                  <option value="None">None</option>
                                 </select>
                               </div>
-                              <div>
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Tracking No:
-                                </label>
-                                <input
-                                  type="text"
-                                  name="trackingNo"
-                                  className="form-control"
-                                  placeholder="Enter tracking No"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.trackingNo}
-                                  required
-                                />
-                              </div>
-                            </div>
-                            <div className="form-row mb-3">
                               <div className="col">
                                 <label
                                   style={{
@@ -495,33 +519,12 @@ class CreateOrderModal extends Component {
                                   <option value="">
                                     Select Packaging Type
                                   </option>
-                                  <option value="Wooden Box">Wooden Box</option>
-                                  <option value="Shoes">Oven Wrapping</option>
-                                  <option value="Polythene Bag">
-                                    Polythene Bag
+                                  <option value="Green Bag">Green Bag</option>
+                                  <option value="Green Bag with Polythene">
+                                    Green Bag with Polythene
                                   </option>
+                                  <option value="Wooden Box">Wooden Box</option>
                                 </select>
-                              </div>
-                              <div>
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Packaging Cost:
-                                </label>
-                                <input
-                                  type="text"
-                                  name="packagingCost"
-                                  className="form-control"
-                                  placeholder="Enter Packaging Cost"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.packagingCost}
-                                  required
-                                />
                               </div>
                             </div>
 

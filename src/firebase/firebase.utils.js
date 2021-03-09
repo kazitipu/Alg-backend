@@ -394,6 +394,19 @@ export const getAllLots = async () => {
     alert(error);
   }
 };
+export const getAllBookings = async () => {
+  const bookingsCollectionRef = firestore.collection("bookingRequest");
+  try {
+    const bookings = await bookingsCollectionRef.get();
+    const bookingsArray = [];
+    bookings.forEach((doc) => {
+      bookingsArray.push(doc.data());
+    });
+    return bookingsArray;
+  } catch (error) {
+    alert(error);
+  }
+};
 export const getAllDocumentExpressRates = async () => {
   const expressRatesDocumentsCollectionRef = firestore.collection(
     "expressRatesDocuments"
@@ -645,6 +658,19 @@ export const updateLot = async (lotObj) => {
   try {
     await lotRef.update({ ...lotObj });
     const snapShot = await lotRef.get();
+    return snapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
+export const updateBooking = async (bookingObj) => {
+  const bookingRef = firestore.doc(`bookingRequest/${bookingObj.bookingId}`);
+  try {
+    await bookingRef.update({
+      bookingStatus: bookingObj.bookingStatus,
+      chinaOffice: bookingObj.chinaOffice,
+    });
+    const snapShot = await bookingRef.get();
     return snapShot.data();
   } catch (error) {
     alert(error);

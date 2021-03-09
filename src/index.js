@@ -12,6 +12,7 @@ import Dashboard from "./components/dashboard";
 
 // Products physical
 import LotList from "./components/lot/physical/lotlist";
+import BookingList from "./components/bookings/bookingList";
 import Sub_category from "./components/lot/physical/sub-category";
 import Product_list from "./components/lot/physical/product-list";
 import Add_Aliexpress_product from "./components/lot/physical/add-aliexpress-product";
@@ -114,6 +115,11 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/lot/lot-list`}
                   component={LotList}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/booking-request/:bookingStatus`}
+                  component={BookingList}
                 />
                 <Route
                   exact

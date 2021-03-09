@@ -5,6 +5,7 @@
 }
 
 .visible-modal-content-2 {
+  /* background-image: url("../../../assets/images/dashboard/login-bg.png"); */
   background-size: cover;
-  box-shadow: rgb(201, 146, 224) 1px 5px 24px 0px;
+  box-shadow: rgb(233, 109, 109) 1px 5px 24px 0px;
 }
