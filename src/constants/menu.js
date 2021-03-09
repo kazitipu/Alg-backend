@@ -77,6 +77,17 @@ export const MENUITEMSFORADMIN = [
     ],
   },
   {
+    title: "Calculation",
+    icon: DollarSign,
+    type: "sub",
+    active: false,
+    children: [
+      { path: "/calculation/D2D", title: "Door to Door", type: "link" },
+      { path: "/calculation/Freight", title: "Freight", type: "link" },
+      { path: "/calculation/express", title: "Express", type: "link" },
+    ],
+  },
+  {
     title: "Payments",
     icon: Tag,
     type: "sub",
@@ -140,50 +151,6 @@ export const MENUITEMSFORADMIN = [
       },
     ],
   },
-  // {
-  //   title: "D2D Rates",
-  //   icon: DollarSign,
-  //   type: "sub",
-  //   active: false,
-  //   children: [
-  //     {
-  //       title: "Air",
-  //       icon: DollarSign,
-  //       type: "sub",
-  //       active: false,
-  //       childern: [
-  //         {
-  //           path: "/express-rates/document",
-  //           title: "Document",
-  //           type: "link",
-  //         },
-  //         {
-  //           path: "/express-rates/parcel",
-  //           title: "Parcel",
-  //           type: "link",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       title: "Sea",
-  //       icon: DollarSign,
-  //       type: "sub",
-  //       active: false,
-  //       childern: [
-  //         {
-  //           path: "/express-rates/document",
-  //           title: "Document",
-  //           type: "link",
-  //         },
-  //         {
-  //           path: "/express-rates/parcel",
-  //           title: "Parcel",
-  //           type: "link",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
 
   {
     title: "Users",
@@ -302,6 +269,17 @@ export const MENUITEMSFORAGENT = [
       { path: "/orders/D2D", title: "Door to Door", type: "link" },
       { path: "/orders/Freight", title: "Freight", type: "link" },
       { path: "/orders/express", title: "Express", type: "link" },
+    ],
+  },
+  {
+    title: "Calculation",
+    icon: DollarSign,
+    type: "sub",
+    active: false,
+    children: [
+      { path: "/calculation/D2D", title: "Door to Door", type: "link" },
+      { path: "/calculation/Freight", title: "Freight", type: "link" },
+      { path: "/calculation/express", title: "Express", type: "link" },
     ],
   },
   {

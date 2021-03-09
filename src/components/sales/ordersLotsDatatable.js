@@ -3,7 +3,6 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deleteLot } from "../../firebase/firebase.utils";
 import { withRouter } from "react-router-dom";
 
 export class Datatable extends Component {

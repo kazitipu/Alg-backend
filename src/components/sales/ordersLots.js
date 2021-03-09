@@ -1,14 +1,13 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../common/breadcrumb";
-import data from "../../assets/data/orders";
 import Datatable from "./ordersLotsDatatable";
 import { getAllLotsRedux } from "../../actions/index";
 import CreateOrderModal from "./createOrderModal";
 import SelectLotModal from "./selectLotModal";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
-
-export class OrdersLots extends Component {
+import { withRouter } from "react-router-dom";
+export class CalculationLots extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -75,6 +74,7 @@ export class OrdersLots extends Component {
               toggleModalCreateOrder={this.state.toggleModalCreateOrder}
               startToggleModalCreateOrder={this.startToggleModalCreateOrder}
               singleLot={this.state.singleLot}
+              calculation={this.props.calculation}
             />
             <SelectLotModal
               toggleModalSelectLot={this.state.toggleModalSelectLot}
@@ -166,15 +166,39 @@ export class OrdersLots extends Component {
                             </div>
                           </form>
                         </li>
-                        <li>
-                          <button
-                            className="btn btn-primary"
-                            type="button"
-                            onClick={() => this.startToggleModalSelectLot(null)}
-                          >
-                            Create Order
-                          </button>
-                        </li>
+                        {!this.props.calculation ? (
+                          <li>
+                            <button
+                              className="btn"
+                              style={{
+                                backgroundColor: "rgb(68, 0, 97)",
+                                color: "white",
+                              }}
+                              type="button"
+                              onClick={() =>
+                                this.startToggleModalSelectLot(null)
+                              }
+                            >
+                              Create Order
+                            </button>
+                          </li>
+                        ) : (
+                          <li>
+                            <button
+                              className="btn"
+                              style={{
+                                backgroundColor: "rgb(68, 0, 97)",
+                                color: "white",
+                              }}
+                              type="button"
+                              onClick={() =>
+                                this.startToggleModalSelectLot(null)
+                              }
+                            >
+                              Expense
+                            </button>
+                          </li>
+                        )}
                       </div>
                     </div>
 
@@ -215,4 +239,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getAllLotsRedux })(OrdersLots);
+export default withRouter(
+  connect(mapStateToProps, { getAllLotsRedux })(CalculationLots)
+);

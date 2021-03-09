@@ -1,15 +1,14 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../common/breadcrumb";
-import data from "../../assets/data/orders";
 import Datatable from "./ordersD2DFreightDatatable";
-
 import { getAllOrdersOfSingleLotRedux, get } from "../../actions/index";
 import CreateOrderModal from "./createOrderModal";
 import SelectLotModal from "./selectLotModal";
 import AdditionalInfoModal from "./additionalInfoModal";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
-
+import { ExportCSV } from "./exportCsv";
+import { withRouter } from "react-router-dom";
 export class OrdersD2DFreight extends Component {
   constructor(props) {
     super(props);
@@ -195,6 +194,9 @@ export class OrdersD2DFreight extends Component {
                     </li>
                   </div>
                 </div>
+                {allOrders.length > 0 ? (
+                  <ExportCSV csvData={allOrders} fileName={lotNo} />
+                ) : null}
 
                 <div className="card-body order-datatable">
                   <Datatable
@@ -223,6 +225,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getAllOrdersOfSingleLotRedux })(
-  OrdersD2DFreight
+export default withRouter(
+  connect(mapStateToProps, { getAllOrdersOfSingleLotRedux })(OrdersD2DFreight)
 );

@@ -7,6 +7,8 @@ import CreateOrderModal from "./createOrderModal";
 import SelectLotModal from "./selectLotModal";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
+import { ExportCSV } from "./exportCsv";
+import { withRouter } from "react-router-dom";
 export class OrdersExpress extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +29,7 @@ export class OrdersExpress extends Component {
 
   render() {
     const { allExpressOrders } = this.state;
+    const { month } = this.props.match.params;
     return (
       <Fragment>
         <Breadcrumb title="express" parent="orders" />
@@ -114,6 +117,9 @@ export class OrdersExpress extends Component {
                     </li>
                   </div>
                 </div>
+                {allExpressOrders.length > 0 ? (
+                  <ExportCSV csvData={allExpressOrders} fileName={month} />
+                ) : null}
 
                 <div className="card-body order-datatable">
                   <Datatable
@@ -146,6 +152,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, { getAllExpressOrdersRedux })(
-  OrdersExpress
+export default withRouter(
+  connect(mapStateToProps, { getAllExpressOrdersRedux })(OrdersExpress)
 );

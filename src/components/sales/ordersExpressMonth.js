@@ -7,6 +7,7 @@ import CreateOrderModal from "./createOrderModal";
 import SelectLotModal from "./selectLotModal";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
+import { withRouter } from "react-router-dom";
 export class OrdersExpressMonth extends Component {
   constructor(props) {
     super(props);
@@ -140,6 +141,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getAllExpressOrdersRedux })(
-  OrdersExpressMonth
+export default withRouter(
+  connect(mapStateToProps, { getAllExpressOrdersRedux })(OrdersExpressMonth)
 );

@@ -136,7 +136,6 @@ class CreateLotModal extends Component {
                           </h2>
                           <form
                             onSubmit={this.handleSubmit}
-                            noValidate="novalidate"
                             className="rounded-field mt-4"
                           >
                             <div className="form-row mb-4">

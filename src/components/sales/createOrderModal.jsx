@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./createOrderModal.css";
-import { uploadOrderRedux } from "../../actions/index";
+import { uploadOrderRedux, updateLotRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -23,6 +23,9 @@ class CreateOrderModal extends Component {
       showSuggestion: true,
       packaging: "",
       packagingCost: 0,
+      cAndFBill: "",
+      freightCharge: "",
+      otherCharge: "",
     };
   }
 
@@ -72,6 +75,23 @@ class CreateOrderModal extends Component {
       showSuggestion: true,
     });
     // this.props.startToggleModalCreateOrder(null);
+  };
+
+  handleSubmitForExpense = (event) => {
+    event.preventDefault();
+    const { cAndFBill, freightCharge, otherCharge } = this.state;
+    this.props.updateLotRedux({
+      ...this.props.singleLot,
+      cAndFBill,
+      freightCharge,
+      otherCharge,
+    });
+    toast.success(`Expense updated for lot:${this.props.singleLot.lotNo}`);
+    this.setState({
+      cAndFBill: "",
+      freightCharge: "",
+      otherCharge: "",
+    });
   };
   handleChange = (e) => {
     const { name, value } = e.target;
@@ -186,366 +206,458 @@ class CreateOrderModal extends Component {
                                 : ""}
                             </span>
                           </h2>
-                          <form
-                            onSubmit={this.handleSubmit}
-                            className="rounded-field mt-4"
-                          >
-                            <div className="form-row mb-4">
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Tracking No:
-                                </label>
-                                <input
-                                  type="text"
-                                  name="trackingNo"
-                                  className="form-control"
-                                  placeholder="Enter tracking No"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.trackingNo}
-                                  required
-                                />
-                              </div>
-                            </div>
-
-                            <div className="form-row mb-4">
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Select Customer:
-                                </label>
-                                <input
-                                  title="Please choose a package"
-                                  type="text"
-                                  name="customer"
-                                  className="form-control"
-                                  placeholder="Enter customer Id"
-                                  aria-required="true"
-                                  aria-invalid="false"
-                                  onChange={this.handleChange}
-                                  value={this.state.customer}
-                                  required
-                                  autoComplete="off"
-                                />
-
-                                <ul
-                                  className="below-searchbar-recommendation"
-                                  style={{
-                                    display: this.state.showSuggestion
-                                      ? "flex"
-                                      : "none",
-                                  }}
-                                >
-                                  {this.renderShowSuggestion()}
-                                </ul>
-                              </div>
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Shipping Mark:
-                                </label>
-                                <input
-                                  type="text"
-                                  name="shippingMark"
-                                  className="form-control"
-                                  placeholder="Enter Shipping Mark"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.shippingMark}
-                                  required
-                                />
-                              </div>
-                            </div>
-                            <div className="form-row mb-4">
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Carton No:
-                                </label>
-                                <input
-                                  type="text"
-                                  name="cartonNo"
-                                  className="form-control"
-                                  placeholder="Enter Carton No"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.cartonNo}
-                                  required
-                                />
-                              </div>
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Product Name:
-                                </label>
-                                <input
-                                  type="text"
-                                  name="productName"
-                                  className="form-control"
-                                  placeholder="Enter Product Name"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.productName}
-                                  required
-                                />
-                              </div>
-                            </div>
-                            <div className="form-row mb-4">
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Quantity:
-                                </label>
-                                <input
-                                  type="text"
-                                  name="quantity"
-                                  className="form-control"
-                                  placeholder="Enter Product Quantity"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.quantity}
-                                  required
-                                />
-                              </div>
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Gross Weight:
-                                </label>
-                                <input
-                                  type="text"
-                                  name="grossWeight"
-                                  className="form-control"
-                                  placeholder="Total Weight"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.grossWeight}
-                                  required
-                                />
-                              </div>
-                            </div>
-                            <div className="form-row">
-                              {" "}
-                              <label
-                                style={{
-                                  color: "white",
-                                  marginBottom: "0px",
-                                  fontSize: "130%",
-                                }}
-                              >
-                                Carton Size:
-                              </label>
-                            </div>
-                            <div
-                              className="form-row mb-3"
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "space-around",
-                                flexWrap: "nowrap",
-                              }}
+                          {!this.props.calculation ? (
+                            <form
+                              onSubmit={this.handleSubmit}
+                              className="rounded-field mt-4"
                             >
-                              <div>
-                                <input
-                                  type="number"
-                                  name="cbm_height"
-                                  className="form-control"
-                                  placeholder="height"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.cbm_height}
-                                  required
-                                />
+                              <div className="form-row mb-4">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Tracking No:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="trackingNo"
+                                    className="form-control"
+                                    placeholder="Enter tracking No"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.trackingNo}
+                                    required
+                                  />
+                                </div>
                               </div>
-                              <div
-                                style={{
-                                  fontSize: "130%",
-                                  marginTop: "5px",
-                                  color: "white",
-                                }}
-                              >
-                                {" "}
-                                X
-                              </div>
-                              <div>
-                                <input
-                                  type="number"
-                                  name="cbm_width"
-                                  className="form-control"
-                                  placeholder="width"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.cbm_width}
-                                  required
-                                />
-                              </div>
-                              <div
-                                style={{
-                                  fontSize: "130%",
-                                  marginTop: "5px",
-                                  color: "white",
-                                }}
-                              >
-                                {" "}
-                                X
-                              </div>
-                              <div>
-                                <input
-                                  type="number"
-                                  name="cbm_length"
-                                  className="form-control"
-                                  placeholder="length"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.cbm_length}
-                                  required
-                                />
-                              </div>
-                            </div>
-                            <div className="form-row mb-3">
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Total CBM:
-                                </label>
-                                <input
-                                  type="number"
-                                  name="total_cbm"
-                                  className="form-control"
-                                  placeholder="Total CBM"
-                                  value={
-                                    (this.state.cbm_height *
-                                      this.state.cbm_width *
-                                      this.state.cbm_length) /
-                                    1000000
-                                  }
-                                  readOnly
-                                />
-                              </div>
-                            </div>
 
-                            <div className="form-row mb-3">
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Product Type:
-                                </label>
-                                <select
-                                  title="Please choose a package"
-                                  required
-                                  name="productType"
-                                  className="custom-select"
-                                  aria-required="true"
-                                  aria-invalid="false"
-                                  onChange={this.handleChange}
-                                  value={this.state.productType}
-                                  required
-                                >
-                                  <option value="">Select Product Type</option>
-                                  <option value="Liquid">Liquid</option>
-                                  <option value="Battery">Battery</option>
-                                  <option value="Powder">Powder</option>
-                                  <option value="Copy">Copy</option>
-                                  <option value="None">None</option>
-                                </select>
-                              </div>
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "0px",
-                                    fontSize: "130%",
-                                  }}
-                                >
-                                  Packaging Type:
-                                </label>
-                                <select
-                                  title="Please choose a package"
-                                  required
-                                  name="packaging"
-                                  className="custom-select"
-                                  aria-required="true"
-                                  aria-invalid="false"
-                                  onChange={this.handleChange}
-                                  value={this.state.packaging}
-                                  required
-                                >
-                                  <option value="">
-                                    Select Packaging Type
-                                  </option>
-                                  <option value="Green Bag">Green Bag</option>
-                                  <option value="Green Bag with Polythene">
-                                    Green Bag with Polythene
-                                  </option>
-                                  <option value="Wooden Box">Wooden Box</option>
-                                </select>
-                              </div>
-                            </div>
+                              <div className="form-row mb-4">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Select Customer:
+                                  </label>
+                                  <input
+                                    title="Please choose a package"
+                                    type="text"
+                                    name="customer"
+                                    className="form-control"
+                                    placeholder="Enter customer Id"
+                                    aria-required="true"
+                                    aria-invalid="false"
+                                    onChange={this.handleChange}
+                                    value={this.state.customer}
+                                    required
+                                    autoComplete="off"
+                                  />
 
-                            <div className="form-row">
+                                  <ul
+                                    className="below-searchbar-recommendation"
+                                    style={{
+                                      display: this.state.showSuggestion
+                                        ? "flex"
+                                        : "none",
+                                    }}
+                                  >
+                                    {this.renderShowSuggestion()}
+                                  </ul>
+                                </div>
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Shipping Mark:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="shippingMark"
+                                    className="form-control"
+                                    placeholder="Enter Shipping Mark"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.shippingMark}
+                                    required
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-row mb-4">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Carton No:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="cartonNo"
+                                    className="form-control"
+                                    placeholder="Enter Carton No"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.cartonNo}
+                                    required
+                                  />
+                                </div>
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Product Name:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="productName"
+                                    className="form-control"
+                                    placeholder="Enter Product Name"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.productName}
+                                    required
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-row mb-4">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Quantity:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="quantity"
+                                    className="form-control"
+                                    placeholder="Enter Product Quantity"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.quantity}
+                                    required
+                                  />
+                                </div>
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Gross Weight:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="grossWeight"
+                                    className="form-control"
+                                    placeholder="Total Weight"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.grossWeight}
+                                    required
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-row">
+                                {" "}
+                                <label
+                                  style={{
+                                    color: "white",
+                                    marginBottom: "0px",
+                                    fontSize: "130%",
+                                  }}
+                                >
+                                  Carton Size:
+                                </label>
+                              </div>
                               <div
-                                className="col pt-3"
+                                className="form-row mb-3"
                                 style={{
                                   display: "flex",
-                                  justifyContent: "flex-end",
+                                  flexDirection: "row",
+                                  justifyContent: "space-around",
+                                  flexWrap: "nowrap",
                                 }}
                               >
-                                <button
-                                  type="submit"
-                                  className="btn btn-secondary"
+                                <div>
+                                  <input
+                                    type="number"
+                                    name="cbm_height"
+                                    className="form-control"
+                                    placeholder="height"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.cbm_height}
+                                    required
+                                  />
+                                </div>
+                                <div
+                                  style={{
+                                    fontSize: "130%",
+                                    marginTop: "5px",
+                                    color: "white",
+                                  }}
                                 >
-                                  Add
-                                  <i className="icofont-rounded-right"></i>
-                                </button>
+                                  {" "}
+                                  X
+                                </div>
+                                <div>
+                                  <input
+                                    type="number"
+                                    name="cbm_width"
+                                    className="form-control"
+                                    placeholder="width"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.cbm_width}
+                                    required
+                                  />
+                                </div>
+                                <div
+                                  style={{
+                                    fontSize: "130%",
+                                    marginTop: "5px",
+                                    color: "white",
+                                  }}
+                                >
+                                  {" "}
+                                  X
+                                </div>
+                                <div>
+                                  <input
+                                    type="number"
+                                    name="cbm_length"
+                                    className="form-control"
+                                    placeholder="length"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.cbm_length}
+                                    required
+                                  />
+                                </div>
                               </div>
-                            </div>
-                          </form>
+                              <div className="form-row mb-3">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Total CBM:
+                                  </label>
+                                  <input
+                                    type="number"
+                                    name="total_cbm"
+                                    className="form-control"
+                                    placeholder="Total CBM"
+                                    value={
+                                      (this.state.cbm_height *
+                                        this.state.cbm_width *
+                                        this.state.cbm_length) /
+                                      1000000
+                                    }
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="form-row mb-3">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Product Type:
+                                  </label>
+                                  <select
+                                    title="Please choose a package"
+                                    required
+                                    name="productType"
+                                    className="custom-select"
+                                    aria-required="true"
+                                    aria-invalid="false"
+                                    onChange={this.handleChange}
+                                    value={this.state.productType}
+                                    required
+                                  >
+                                    <option value="">
+                                      Select Product Type
+                                    </option>
+                                    <option value="Liquid">Liquid</option>
+                                    <option value="Battery">Battery</option>
+                                    <option value="Powder">Powder</option>
+                                    <option value="Copy">Copy</option>
+                                    <option value="None">None</option>
+                                  </select>
+                                </div>
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    Packaging Type:
+                                  </label>
+                                  <select
+                                    title="Please choose a package"
+                                    required
+                                    name="packaging"
+                                    className="custom-select"
+                                    aria-required="true"
+                                    aria-invalid="false"
+                                    onChange={this.handleChange}
+                                    value={this.state.packaging}
+                                    required
+                                  >
+                                    <option value="">
+                                      Select Packaging Type
+                                    </option>
+                                    <option value="Green Bag">Green Bag</option>
+                                    <option value="Green Bag with Polythene">
+                                      Green Bag with Polythene
+                                    </option>
+                                    <option value="Wooden Box">
+                                      Wooden Box
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div className="form-row">
+                                <div
+                                  className="col pt-3"
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                  }}
+                                >
+                                  <button
+                                    type="submit"
+                                    className="btn btn-secondary"
+                                  >
+                                    Add
+                                    <i className="icofont-rounded-right"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </form>
+                          ) : (
+                            <form
+                              onSubmit={this.handleSubmitForExpense}
+                              className="rounded-field mt-4"
+                            >
+                              <div className="form-row mb-4">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "5px",
+                                    }}
+                                  >
+                                    C&F Bill
+                                  </label>
+                                  <input
+                                    type="number"
+                                    name="cAndFBill"
+                                    className="form-control"
+                                    placeholder="C&F Bill"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.cAndFBill}
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-row mb-4">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "5px",
+                                    }}
+                                  >
+                                    Freight Charge
+                                  </label>
+                                  <input
+                                    type="number"
+                                    name="freightCharge"
+                                    className="form-control"
+                                    placeholder="Freight Charge"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.freightCharge}
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-row mb-4">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "5px",
+                                    }}
+                                  >
+                                    Other Charge
+                                  </label>
+                                  <input
+                                    type="number"
+                                    name="otherCharge"
+                                    className="form-control"
+                                    placeholder="Other Charge"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.otherCharge}
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-row">
+                                <div
+                                  className="col pt-3"
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                  }}
+                                >
+                                  <button
+                                    type="submit"
+                                    className="btn btn-secondary"
+                                  >
+                                    Update Expense
+                                    <i className="icofont-rounded-right"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </form>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -565,4 +677,6 @@ const mapStateToProps = (state) => {
     allUsers: state.users.users,
   };
 };
-export default connect(mapStateToProps, { uploadOrderRedux })(CreateOrderModal);
+export default connect(mapStateToProps, { uploadOrderRedux, updateLotRedux })(
+  CreateOrderModal
+);

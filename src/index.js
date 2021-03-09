@@ -13,25 +13,13 @@ import Dashboard from "./components/dashboard";
 // Products physical
 import LotList from "./components/lot/physical/lotlist";
 import BookingList from "./components/bookings/bookingList";
-import Sub_category from "./components/lot/physical/sub-category";
-import Product_list from "./components/lot/physical/product-list";
-import Add_Aliexpress_product from "./components/lot/physical/add-aliexpress-product";
-import Update_product from "./components/lot/physical/update-product";
-import Product_detail from "./components/lot/physical/product-detail";
 
 //Sales
 import OrdersLots from "./components/sales/ordersLots";
 import OrdersD2DFreight from "./components/sales/ordersD2DFreight";
 import OrdersExpressMonth from "./components/sales/ordersExpressMonth";
 import OrdersExpress from "./components/sales/ordersExpress";
-import PendingOrders from "./components/sales/pendingOrders";
-import PaymentApproved from "./components/sales/paymentApproved";
-import Ordered from "./components/sales/ordered";
-import ChinaWarehouse from "./components/sales/chinaWarehouse";
-import InShipment from "./components/sales/inShipment";
-import InStock from "./components/sales/inStock";
-import Delivered from "./components/sales/delivered";
-import UpdateOrder from "./components/sales/updateOrder";
+
 // Express Rates
 import Document from "./components/express-rates/document/document";
 import Parcel from "./components/express-rates/parcel/parcel";
@@ -121,31 +109,7 @@ class Root extends Component {
                   path={`${process.env.PUBLIC_URL}/booking-request/:bookingStatus`}
                   component={BookingList}
                 />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/products/physical/sub-category`}
-                  component={Sub_category}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/products/physical/product-list`}
-                  component={Product_list}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/products/physical/product-detail`}
-                  component={Product_detail}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/products/physical/add-aliexpress-product`}
-                  component={Add_Aliexpress_product}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/products/physical/add-product/:id`}
-                  component={Update_product}
-                />
+
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/orders/express`}
@@ -166,6 +130,35 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/orders/d2d-freight/:shipmentMethodLotNo`}
                   component={OrdersD2DFreight}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/calculation/express`}
+                  component={(props) => (
+                    <OrdersExpressMonth props={props} calculation={true} />
+                  )}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/calcualation/expressOrder/:month`}
+                  component={(props) => (
+                    <OrdersExpress props={props} calculation={true} />
+                  )}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/calculation/:shipmentMethod`}
+                  component={(props) => (
+                    <OrdersLots props={props} calculation={true} />
+                  )}
+                />
+
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/calculation/d2d-freight/:shipmentMethodLotNo`}
+                  component={(props) => (
+                    <OrdersD2DFreight props={props} calculation={true} />
+                  )}
                 />
 
                 <Route
@@ -195,46 +188,12 @@ class Root extends Component {
                   component={D2DRates}
                 />
 
-                <Route
+                {/* <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/sales/orders/update-status/:orderId`}
                   component={UpdateOrder}
                 />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/sales/order_pending`}
-                  component={PendingOrders}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/sales/payment_approved`}
-                  component={PaymentApproved}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/sales/ordered`}
-                  component={Ordered}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/sales/china_warehouse`}
-                  component={ChinaWarehouse}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/sales/in-shipping`}
-                  component={InShipment}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/sales/in_stock`}
-                  component={InStock}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/sales/delivered`}
-                  component={Delivered}
-                />
+             */}
 
                 <Route
                   exact
