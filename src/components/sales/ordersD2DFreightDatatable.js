@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { deleteSingleOrderRedux } from "../../actions/index";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import PrintSticker from "./printSticker";
 export class Datatable extends Component {
   constructor(props) {
     super(props);
@@ -235,7 +236,13 @@ export class Datatable extends Component {
         id: "delete",
         accessor: (str) => "delete",
         Cell: (row) => (
-          <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
             <span
               onClick={() => {
                 let data = myData;
@@ -262,6 +269,9 @@ export class Datatable extends Component {
                   cursor: "pointer",
                 }}
               ></i>
+            </span>
+            <span>
+              <PrintSticker cartonNo={row.original.Carton} />
             </span>
           </div>
         ),

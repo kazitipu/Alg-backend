@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import { Search } from "react-feather";
 import { ExportCSV } from "./exportCsv";
 import { withRouter } from "react-router-dom";
+import PrintSticker from "./printSticker";
 export class OrdersD2DFreight extends Component {
   constructor(props) {
     super(props);
@@ -86,6 +87,7 @@ export class OrdersD2DFreight extends Component {
           startToggleModalCreateOrder={this.startToggleModalCreateOrder}
           singleLot={this.state.singleLot}
         />
+
         <AdditionalInfoModal
           toggleModalAdditionalInfo={this.state.toggleModalAdditionalInfo}
           startToggleModalAdditionalInfo={this.startToggleModalAdditionalInfo}
@@ -197,7 +199,7 @@ export class OrdersD2DFreight extends Component {
                 {allOrders.length > 0 ? (
                   <ExportCSV csvData={allOrders} fileName={lotNo} />
                 ) : null}
-
+                {/* <PrintSticker /> */}
                 <div className="card-body order-datatable">
                   <Datatable
                     startToggleModalAdditionalInfo={
