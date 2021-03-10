@@ -416,6 +416,41 @@ table td {
  * If the printed invoice is not looking as expected you may tune up
  * the print styles (you can use !important to override styles)
  */
+/* @media print {
+  @page {
+    size: landscape !important;
+  }
+} */
+
+@media all {
+  .page-break {
+    display: none;
+  }
+}
+
 @media print {
-  /* Here goes your print styles */
+  html,
+  #container {
+    font: normal 13px/1.4em "Open Sans", Sans-serif;
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    background: #f7edeb url("../img/bg.png") 0 0 no-repeat;
+    background-size: 100% auto;
+    color: #5b6165;
+    position: relative;
+  }
+}
+
+@media print {
+  .page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: auto;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 20mm;
 }

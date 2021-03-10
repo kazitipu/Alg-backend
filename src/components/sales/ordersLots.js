@@ -83,7 +83,10 @@ export class CalculationLots extends Component {
               singleLot={this.state.singleLot}
               fixedLot={this.state.fixedLot}
             />
-            <Breadcrumb title="Orders" parent="Sales" />
+            <Breadcrumb
+              title={this.props.calculation ? "Expense" : "Orders"}
+              parent="Lots"
+            />
 
             <div className="container-fluid">
               <div className="row">
@@ -108,7 +111,9 @@ export class CalculationLots extends Component {
                             color: "#ff8084",
                           }}
                         ></i>
-                        Manage Orders
+                        {this.props.calculation
+                          ? "Manage Expense"
+                          : "Manage Orders"}
                       </h5>
                       <div
                         style={{
