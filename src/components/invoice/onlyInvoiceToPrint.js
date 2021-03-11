@@ -14,6 +14,7 @@ import { withRouter } from "react-router-dom";
 export class OnlyInvoieToPrint extends Component {
   state = {
     userObj: null,
+    orderObj: null,
   };
   componentDidMount = async () => {
     const [
@@ -69,6 +70,13 @@ export class OnlyInvoieToPrint extends Component {
     }
   };
 
+  componentWillUnmount = () => {
+    this.setState({
+      userObj: null,
+      orderObj: null,
+    });
+  };
+
   render() {
     const [
       shipmentMethod,
@@ -87,6 +95,13 @@ export class OnlyInvoieToPrint extends Component {
           parseInt(orderObj.packagingCost) +
           parseInt(orderObj.localDeliveryCost)
       );
+    }
+
+    if (orderObj && orderObj.paid) {
+      total = total - orderObj.paid;
+    }
+    if (orderObj && orderObj.discountInvoice) {
+      total = total - orderObj.discountInvoice;
     }
     console.log(userObj);
     return (
@@ -230,6 +245,12 @@ export class OnlyInvoieToPrint extends Component {
                   <th>paid</th>
                   <td>0tk</td>
                 </tr>
+                {orderObj && orderObj.discountInvoice ? (
+                  <tr data-hide-on-quote="true">
+                    <th>Discount</th>
+                    <td>{orderObj.discountInvoice}tk</td>
+                  </tr>
+                ) : null}
 
                 <tr data-hide-on-quote="true">
                   <th>AMOUNT DUE</th>

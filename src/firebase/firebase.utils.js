@@ -496,6 +496,34 @@ export const getAllOrdersOfSingleLot = async (lotObj) => {
     alert(error);
   }
 };
+export const getAllOrdersInvoiceRateSingleLot = async (lotObj) => {
+  let ordersDocumentRef;
+  if (lotObj.shipmentMethod.includes("D2D")) {
+    ordersDocumentRef = firestore.doc(`ordersD2D/${lotObj.lotNo}`);
+  }
+  if (lotObj.shipmentMethod.includes("Freight")) {
+    ordersDocumentRef = firestore.doc(`ordersFreight/${lotObj.lotNo}`);
+  }
+
+  try {
+    const snapShot = await ordersDocumentRef.get();
+    console.log(snapShot.data());
+    const ordersArray = snapShot.data().orders;
+    let totalRevenue = 0;
+    if (ordersArray.length > 0) {
+      const invoicedOrdersArray = ordersArray.filter(
+        (order) => order.invoiceTotal
+      );
+      invoicedOrdersArray.forEach(
+        (order) => (totalRevenue += order.invoiceTotal)
+      );
+    }
+    return totalRevenue;
+  } catch (error) {
+    alert(error);
+    return 0;
+  }
+};
 
 export const getAllProductsTax = async () => {
   const productsCollectionRef = firestore.collection("taxes");

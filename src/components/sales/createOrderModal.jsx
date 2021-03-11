@@ -3,6 +3,7 @@ import "./createOrderModal.css";
 import { uploadOrderRedux, updateLotRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import { getAllOrdersInvoiceRateSingleLot } from "../../firebase/firebase.utils";
 
 class CreateOrderModal extends Component {
   constructor(props) {
@@ -77,14 +78,41 @@ class CreateOrderModal extends Component {
     // this.props.startToggleModalCreateOrder(null);
   };
 
-  handleSubmitForExpense = (event) => {
+  handleSubmitForExpense = async (event) => {
     event.preventDefault();
     const { cAndFBill, freightCharge, otherCharge } = this.state;
+    const { singleLot } = this.props;
+    console.log(singleLot);
+    console.log(this.props.singleLot);
+    console.log(this.props.singleLot.lotNo);
+    console.log(this.props.singleLot.shipmentMethod);
+    const totalRevenue = await getAllOrdersInvoiceRateSingleLot(singleLot);
+    let totalLoss;
+    let totalProfit;
+    let expense =
+      parseInt(cAndFBill ? cAndFBill : 0) +
+      parseInt(freightCharge ? freightCharge : 0) +
+      parseInt(otherCharge ? otherCharge : 0);
+    let totalExpense =
+      expense +
+      parseInt(
+        singleLot.totalInvoiceDiscount ? singleLot.totalInvoiceDiscount : 0
+      );
+    if (totalRevenue && parseInt(totalRevenue) > totalExpense) {
+      totalProfit = parseInt(totalRevenue) - totalExpense;
+    } else {
+      totalLoss = totalExpense - (totalRevenue ? parseInt(totalRevenue) : 0);
+    }
+
     this.props.updateLotRedux({
-      ...this.props.singleLot,
+      ...singleLot,
       cAndFBill,
       freightCharge,
       otherCharge,
+      expense: expense,
+      totalExpense,
+      totalRevenue,
+      ...(totalProfit ? { totalProfit } : { totalLoss }),
     });
     toast.success(`Expense updated for lot:${this.props.singleLot.lotNo}`);
     this.setState({
@@ -677,6 +705,7 @@ const mapStateToProps = (state) => {
     allUsers: state.users.users,
   };
 };
-export default connect(mapStateToProps, { uploadOrderRedux, updateLotRedux })(
-  CreateOrderModal
-);
+export default connect(mapStateToProps, {
+  uploadOrderRedux,
+  updateLotRedux,
+})(CreateOrderModal);

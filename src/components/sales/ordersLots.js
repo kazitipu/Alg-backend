@@ -209,6 +209,7 @@ export class CalculationLots extends Component {
 
                     <div className="card-body order-datatable">
                       <Datatable
+                        calculation={this.props.calculation}
                         multiSelectOption={false}
                         myData={
                           this.props.match.params.shipmentMethod == "D2D"

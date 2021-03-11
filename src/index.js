@@ -50,7 +50,7 @@ import Profile from "./components/settings/profile";
 import Reports from "./components/reports/report";
 import Invoice from "./components/invoice/invoice";
 import InvoiceOrderList from "./components/invoice/invoiceOrderList";
-
+import InvoiceByOrder from "./components/invoice/invoice-by-order";
 import Print from "./components/invoice/print";
 import Datatable from "./components/common/datatable";
 import Login from "./components/auth/login";
@@ -170,7 +170,7 @@ class Root extends Component {
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/invoice-by-orderId/:orderId`}
-                  component={Print}
+                  component={InvoiceByOrder}
                 />
 
                 <Route

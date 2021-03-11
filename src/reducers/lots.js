@@ -11,6 +11,7 @@ const setLotsReducer = (state = INITIAL_STATE, action) => {
         (lot) => lot.lotNo !== action.payload.lotNo
       );
       return { ...state, lots: [...filteredLot, action.payload] };
+
     default:
       return { ...state };
   }
