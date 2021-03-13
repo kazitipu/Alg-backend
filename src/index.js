@@ -62,6 +62,10 @@ import SearchedOrder from "./components/searched-order/searched-order";
 import CommunicationByLots from "./components/communication/lots/lotList";
 import CommunicationByCustomers from "./components/communication/customers/customerList";
 
+// recharge
+import RechargeRequest from "./components/recharge/recharge-request/rechargeRequest";
+import RechargeWallet from "./components/recharge/recharge-wallet/rechargeWallet";
+import RechargeHistory from "./components/recharge/recharge-history/rechargeHistory";
 class Root extends Component {
   constructor(props) {
     super(props);
@@ -223,6 +227,23 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/communication/customers`}
                   component={CommunicationByCustomers}
+                />
+
+                {/* recharge  */}
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/recharge/recharge-request`}
+                  component={RechargeRequest}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/recharge/recharge-wallet`}
+                  component={RechargeWallet}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/recharge/recharge-history`}
+                  component={RechargeHistory}
                 />
 
                 <Route

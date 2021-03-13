@@ -394,6 +394,19 @@ export const getAllLots = async () => {
     alert(error);
   }
 };
+export const getAllRechargeRequest = async () => {
+  const rechargeRequestCollectionRef = firestore.collection("rechargeRequest");
+  try {
+    const rechargeRequest = await rechargeRequestCollectionRef.get();
+    const rechargeRequestArray = [];
+    rechargeRequest.forEach((doc) => {
+      rechargeRequestArray.push(...doc.data().rechargeRequestArray);
+    });
+    return rechargeRequestArray;
+  } catch (error) {
+    alert(error);
+  }
+};
 export const getAllBookings = async () => {
   const bookingsCollectionRef = firestore.collection("bookingRequest");
   try {

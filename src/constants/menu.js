@@ -84,6 +84,29 @@ export const MENUITEMSFORADMIN = [
     active: false,
   },
   {
+    title: "Recharge",
+    icon: Tag,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/recharge/recharge-request",
+        title: "Recharge Request",
+        type: "link",
+      },
+      {
+        path: "/recharge/recharge-wallet",
+        title: "Recharge Wallet",
+        type: "link",
+      },
+      {
+        path: "/recharge/recharge-history",
+        title: "Recharge History",
+        type: "link",
+      },
+    ],
+  },
+  {
     title: "Calculation",
     icon: DollarSign,
     type: "sub",
@@ -282,6 +305,29 @@ export const MENUITEMSFORAGENT = [
     icon: Archive,
     type: "link",
     active: false,
+  },
+  {
+    title: "Recharge",
+    icon: Tag,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/recharge/recharge-request",
+        title: "Recharge Request",
+        type: "link",
+      },
+      {
+        path: "/recharge/recharge-wallet",
+        title: "Recharge Wallet",
+        type: "link",
+      },
+      {
+        path: "/recharge/recharge-history",
+        title: "Recharge History",
+        type: "link",
+      },
+    ],
   },
   {
     title: "Calculation",

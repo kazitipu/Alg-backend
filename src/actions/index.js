@@ -26,6 +26,7 @@ import {
   uploadD2DRates,
   deleteD2DRates,
   getAllUsers,
+  getAllRechargeRequest,
 } from "../firebase/firebase.utils";
 
 export const getAllUsersRedux = () => async (dispatch) => {
@@ -291,4 +292,10 @@ export const deleteD2DRatesRedux = (
     type: "DELETE_D2D_RATES",
     payload: { freightType, country, productTypeId },
   });
+};
+
+// Recharge
+export const getAllRechargeRequestRedux = () => async (dispatch) => {
+  const rechargeRequestArray = await getAllRechargeRequest();
+  dispatch({ type: "GET_ALL_RECHARGE_REQUEST", payload: rechargeRequestArray });
 };
