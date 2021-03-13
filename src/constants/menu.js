@@ -77,6 +77,13 @@ export const MENUITEMSFORADMIN = [
     ],
   },
   {
+    title: "Invoice",
+    path: "/invoice",
+    icon: Archive,
+    type: "link",
+    active: false,
+  },
+  {
     title: "Calculation",
     icon: DollarSign,
     type: "sub",
@@ -151,7 +158,6 @@ export const MENUITEMSFORADMIN = [
       },
     ],
   },
-
   {
     title: "Users",
     icon: UserPlus,
@@ -163,14 +169,19 @@ export const MENUITEMSFORADMIN = [
     ],
   },
   {
-    title: "Suppliers",
+    title: "Communication",
     icon: Users,
     type: "sub",
     active: false,
     children: [
       {
-        path: "/suppliers/list_suppliers",
-        title: "Distributed Orders",
+        path: "/communication/lots",
+        title: "Lots",
+        type: "link",
+      },
+      {
+        path: "/communication/customers",
+        title: "Customers",
         type: "link",
       },
     ],
@@ -205,13 +216,7 @@ export const MENUITEMSFORADMIN = [
     active: false,
     children: [{ path: "/settings/profile", title: "Profile", type: "link" }],
   },
-  {
-    title: "Invoice",
-    path: "/invoice",
-    icon: Archive,
-    type: "link",
-    active: false,
-  },
+
   {
     title: "Register a manager",
     path: "/",
@@ -272,6 +277,13 @@ export const MENUITEMSFORAGENT = [
     ],
   },
   {
+    title: "Invoice",
+    path: "/invoice",
+    icon: Archive,
+    type: "link",
+    active: false,
+  },
+  {
     title: "Calculation",
     icon: DollarSign,
     type: "sub",
@@ -358,14 +370,19 @@ export const MENUITEMSFORAGENT = [
     ],
   },
   {
-    title: "Suppliers",
+    title: "Communication",
     icon: Users,
     type: "sub",
     active: false,
     children: [
       {
-        path: "/suppliers/list_suppliers",
-        title: "Distributed Orders",
+        path: "/communication/lots",
+        title: "Lots",
+        type: "link",
+      },
+      {
+        path: "/communication/customers",
+        title: "Customers",
         type: "link",
       },
     ],
@@ -400,13 +417,7 @@ export const MENUITEMSFORAGENT = [
     active: false,
     children: [{ path: "/settings/profile", title: "Profile", type: "link" }],
   },
-  {
-    title: "Invoice",
-    path: "/invoice",
-    icon: Archive,
-    type: "link",
-    active: false,
-  },
+
   {
     title: "Register a manager",
     path: "/",

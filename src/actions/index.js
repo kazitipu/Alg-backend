@@ -105,6 +105,7 @@ export const updateProfileImageRedux = (imgUrl) => {
 export const getAllOrdersOfSingleLotRedux = (lotObj) => async (dispatch) => {
   const ordersArray = await getAllOrdersOfSingleLot(lotObj);
   dispatch({ type: "GET_ALL_ORDERS", payload: ordersArray });
+  return ordersArray;
 };
 export const deleteSingleOrderRedux = (orderObj) => async (dispatch) => {
   await deleteSingleOrder(orderObj);

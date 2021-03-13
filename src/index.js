@@ -10,11 +10,13 @@ import { Provider } from "react-redux";
 import store from "./store";
 import Dashboard from "./components/dashboard";
 
-// Products physical
-import LotList from "./components/lot/physical/lotlist";
+//  BookingRequests
 import BookingList from "./components/bookings/bookingList";
 
-//Sales
+// LotsList
+import LotList from "./components/lot/physical/lotlist";
+
+//Orders
 import OrdersLots from "./components/sales/ordersLots";
 import OrdersD2DFreight from "./components/sales/ordersD2DFreight";
 import OrdersExpressMonth from "./components/sales/ordersExpressMonth";
@@ -55,6 +57,10 @@ import Print from "./components/invoice/print";
 import Datatable from "./components/common/datatable";
 import Login from "./components/auth/login";
 import SearchedOrder from "./components/searched-order/searched-order";
+
+// communication
+import CommunicationByLots from "./components/communication/lots/lotList";
+import CommunicationByCustomers from "./components/communication/customers/customerList";
 
 class Root extends Component {
   constructor(props) {
@@ -205,6 +211,18 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/payments/verified`}
                   component={VerifiedPayments}
+                />
+
+                {/* communication  */}
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/communication/lots`}
+                  component={CommunicationByLots}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/communication/customers`}
+                  component={CommunicationByCustomers}
                 />
 
                 <Route
