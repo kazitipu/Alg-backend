@@ -42,15 +42,12 @@ export class Datatable extends Component {
     const { myData } = this.props;
     if (myData.length > 0) {
       const newData = [];
-      myData.forEach((lot) => {
+      myData.forEach((rechargeDay) => {
         //  this is not affecting my output see line 104
         newData.push({
-          Lot: lot ? lot.lotNo : "",
-          Country: lot ? lot.selectCountry : "",
-          Shipment_Method: lot ? lot.shipmentMethod : "",
-          Shipment_Status: lot ? lot.shipmentStatus : "",
-          Shipment_Date: lot ? lot.shipmentDate : "",
-          Arrival_Date: lot ? lot.arrivalDate : "",
+          Date: rechargeDay.date,
+          Day: rechargeDay.day,
+          Total: rechargeDay.total,
         });
       });
       return (
@@ -92,14 +89,11 @@ export class Datatable extends Component {
     console.log(myData);
     const newData = [];
     if (myData.length > 0) {
-      myData.forEach((lot) => {
+      myData.forEach((rechargeDay) => {
         newData.push({
-          Lot: lot ? lot.lotNo : "",
-          Country: lot ? lot.selectCountry : "",
-          Shipment_Method: lot ? lot.shipmentMethod : "",
-          Shipment_Status: lot ? lot.shipmentStatus : "",
-          Shipment_Date: lot ? lot.shipmentDate : "",
-          Arrival_Date: lot ? lot.arrivalDate : "",
+          Date: rechargeDay.date,
+          Day: rechargeDay.day,
+          Total: rechargeDay.total,
         });
       });
     }

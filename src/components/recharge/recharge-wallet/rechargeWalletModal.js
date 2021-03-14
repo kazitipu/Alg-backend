@@ -4,6 +4,7 @@ import {
   uploadLotRedux,
   updateLotRedux,
   getAllOrdersOfSingleLotRedux,
+  rechargeUserRedux,
 } from "../../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
@@ -20,12 +21,58 @@ class RechargeWalletModal extends Component {
       receitNo: "",
     };
   }
+  uniqueId = (length = 16) => {
+    return parseInt(Math.ceil(Math.random() * Date.now()).toPrecision(length));
+  };
+
+  componentDidMount = () => {
+    console.log(this.uniqueId());
+  };
 
   handleSubmit = async (event) => {
     event.preventDefault();
     const { userObj } = this.props;
     console.log(this.props);
     if (userObj) {
+      let rechargedAt = new Date().toLocaleDateString();
+      rechargedAt = rechargedAt.replaceAll("/", "-");
+      console.log(rechargedAt);
+      const dayInDigit = new Date().getDay();
+      let day;
+      if (dayInDigit == 0) {
+        day = "Saturday";
+      }
+      if (dayInDigit == 1) {
+        day = "Sunday";
+      }
+      if (dayInDigit == 2) {
+        day = "Monday";
+      }
+      if (dayInDigit == 3) {
+        day = "Tuesday";
+      }
+      if (dayInDigit == 4) {
+        day = "Wednesday";
+      }
+      if (dayInDigit == 5) {
+        day = "Thursday";
+      }
+      if (dayInDigit == 6) {
+        day = "Friday";
+      }
+      const rechargeId = this.uniqueId();
+      console.log(userObj);
+      await this.props.rechargeUserRedux({
+        ...userObj,
+        ...this.state,
+        rechargedAt,
+        day,
+        rechargeId,
+        rechargeBy: "Md tipu",
+      });
+      toast.success(
+        `Recharge succesful to ${userObj.Name} of amount ${this.state.amount}`
+      );
     }
 
     this.setState({
@@ -45,7 +92,6 @@ class RechargeWalletModal extends Component {
   };
 
   render() {
-    console.log(this.props.singleLot);
     return (
       <>
         <div
@@ -316,5 +362,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   uploadLotRedux,
   updateLotRedux,
+  rechargeUserRedux,
   getAllOrdersOfSingleLotRedux,
 })(RechargeWalletModal);

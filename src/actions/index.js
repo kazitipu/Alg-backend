@@ -28,6 +28,8 @@ import {
   getAllUsers,
   getAllRechargeRequest,
   updateRechargeRequestStatus,
+  rechargeUser,
+  getAllRechargeDays,
 } from "../firebase/firebase.utils";
 
 export const getAllUsersRedux = () => async (dispatch) => {
@@ -311,4 +313,17 @@ export const updateRechargeRequestStatusRedux = (rechargeRequestObj) => async (
     type: "UPDATE_RECHARGE_REQUEST_STATUS",
     payload: updatedRechargeRequestObj,
   });
+};
+
+export const rechargeUserRedux = (rechargeObj) => async (dispatch) => {
+  const rechargedUserObj = await rechargeUser(rechargeObj);
+  dispatch({
+    type: "RECHARGE_USER",
+    payload: rechargedUserObj,
+  });
+};
+
+export const getAllRechargeDayRedux = () => async (dispatch) => {
+  const rechargeDaysArray = await getAllRechargeDays();
+  dispatch({ type: "GET_ALL_RECHARGE_DAY", payload: rechargeDaysArray });
 };

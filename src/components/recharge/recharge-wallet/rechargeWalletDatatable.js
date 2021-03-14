@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Users } from "react-feather";
+import { ReactReduxContext } from "react-redux";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -50,7 +51,6 @@ export class Datatable extends Component {
           Name: user.displayName,
           Mobile: user.mobileNo,
           Email: user.email,
-          Status: user.status,
         });
       });
       return (
@@ -99,7 +99,6 @@ export class Datatable extends Component {
           Name: user.displayName,
           Mobile: user.mobileNo,
           Email: user.email,
-          Status: user.status,
         });
       });
     }
@@ -173,6 +172,46 @@ export class Datatable extends Component {
     } else {
       columns.push(
         {
+          Header: <b style={{ color: "gray" }}>Status</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => {
+            if (myData.length > 0) {
+              const userObj = myData.find(
+                (user) => user.uid === row.original.uid
+              );
+              if (userObj.status === "silver") {
+                return (
+                  <div style={{ color: "silver" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+              if (userObj.status === "gold") {
+                return (
+                  <div style={{ color: "gold" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+              if (userObj.status === "diamond") {
+                return (
+                  <div style={{ color: "darkviolet" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+            } else {
+              return <div></div>;
+            }
+          },
+
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
+        },
+        {
           Header: <b style={{ color: "darkorange" }}>Wallet Balance</b>,
           id: "delete",
           accessor: (str) => "delete",
@@ -184,6 +223,8 @@ export class Datatable extends Component {
               return (
                 <div style={{ color: "darkorange" }}>{userObj.myWallet}Tk</div>
               );
+            } else {
+              return <div></div>;
             }
           },
 

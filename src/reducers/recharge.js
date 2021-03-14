@@ -1,4 +1,8 @@
-const INITIAL_STATE = { rechargeRequestArray: [] };
+const INITIAL_STATE = {
+  rechargeRequestArray: [],
+  rechargeHistoryArray: [],
+  rechargeDaysArray: [],
+};
 
 const setRechargeReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -9,11 +13,13 @@ const setRechargeReducer = (state = INITIAL_STATE, action) => {
         (rechargeRequest) =>
           rechargeRequest.rechargeId !== action.payload.rechargeId
       );
-
       return {
         ...state,
         rechargeRequestArray: [action.payload, ...filteredRechargeRequestArray],
       };
+    case "GET_ALL_RECHARGE_DAY":
+      return { ...state, rechargeDaysArray: [...action.payload] };
+
     default:
       return { ...state };
   }

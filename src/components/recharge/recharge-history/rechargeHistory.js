@@ -3,7 +3,7 @@ import Breadcrumb from "../../common/breadcrumb";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import Datatable from "./rechargeHistoryDatatable";
-import { getAllLotsRedux } from "../../../actions/index";
+import { getAllRechargeDayRedux } from "../../../actions/index";
 import { Link } from "react-router-dom";
 import TextOrMailModal from "../textOrmailModal";
 import { connect } from "react-redux";
@@ -27,7 +27,7 @@ export class RechargeHistory extends Component {
   //     this.setState({ open: false });
   // };
   componentDidMount = async () => {
-    this.props.getAllLotsRedux();
+    this.props.getAllRechargeDayRedux();
   };
 
   startToggleModal = async (lotObj) => {
@@ -136,19 +136,7 @@ export class RechargeHistory extends Component {
                         </div>
                       </form>
                     </li>
-                    <li>
-                      {/* <button
-                        className="btn"
-                        style={{
-                          backgroundColor: "rgb(68, 0, 97)",
-                          color: "white",
-                        }}
-                        type="button"
-                        onClick={() => this.startToggleModal(null)}
-                      >
-                        Text
-                      </button> */}
-                    </li>
+                    <li></li>
                   </div>
                 </div>
                 <div className="card-body">
@@ -158,7 +146,7 @@ export class RechargeHistory extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.props.allLots}
+                      myData={this.props.allDays}
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"
@@ -178,10 +166,10 @@ export class RechargeHistory extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    allLots: state.lots.lots,
+    allDays: state.recharge.rechargeDayArray,
   };
 };
 
 export default connect(mapStateToProps, {
-  getAllLotsRedux,
+  getAllRechargeDayRedux,
 })(RechargeHistory);
