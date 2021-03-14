@@ -42,15 +42,15 @@ export class Datatable extends Component {
     const { myData } = this.props;
     if (myData.length > 0) {
       const newData = [];
-      myData.forEach((lot) => {
+      myData.forEach((user) => {
         //  this is not affecting my output see line 104
         newData.push({
-          Lot: lot ? lot.lotNo : "",
-          Country: lot ? lot.selectCountry : "",
-          Shipment_Method: lot ? lot.shipmentMethod : "",
-          Shipment_Status: lot ? lot.shipmentStatus : "",
-          Shipment_Date: lot ? lot.shipmentDate : "",
-          Arrival_Date: lot ? lot.arrivalDate : "",
+          uid: user.uid,
+          Id: user.userId,
+          Name: user.displayName,
+          Mobile: user.mobileNo,
+          Email: user.email,
+          Status: user.status,
         });
       });
       return (
@@ -92,14 +92,14 @@ export class Datatable extends Component {
     console.log(myData);
     const newData = [];
     if (myData.length > 0) {
-      myData.forEach((lot) => {
+      myData.forEach((user) => {
         newData.push({
-          Lot: lot ? lot.lotNo : "",
-          Country: lot ? lot.selectCountry : "",
-          Shipment_Method: lot ? lot.shipmentMethod : "",
-          Shipment_Status: lot ? lot.shipmentStatus : "",
-          Shipment_Date: lot ? lot.shipmentDate : "",
-          Arrival_Date: lot ? lot.arrivalDate : "",
+          uid: user.uid,
+          Id: user.userId,
+          Name: user.displayName,
+          Mobile: user.mobileNo,
+          Email: user.email,
+          Status: user.status,
         });
       });
     }
@@ -171,58 +171,56 @@ export class Datatable extends Component {
         },
       });
     } else {
-      columns.push({
-        Header: <b>Action</b>,
-        id: "delete",
-        accessor: (str) => "delete",
-        Cell: (row) => (
-          <div>
-            <span style={{ cursor: "pointer", padding: "5px" }}>
-              <button
-                className="btn"
-                style={{
-                  backgroundColor: "#67000a",
-                  color: "white",
-                }}
-                type="button"
-                onClick={() =>
-                  this.props.startToggleModal({
-                    ...row.original,
-                    action: "text",
-                    from: "lots",
-                  })
-                }
-              >
-                Text
-              </button>
-            </span>
+      columns.push(
+        {
+          Header: <b style={{ color: "darkorange" }}>Wallet Balance</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => {
+            if (myData.length > 0) {
+              const userObj = myData.find(
+                (user) => user.uid === row.original.uid
+              );
+              return (
+                <div style={{ color: "darkorange" }}>{userObj.myWallet}Tk</div>
+              );
+            }
+          },
 
-            <span style={{ cursor: "pointer" }}>
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
+        },
+        {
+          Header: <b style={{ color: "green" }}>Action</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => (
+            <div>
               <button
                 className="btn"
                 style={{
-                  backgroundColor: "rgb(22 67 140)",
+                  backgroundColor: "green",
                   color: "white",
                 }}
                 type="button"
                 onClick={() =>
                   this.props.startToggleModal({
                     ...row.original,
-                    action: "mail",
-                    from: "lots",
                   })
                 }
               >
-                Mail
+                <i className="icofont-dollar-plus"></i>&nbsp; Recharge
               </button>
-            </span>
-          </div>
-        ),
-        style: {
-          textAlign: "center",
-        },
-        sortable: false,
-      });
+            </div>
+          ),
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
+        }
+      );
     }
 
     return (

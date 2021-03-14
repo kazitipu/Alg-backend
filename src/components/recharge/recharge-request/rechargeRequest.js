@@ -53,7 +53,7 @@ export class RechargeRequest extends Component {
           startToggleModal={this.startToggleModal}
           singleLot={this.state.singleLot}
         />
-        <Breadcrumb title="Text/Mail" parent="Lot" />
+        <Breadcrumb title="Recharge Request" parent="Recharge" />
         {/* <!-- Container-fluid starts--> */}
         <div className="container-fluid">
           <div className="row">
@@ -70,7 +70,7 @@ export class RechargeRequest extends Component {
                   <h5>
                     {" "}
                     <i
-                      className="icofont-send-mail"
+                      className="fas fa-money-check-alt"
                       style={{
                         fontSize: "180%",
                         marginRight: "5px",
@@ -78,7 +78,7 @@ export class RechargeRequest extends Component {
                         color: "#ff8084",
                       }}
                     ></i>
-                    Text or Mail
+                    Recharge Request
                   </h5>
                   <div
                     style={{

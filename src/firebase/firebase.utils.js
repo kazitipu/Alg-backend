@@ -493,6 +493,31 @@ export const updateExpressOrder = async (orderId) => {
     alert(error);
   }
 };
+export const updateRechargeRequestStatus = async (rechargeRequestObj) => {
+  const userRechargeRequestRef = firestore.doc(
+    `rechargeRequest/${rechargeRequestObj.userId}`
+  );
+  try {
+    const userRechargeRequest = await userRechargeRequestRef.get();
+    const rechargeRequestArray = userRechargeRequest.data()
+      .rechargeRequestArray;
+    const filteredrechargeRequestArray = rechargeRequestArray.filter(
+      (rechargeRequest) =>
+        rechargeRequest.rechargeId !== rechargeRequestObj["Recharge Id"]
+    );
+    const rechargeRequest = rechargeRequestArray.find(
+      (rechargeRequest) =>
+        rechargeRequest.rechargeId === rechargeRequestObj["Recharge Id"]
+    );
+    rechargeRequest.status = rechargeRequestObj.status;
+    await userRechargeRequestRef.update({
+      rechargeRequestArray: [...filteredrechargeRequestArray, rechargeRequest],
+    });
+    return rechargeRequest;
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const getAllOrdersOfSingleLot = async (lotObj) => {
   const ordersDocumentRef = firestore.doc(

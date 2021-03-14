@@ -27,6 +27,7 @@ import {
   deleteD2DRates,
   getAllUsers,
   getAllRechargeRequest,
+  updateRechargeRequestStatus,
 } from "../firebase/firebase.utils";
 
 export const getAllUsersRedux = () => async (dispatch) => {
@@ -298,4 +299,16 @@ export const deleteD2DRatesRedux = (
 export const getAllRechargeRequestRedux = () => async (dispatch) => {
   const rechargeRequestArray = await getAllRechargeRequest();
   dispatch({ type: "GET_ALL_RECHARGE_REQUEST", payload: rechargeRequestArray });
+};
+
+export const updateRechargeRequestStatusRedux = (rechargeRequestObj) => async (
+  dispatch
+) => {
+  const updatedRechargeRequestObj = await updateRechargeRequestStatus(
+    rechargeRequestObj
+  );
+  dispatch({
+    type: "UPDATE_RECHARGE_REQUEST_STATUS",
+    payload: updatedRechargeRequestObj,
+  });
 };

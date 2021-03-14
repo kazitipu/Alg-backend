@@ -3,9 +3,8 @@ import Breadcrumb from "../../common/breadcrumb";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import Datatable from "./rechargeWalletDatatable";
-import { getAllLotsRedux } from "../../../actions/index";
 import { Link } from "react-router-dom";
-import TextOrMailModal from "../textOrmailModal";
+import RechargeWalletModal from "./rechargeWalletModal";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
 
@@ -16,7 +15,7 @@ export class RechargeWallet extends Component {
       open: false,
 
       toggleModal: true,
-      singleLot: null,
+      userObj: null,
     };
   }
   // onOpenModal = () => {
@@ -26,18 +25,15 @@ export class RechargeWallet extends Component {
   // onCloseModal = () => {
   //     this.setState({ open: false });
   // };
-  componentDidMount = async () => {
-    this.props.getAllLotsRedux();
-  };
+  componentDidMount = async () => {};
 
-  startToggleModal = async (lotObj) => {
-    if (lotObj == null) {
-      this.setState({ toggleModal: !this.state.toggleModal, singleLot: null });
+  startToggleModal = async (userObj) => {
+    if (userObj == null) {
+      this.setState({ toggleModal: !this.state.toggleModal, userObj: null });
     } else {
-      console.log(lotObj);
       this.setState({
         toggleModal: !this.state.toggleModal,
-        singleLot: lotObj,
+        userObj: userObj,
       });
     }
   };
@@ -48,12 +44,12 @@ export class RechargeWallet extends Component {
     console.log(this.props);
     return (
       <Fragment>
-        <TextOrMailModal
+        <RechargeWalletModal
           toggleModal={this.state.toggleModal}
           startToggleModal={this.startToggleModal}
-          singleLot={this.state.singleLot}
+          userObj={this.state.userObj}
         />
-        <Breadcrumb title="Text/Mail" parent="Lot" />
+        <Breadcrumb title="Recharge wallet" parent="Recharge" />
         {/* <!-- Container-fluid starts--> */}
         <div className="container-fluid">
           <div className="row">
@@ -78,7 +74,7 @@ export class RechargeWallet extends Component {
                         color: "#ff8084",
                       }}
                     ></i>
-                    Text or Mail
+                    Recharge Wallet
                   </h5>
                   <div
                     style={{
@@ -158,7 +154,7 @@ export class RechargeWallet extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.props.allLots}
+                      myData={this.props.allUser}
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"
@@ -178,8 +174,8 @@ export class RechargeWallet extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    allLots: state.lots.lots,
+    allUser: state.users.users,
   };
 };
 
-export default connect(mapStateToProps, { getAllLotsRedux })(RechargeWallet);
+export default connect(mapStateToProps)(RechargeWallet);

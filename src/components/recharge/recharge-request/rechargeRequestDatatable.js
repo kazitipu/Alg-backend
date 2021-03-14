@@ -4,6 +4,8 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { connect } from "react-redux";
+import { updateRechargeRequestStatusRedux } from "../../../actions/index";
 
 export class Datatable extends Component {
   constructor(props) {
@@ -44,11 +46,26 @@ export class Datatable extends Component {
       const newData = [];
       myData.forEach((rechargeRequest) => {
         //  this is not affecting my output see line 104
+        const userObj = this.props.allUser.find(
+          (user) => user.uid === rechargeRequest.userId
+        );
         newData.push({
-          "SL No": rechargeRequest ? rechargeRequest.userObj.userId : "",
-          Name: rechargeRequest ? rechargeRequest.userObj.displayName : "",
+          "Recharge Id": rechargeRequest ? rechargeRequest.rechargeId : "",
+          "SL No": userObj ? userObj.userId : "",
+          Name: userObj ? userObj.displayName : "",
+          Method: rechargeRequest ? rechargeRequest.method : "",
           Amount: rechargeRequest ? rechargeRequest.amount : "",
-          //   image:
+          image: (
+            <a
+              target="_blank"
+              href={rechargeRequest ? rechargeRequest.imageUrl : ""}
+            >
+              <img
+                style={{ width: "150px", height: "100px" }}
+                src={rechargeRequest ? rechargeRequest.imageUrl : ""}
+              ></img>
+            </a>
+          ),
         });
       });
       return (
@@ -91,10 +108,29 @@ export class Datatable extends Component {
     const newData = [];
     if (myData.length > 0) {
       myData.forEach((rechargeRequest) => {
+        console.log(this.props.allUser);
+        console.log(rechargeRequest.userId);
+        const userObj = this.props.allUser.find(
+          (user) => user.uid === rechargeRequest.userId
+        );
+        console.log(userObj);
         newData.push({
-          "SL No": rechargeRequest ? rechargeRequest.userObj.userId : "",
-          Name: rechargeRequest ? rechargeRequest.userObj.displayName : "",
+          "Recharge Id": rechargeRequest ? rechargeRequest.rechargeId : "",
+          "SL No": userObj ? userObj.userId : "",
+          Name: userObj ? userObj.displayName : "",
+          Method: rechargeRequest ? rechargeRequest.method : "",
           Amount: rechargeRequest ? rechargeRequest.amount : "",
+          image: (
+            <a
+              target="_blank"
+              href={rechargeRequest ? rechargeRequest.imageUrl : ""}
+            >
+              <img
+                style={{ width: "150px", height: "100px" }}
+                src={rechargeRequest ? rechargeRequest.imageUrl : ""}
+              ></img>
+            </a>
+          ),
         });
       });
     }
@@ -166,58 +202,117 @@ export class Datatable extends Component {
         },
       });
     } else {
-      columns.push({
-        Header: <b>Action</b>,
-        id: "delete",
-        accessor: (str) => "delete",
-        Cell: (row) => (
-          <div>
-            <span style={{ cursor: "pointer", padding: "5px" }}>
-              <button
-                className="btn"
-                style={{
-                  backgroundColor: "#67000a",
-                  color: "white",
-                }}
-                type="button"
-                onClick={() =>
-                  this.props.startToggleModal({
-                    ...row.original,
-                    action: "text",
-                    from: "lots",
-                  })
-                }
-              >
-                Text
-              </button>
-            </span>
-
-            <span style={{ cursor: "pointer" }}>
-              <button
-                className="btn"
-                style={{
-                  backgroundColor: "rgb(22 67 140)",
-                  color: "white",
-                }}
-                type="button"
-                onClick={() =>
-                  this.props.startToggleModal({
-                    ...row.original,
-                    action: "mail",
-                    from: "lots",
-                  })
-                }
-              >
-                Mail
-              </button>
-            </span>
-          </div>
-        ),
-        style: {
-          textAlign: "center",
+      columns.push(
+        {
+          Header: <b>status</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => {
+            if (myData.length > 0) {
+              const rechargeRequest = myData.find(
+                (rechargeRequest) =>
+                  rechargeRequest.rechargeId === row.original["Recharge Id"]
+              );
+              if (rechargeRequest.status === "pending") {
+                return (
+                  <div style={{ color: "orange" }}>
+                    <i className="icofont-spinner-alt-3"></i>&nbsp;
+                    {rechargeRequest.status}
+                  </div>
+                );
+              }
+              if (rechargeRequest.status === "approved") {
+                return (
+                  <div style={{ color: "green" }}>
+                    <i className="icofont-checked"></i>&nbsp;
+                    {rechargeRequest.status}
+                  </div>
+                );
+              }
+              if (rechargeRequest.status === "rejected") {
+                return (
+                  <div style={{ color: "red" }}>
+                    <i className="icofont-close-squared"></i>&nbsp;
+                    {rechargeRequest.status}
+                  </div>
+                );
+              }
+            }
+          },
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
         },
-        sortable: false,
-      });
+        {
+          Header: <b>Action</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => (
+            <div>
+              <span style={{ cursor: "pointer", padding: "5px" }}>
+                <button
+                  className="btn"
+                  style={{
+                    backgroundColor: "green",
+                    color: "white",
+                  }}
+                  type="button"
+                  onClick={() => {
+                    if (myData.length > 0) {
+                      const rechargeRequest = myData.find(
+                        (rechargeRequest) =>
+                          rechargeRequest.rechargeId ===
+                          row.original["Recharge Id"]
+                      );
+                      this.props.updateRechargeRequestStatusRedux({
+                        ...row.original,
+                        status: "approved",
+                        userId: rechargeRequest.userId,
+                      });
+                    }
+                  }}
+                >
+                  {" "}
+                  <i className="icofont-checked"></i>&nbsp; Approve
+                </button>
+              </span>
+
+              <span style={{ cursor: "pointer" }}>
+                <button
+                  className="btn"
+                  style={{
+                    backgroundColor: "red",
+                    color: "white",
+                  }}
+                  type="button"
+                  onClick={() => {
+                    if (myData.length > 0) {
+                      const rechargeRequest = myData.find(
+                        (rechargeRequest) =>
+                          rechargeRequest.rechargeId ===
+                          row.original["Recharge Id"]
+                      );
+                      this.props.updateRechargeRequestStatusRedux({
+                        ...row.original,
+                        status: "rejected",
+                        userId: rechargeRequest.userId,
+                      });
+                    }
+                  }}
+                >
+                  {" "}
+                  <i className="icofont-close-squared"></i>&nbsp; Reject
+                </button>
+              </span>
+            </div>
+          ),
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
+        }
+      );
     }
 
     return (
@@ -234,5 +329,11 @@ export class Datatable extends Component {
     );
   }
 }
-
-export default Datatable;
+const mapStateToProps = (state) => {
+  return {
+    allUser: state.users.users,
+  };
+};
+export default connect(mapStateToProps, { updateRechargeRequestStatusRedux })(
+  Datatable
+);
