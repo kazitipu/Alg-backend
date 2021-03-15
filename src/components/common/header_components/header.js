@@ -154,13 +154,13 @@ export class Header extends Component {
 
 const mapStateToProps = (state) => {
   const unVerifiedPaymentsArray = [];
-  state.payments.payments.forEach((payment) => {
-    payment.payments.forEach((inPayment) => {
-      if (inPayment.paymentStatus === "unVerified") {
-        unVerifiedPaymentsArray.push(inPayment);
-      }
-    });
-  });
+  // state.payments.payments.forEach((payment) => {
+  //   payment.payments.forEach((inPayment) => {
+  //     if (inPayment.paymentStatus === "unVerified") {
+  //       unVerifiedPaymentsArray.push(inPayment);
+  //     }
+  //   });
+  // });
   return {
     pendingOrders: state.orders.orders.filter(
       (order) => order.status === "order_pending"

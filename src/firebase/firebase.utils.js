@@ -489,6 +489,21 @@ export const getAllRechargeDays = async () => {
     return rechargeDaysArray;
   } catch (error) {
     alert(error);
+    return [];
+  }
+};
+export const getAllPaymentDays = async () => {
+  const paymentDaysCollectionRef = firestore.collection("paymentDays");
+  try {
+    const paymentDays = await paymentDaysCollectionRef.get();
+    const paymentDaysArray = [];
+    paymentDays.forEach((doc) => {
+      paymentDaysArray.push(doc.data());
+    });
+    return paymentDaysArray;
+  } catch (error) {
+    alert(error);
+    return [];
   }
 };
 
@@ -622,6 +637,34 @@ export const getAllOrdersOfSingleLot = async (lotObj) => {
     }
   } catch (error) {
     alert(error);
+  }
+};
+export const getAllRechargesOfSingleDate = async (date) => {
+  const rechargesDocumentRef = firestore.doc(`rechargeHistory/${date}`);
+  try {
+    const snapShot = await rechargesDocumentRef.get();
+    if (snapShot.exists) {
+      return snapShot.data().recharges;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    alert(error);
+    return [];
+  }
+};
+export const getAllPaymentsOfSingleDate = async (date) => {
+  const paymentsDocumentRef = firestore.doc(`paymentHistory/${date}`);
+  try {
+    const snapShot = await paymentsDocumentRef.get();
+    if (snapShot.exists) {
+      return snapShot.data().payments;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    alert(error);
+    return [];
   }
 };
 export const getAllOrdersInvoiceRateSingleLot = async (lotObj) => {

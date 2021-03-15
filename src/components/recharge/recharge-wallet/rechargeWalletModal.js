@@ -40,25 +40,25 @@ class RechargeWalletModal extends Component {
       const dayInDigit = new Date().getDay();
       let day;
       if (dayInDigit == 0) {
-        day = "Saturday";
-      }
-      if (dayInDigit == 1) {
         day = "Sunday";
       }
-      if (dayInDigit == 2) {
+      if (dayInDigit == 1) {
         day = "Monday";
       }
-      if (dayInDigit == 3) {
+      if (dayInDigit == 2) {
         day = "Tuesday";
       }
-      if (dayInDigit == 4) {
+      if (dayInDigit == 3) {
         day = "Wednesday";
       }
-      if (dayInDigit == 5) {
+      if (dayInDigit == 4) {
         day = "Thursday";
       }
-      if (dayInDigit == 6) {
+      if (dayInDigit == 5) {
         day = "Friday";
+      }
+      if (dayInDigit == 6) {
+        day = "Saturday";
       }
       const rechargeId = this.uniqueId();
       console.log(userObj);

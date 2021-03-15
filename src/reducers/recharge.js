@@ -19,7 +19,8 @@ const setRechargeReducer = (state = INITIAL_STATE, action) => {
       };
     case "GET_ALL_RECHARGE_DAY":
       return { ...state, rechargeDaysArray: [...action.payload] };
-
+    case "GET_ALL_RECHARGES_OF_SINGLE_DAY":
+      return { ...state, rechargeHistoryArray: [...action.payload] };
     default:
       return { ...state };
   }

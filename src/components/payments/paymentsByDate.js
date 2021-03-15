@@ -1,60 +1,37 @@
 import React, { Component, Fragment } from "react";
-import Breadcrumb from "../../common/breadcrumb";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import Datatable from "./rechargeHistoryDatatable";
-import { getAllRechargeDayRedux } from "../../../actions/index";
-import { Link } from "react-router-dom";
-import TextOrMailModal from "../textOrmailModal";
+import Breadcrumb from "../common/breadcrumb";
+import Datatable from "./paymentsByDateDatatable";
+import { getAllPaymentsOfSingleDateRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
+import { ExportCSV } from "./exportCsv";
+import { withRouter } from "react-router-dom";
 
-export class RechargeHistory extends Component {
+export class PaymentsByDate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
-
-      toggleModal: true,
-      singleLot: null,
+      allPayments: [],
     };
   }
-  // onOpenModal = () => {
-  //     this.setState({ open: true });
-  // };
 
-  // onCloseModal = () => {
-  //     this.setState({ open: false });
-  // };
   componentDidMount = async () => {
-    this.props.getAllRechargeDayRedux();
+    const { date } = this.props.match.params;
+    await this.props.getAllPaymentsOfSingleDateRedux(date);
+    this.setState({ allPayments: this.props.payments });
   };
 
-  startToggleModal = async (lotObj) => {
-    if (lotObj == null) {
-      this.setState({ toggleModal: !this.state.toggleModal, singleLot: null });
-    } else {
-      console.log(lotObj);
-      this.setState({
-        toggleModal: !this.state.toggleModal,
-        singleLot: lotObj,
-      });
-    }
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ allPayments: nextProps.payments });
   };
 
   render() {
-    const { open } = this.state;
-
-    console.log(this.props);
+    const { allPayments } = this.state;
+    const { date } = this.props.match.params;
     return (
       <Fragment>
-        <TextOrMailModal
-          toggleModal={this.state.toggleModal}
-          startToggleModal={this.startToggleModal}
-          singleLot={this.state.singleLot}
-        />
-        <Breadcrumb title="Text/Mail" parent="Lot" />
-        {/* <!-- Container-fluid starts--> */}
+        <Breadcrumb title="Recharge-history" parent="Recharge" />
+
         <div className="container-fluid">
           <div className="row">
             <div className="col-sm-12">
@@ -68,17 +45,20 @@ export class RechargeHistory extends Component {
                   }}
                 >
                   <h5>
-                    {" "}
-                    <i
-                      className="icofont-send-mail"
+                    <span
                       style={{
-                        fontSize: "180%",
-                        marginRight: "5px",
-                        marginTop: "5px",
-                        color: "#ff8084",
+                        color: "#5ec3db",
+                        fontSize: "150%",
+                        fontWeight: "bold",
+                        textTransform: "none",
                       }}
-                    ></i>
-                    Text or Mail
+                    >
+                      <i
+                        className="icofont-ship"
+                        style={{ color: "black" }}
+                      ></i>
+                      All Payments: {date}
+                    </span>
                   </h5>
                   <div
                     style={{
@@ -87,7 +67,6 @@ export class RechargeHistory extends Component {
                       justifyContent: "space-around",
                     }}
                   >
-                    {" "}
                     <li
                       style={{
                         border: "1px solid gainsboro",
@@ -117,7 +96,7 @@ export class RechargeHistory extends Component {
                             name="searchFor"
                             value={this.state.searchFor}
                             type="search"
-                            placeholder="Search lot"
+                            placeholder="Search Recharge"
                             onChange={this.handleChange}
                           />
                           <span
@@ -138,26 +117,29 @@ export class RechargeHistory extends Component {
                     </li>
                   </div>
                 </div>
-                <div className="card-body">
-                  <div className="clearfix"></div>
-                  <div id="basicScenario" className="product-physical">
-                    <Datatable
-                      startToggleModal={this.startToggleModal}
-                      history={this.props.history}
-                      multiSelectOption={false}
-                      myData={this.props.allDays}
-                      pageSize={10}
-                      pagination={true}
-                      class="-striped -highlight"
-                    />
-                  </div>
+                {allPayments.length > 0 ? (
+                  <ExportCSV
+                    csvData={allPayments}
+                    fileName={`Payments-${date}`}
+                  />
+                ) : null}
+
+                <div className="card-body order-datatable">
+                  <Datatable
+                    startToggleModalAdditionalInfo={
+                      this.startToggleModalAdditionalInfo
+                    }
+                    multiSelectOption={false}
+                    myData={allPayments}
+                    pageSize={10}
+                    pagination={true}
+                    class="-striped -highlight"
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <ToastContainer />
-        {/* <!-- Container-fluid Ends--> */}
       </Fragment>
     );
   }
@@ -165,10 +147,10 @@ export class RechargeHistory extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    allDays: state.recharge.rechargeDaysArray,
+    payments: state.payments.paymentHistoryArray,
   };
 };
 
-export default connect(mapStateToProps, {
-  getAllRechargeDayRedux,
-})(RechargeHistory);
+export default withRouter(
+  connect(mapStateToProps, { getAllPaymentsOfSingleDateRedux })(PaymentsByDate)
+);

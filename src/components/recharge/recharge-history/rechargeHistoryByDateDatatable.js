@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from "react";
-import { Users } from "react-feather";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+
 export class Datatable extends Component {
   constructor(props) {
     super(props);
@@ -42,17 +44,23 @@ export class Datatable extends Component {
     const { myData } = this.props;
     if (myData.length > 0) {
       const newData = [];
-      myData.forEach((rechargeDay) => {
-        //  this is not affecting my output see line 104
+      myData.forEach((recharge) => {
         newData.push({
-          Date: rechargeDay.date,
-          Day: rechargeDay.day,
-          Total: `${rechargeDay.total}Tk`,
+          Id: recharge.Id,
+          Name: recharge.Name,
+          Mobile: recharge.Mobile,
+          Amount: recharge.amount,
+          Method: recharge.paymentMethod,
+          RechargeId: recharge.rechargeId,
+          Receit: recharge.receitNo,
+          RechargeBy: recharge.rechargeBy,
         });
       });
       return (
         <div
           style={{ backgroundColor: "#fafafa" }}
+          contentEditable
+          suppressContentEditableWarning
           onBlur={(e) => {
             const data = [...newData];
             data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
@@ -72,16 +80,6 @@ export class Datatable extends Component {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  getStatus = (productQuantity) => {
-    if (productQuantity < 10) {
-      return <i className="fa fa-circle font-danger f-12" />;
-    } else if (productQuantity > 50) {
-      return <i className="fa fa-circle font-success f-12" />;
-    } else {
-      return <i className="fa fa-circle font-warning f-12" />;
-    }
-  };
-
   render() {
     const { pageSize, myClass, multiSelectOption, pagination } = this.props;
     console.log(this.props);
@@ -89,11 +87,16 @@ export class Datatable extends Component {
     console.log(myData);
     const newData = [];
     if (myData.length > 0) {
-      myData.forEach((rechargeDay) => {
+      myData.forEach((recharge) => {
         newData.push({
-          Date: rechargeDay.date,
-          Day: rechargeDay.day,
-          Total: `${rechargeDay.total}Tk`,
+          Id: recharge.Id,
+          Name: recharge.Name,
+          Mobile: recharge.Mobile,
+          Amount: recharge.amount,
+          Method: recharge.paymentMethod,
+          RechargeId: recharge.rechargeId,
+          Receit: recharge.receitNo,
+          RechargeBy: recharge.rechargeBy,
         });
       });
     }
@@ -119,81 +122,10 @@ export class Datatable extends Component {
       columns.push({
         Header: <b>{this.Capitalize(key.toString())}</b>,
         accessor: key,
-        Cell: editable,
+        Cell: null,
         style: {
           textAlign: "center",
         },
-      });
-    }
-
-    if (multiSelectOption == true) {
-      columns.push({
-        Header: (
-          <button
-            className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
-            onClick={(e) => {
-              if (window.confirm("Are you sure you wish to delete this item?"))
-                this.handleRemoveRow();
-            }}
-          >
-            Delete
-          </button>
-        ),
-        id: "delete",
-        accessor: (str) => "delete",
-        sortable: false,
-        style: {
-          textAlign: "center",
-        },
-        Cell: (row) => (
-          <div>
-            <span>
-              <input
-                type="checkbox"
-                name={row.original.id}
-                defaultChecked={this.state.checkedValues.includes(
-                  row.original.id
-                )}
-                onChange={(e) => this.selectRow(e, row.original.id)}
-              />
-            </span>
-          </div>
-        ),
-        accessor: key,
-        style: {
-          textAlign: "center",
-        },
-      });
-    } else {
-      columns.push({
-        Header: <b>Action</b>,
-        id: "delete",
-        accessor: (str) => "delete",
-        Cell: (row) => (
-          <div>
-            <span style={{ cursor: "pointer", padding: "5px" }}>
-              <button
-                className="btn"
-                style={{
-                  backgroundColor: "#67000a",
-                  color: "white",
-                }}
-                type="button"
-                onClick={() =>
-                  this.props.history.push(
-                    `${process.env.PUBLIC_URL}/recharge/recharge-history/${row.original.Date}`
-                  )
-                }
-              >
-                view
-              </button>
-            </span>
-          </div>
-        ),
-        style: {
-          textAlign: "center",
-        },
-        sortable: false,
       });
     }
 
@@ -212,4 +144,4 @@ export class Datatable extends Component {
   }
 }
 
-export default withRouter(Datatable);
+export default withRouter(connect(null)(Datatable));

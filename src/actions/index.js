@@ -30,6 +30,9 @@ import {
   updateRechargeRequestStatus,
   rechargeUser,
   getAllRechargeDays,
+  getAllRechargesOfSingleDate,
+  getAllPaymentDays,
+  getAllPaymentsOfSingleDate,
 } from "../firebase/firebase.utils";
 
 export const getAllUsersRedux = () => async (dispatch) => {
@@ -326,4 +329,28 @@ export const rechargeUserRedux = (rechargeObj) => async (dispatch) => {
 export const getAllRechargeDayRedux = () => async (dispatch) => {
   const rechargeDaysArray = await getAllRechargeDays();
   dispatch({ type: "GET_ALL_RECHARGE_DAY", payload: rechargeDaysArray });
+};
+
+export const getAllRechargesOfSingleDateRedux = (date) => async (dispatch) => {
+  const rechargesArray = await getAllRechargesOfSingleDate(date);
+  dispatch({
+    type: "GET_ALL_RECHARGES_OF_SINGLE_DAY",
+    payload: rechargesArray,
+  });
+  return rechargesArray;
+};
+
+// payments
+export const getAllPaymentDayRedux = () => async (dispatch) => {
+  const paymentDaysArray = await getAllPaymentDays();
+  dispatch({ type: "GET_ALL_PAYMENT_DAY", payload: paymentDaysArray });
+};
+
+export const getAllPaymentsOfSingleDateRedux = (date) => async (dispatch) => {
+  const paymentsArray = await getAllPaymentsOfSingleDate(date);
+  dispatch({
+    type: "GET_ALL_PAYMENTS_OF_SINGLE_DAY",
+    payload: paymentsArray,
+  });
+  return paymentsArray;
 };

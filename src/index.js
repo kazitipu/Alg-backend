@@ -29,10 +29,10 @@ import Parcel from "./components/express-rates/parcel/parcel";
 // D2D Rates
 import D2DRates from "./components/d2d-rates/d2dRates";
 
-//Coupons
-import UnverifiedPayments from "./components/payments/unVerifiedPayments";
-import VerifiedPayments from "./components/payments/verifiedPayments";
-import Create_coupons from "./components/payments/create-coupons";
+//Payments
+
+import Payments from "./components/payments/payments";
+import PaymentsByDate from "./components/payments/paymentsByDate";
 
 //Pages
 import ProductToOrder from "./components/pages/product-to-order";
@@ -66,6 +66,7 @@ import CommunicationByCustomers from "./components/communication/customers/custo
 import RechargeRequest from "./components/recharge/recharge-request/rechargeRequest";
 import RechargeWallet from "./components/recharge/recharge-wallet/rechargeWallet";
 import RechargeHistory from "./components/recharge/recharge-history/rechargeHistory";
+import RechargeHistoryByDate from "./components/recharge/recharge-history/rechargeHistoryByDate";
 class Root extends Component {
   constructor(props) {
     super(props);
@@ -206,15 +207,16 @@ class Root extends Component {
                 />
              */}
 
+                {/* payments  */}
                 <Route
                   exact
-                  path={`${process.env.PUBLIC_URL}/payments/unVerified`}
-                  component={UnverifiedPayments}
+                  path={`${process.env.PUBLIC_URL}/payments`}
+                  component={Payments}
                 />
                 <Route
                   exact
-                  path={`${process.env.PUBLIC_URL}/payments/verified`}
-                  component={VerifiedPayments}
+                  path={`${process.env.PUBLIC_URL}/payments/:date`}
+                  component={PaymentsByDate}
                 />
 
                 {/* communication  */}
@@ -244,6 +246,11 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/recharge/recharge-history`}
                   component={RechargeHistory}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/recharge/recharge-history/:date`}
+                  component={RechargeHistoryByDate}
                 />
 
                 <Route

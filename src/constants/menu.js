@@ -107,6 +107,19 @@ export const MENUITEMSFORADMIN = [
     ],
   },
   {
+    title: "Payments",
+    icon: BarChart,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/payments",
+        title: "Payments History",
+        type: "link",
+      },
+    ],
+  },
+  {
     title: "Calculation",
     icon: DollarSign,
     type: "sub",
@@ -117,20 +130,7 @@ export const MENUITEMSFORADMIN = [
       { path: "/calculation/express", title: "Express", type: "link" },
     ],
   },
-  {
-    title: "Payments",
-    icon: Tag,
-    type: "sub",
-    active: false,
-    children: [
-      {
-        path: "/payments/unVerified",
-        title: "Unverified Payments",
-        type: "link",
-      },
-      { path: "/payments/verified", title: "Verified Payments", type: "link" },
-    ],
-  },
+
   {
     title: "Express Rates",
     icon: Clipboard,
@@ -330,6 +330,19 @@ export const MENUITEMSFORAGENT = [
     ],
   },
   {
+    title: "Payments",
+    icon: BarChart,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/payments",
+        title: "Payments History",
+        type: "link",
+      },
+    ],
+  },
+  {
     title: "Calculation",
     icon: DollarSign,
     type: "sub",
@@ -338,20 +351,6 @@ export const MENUITEMSFORAGENT = [
       { path: "/calculation/D2D", title: "Door to Door", type: "link" },
       { path: "/calculation/Freight", title: "Freight", type: "link" },
       { path: "/calculation/express", title: "Express", type: "link" },
-    ],
-  },
-  {
-    title: "Payments",
-    icon: Tag,
-    type: "sub",
-    active: false,
-    children: [
-      {
-        path: "/payments/unVerified",
-        title: "Unverified Payments",
-        type: "link",
-      },
-      { path: "/payments/verified", title: "Verified Payments", type: "link" },
     ],
   },
   {
