@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from "react";
+
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deleteUser } from "./../../firebase/firebase.utils";
 
 export class Datatable extends Component {
   constructor(props) {
@@ -45,21 +45,16 @@ export class Datatable extends Component {
       myData.forEach((user) => {
         //  this is not affecting my output see line 104
         newData.push({
-          Id: user.id,
+          uid: user.uid,
+          Id: user.userId,
           Name: user.displayName,
-          Company: user.company,
-          Address: user.address,
           Mobile: user.mobileNo,
           Email: user.email,
-          Status: user.status,
-          Created: this.toDateTime(user.createdAt.seconds),
         });
       });
       return (
         <div
           style={{ backgroundColor: "#fafafa" }}
-          contentEditable
-          suppressContentEditableWarning
           onBlur={(e) => {
             const data = [...newData];
             data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
@@ -79,10 +74,14 @@ export class Datatable extends Component {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  toDateTime = (secs) => {
-    var t = new Date(1970, 0, 1); // Epoch
-    t.setSeconds(secs);
-    return t;
+  getStatus = (productQuantity) => {
+    if (productQuantity < 10) {
+      return <i className="fa fa-circle font-danger f-12" />;
+    } else if (productQuantity > 50) {
+      return <i className="fa fa-circle font-success f-12" />;
+    } else {
+      return <i className="fa fa-circle font-warning f-12" />;
+    }
   };
 
   render() {
@@ -93,16 +92,12 @@ export class Datatable extends Component {
     const newData = [];
     if (myData.length > 0) {
       myData.forEach((user) => {
-        console.log(user.createdAt);
         newData.push({
-          Id: user.id,
+          uid: user.uid,
+          Id: user.userId,
           Name: user.displayName,
-          Company: user.company,
-          Address: user.address,
           Mobile: user.mobileNo,
           Email: user.email,
-          Status: user.status,
-          Created: this.toDateTime(user.createdAt.seconds),
         });
       });
     }
@@ -134,6 +129,140 @@ export class Datatable extends Component {
         },
       });
     }
+
+    if (multiSelectOption == true) {
+      columns.push({
+        Header: (
+          <button
+            className="btn btn-danger btn-sm btn-delete mb-0 b-r-4"
+            onClick={(e) => {
+              if (window.confirm("Are you sure you wish to delete this item?"))
+                this.handleRemoveRow();
+            }}
+          >
+            Delete
+          </button>
+        ),
+        id: "delete",
+        accessor: (str) => "delete",
+        sortable: false,
+        style: {
+          textAlign: "center",
+        },
+        Cell: (row) => (
+          <div>
+            <span>
+              <input
+                type="checkbox"
+                name={row.original.id}
+                defaultChecked={this.state.checkedValues.includes(
+                  row.original.id
+                )}
+                onChange={(e) => this.selectRow(e, row.original.id)}
+              />
+            </span>
+          </div>
+        ),
+        accessor: key,
+        style: {
+          textAlign: "center",
+        },
+      });
+    } else {
+      columns.push(
+        {
+          Header: <b style={{ color: "gray" }}>Status</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => {
+            if (myData.length > 0) {
+              const userObj = myData.find(
+                (user) => user.uid === row.original.uid
+              );
+              if (userObj.status === "silver") {
+                return (
+                  <div style={{ color: "silver" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+              if (userObj.status === "gold") {
+                return (
+                  <div style={{ color: "gold" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+              if (userObj.status === "diamond") {
+                return (
+                  <div style={{ color: "darkviolet" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+            } else {
+              return <div></div>;
+            }
+          },
+
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
+        },
+        {
+          Header: <b style={{ color: "darkorange" }}>Wallet Balance</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => {
+            if (myData.length > 0) {
+              const userObj = myData.find(
+                (user) => user.uid === row.original.uid
+              );
+              return (
+                <div style={{ color: "darkorange" }}>{userObj.myWallet}Tk</div>
+              );
+            } else {
+              return <div></div>;
+            }
+          },
+
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
+        },
+        {
+          Header: <b style={{ color: "green" }}>Action</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => (
+            <div>
+              <button
+                className="btn"
+                style={{
+                  backgroundColor: "green",
+                  color: "white",
+                }}
+                type="button"
+                onClick={() =>
+                  this.props.history.push(
+                    `${process.env.PUBLIC_URL}/users/list-user/${row.original.uid}`
+                  )
+                }
+              >
+                <i className="icofont-eye"></i>&nbsp; View
+              </button>
+            </div>
+          ),
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
+        }
+      );
+    }
+
     return (
       <Fragment>
         <ReactTable

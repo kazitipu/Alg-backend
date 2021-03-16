@@ -41,7 +41,7 @@ import Media from "./components/media/media";
 import List_menu from "./components/menus/list-menu";
 import Create_menu from "./components/menus/create-menu";
 import List_user from "./components/users/list-user";
-import Create_user from "./components/users/create-user";
+import DetailUser from "./components/users/detail-user";
 import ListSuppliers from "./components/suppliers/list-suppliers";
 
 import Currency from "./components/localization/currency";
@@ -284,8 +284,8 @@ class Root extends Component {
                 />
                 <Route
                   exact
-                  path={`${process.env.PUBLIC_URL}/users/create-user`}
-                  component={Create_user}
+                  path={`${process.env.PUBLIC_URL}/users/list-user/:userId`}
+                  component={DetailUser}
                 />
 
                 <Route
