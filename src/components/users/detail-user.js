@@ -9,7 +9,7 @@ export class DetailUser extends Component {
     console.log(user);
     return (
       <Fragment>
-        <Breadcrumb title={user && user.displayName} parent="Users" />
+        {/* <Breadcrumb title={user && user.displayName} parent="Users" /> */}
         <div className="container-fluid">
           <div className="row">
             <div className="col-sm-12">

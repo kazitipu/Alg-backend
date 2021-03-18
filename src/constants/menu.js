@@ -13,6 +13,8 @@ import {
   Settings,
   Archive,
   LogIn,
+  FileText,
+  CreditCard,
 } from "react-feather";
 
 const countries = [
@@ -115,6 +117,42 @@ export const MENUITEMSFORADMIN = [
       {
         path: "/payments",
         title: "Payments History",
+        type: "link",
+      },
+    ],
+  },
+  {
+    title: "Delivery",
+    icon: FileText,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/delivery/D2D",
+        title: "D2D",
+        type: "link",
+      },
+      {
+        path: "/delivery/Freight",
+        title: "Freight",
+        type: "link",
+      },
+    ],
+  },
+  {
+    title: "Refunds",
+    icon: CreditCard,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/refund-request",
+        title: "Refund Request",
+        type: "link",
+      },
+      {
+        path: "/all-refunds",
+        title: "All Refunds",
         type: "link",
       },
     ],
@@ -338,6 +376,42 @@ export const MENUITEMSFORAGENT = [
       {
         path: "/payments",
         title: "Payments History",
+        type: "link",
+      },
+    ],
+  },
+  {
+    title: "Delivery",
+    icon: FileText,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/delivery/D2D",
+        title: "D2D",
+        type: "link",
+      },
+      {
+        path: "/delivery/Freight",
+        title: "Freight",
+        type: "link",
+      },
+    ],
+  },
+  {
+    title: "Refunds",
+    icon: CreditCard,
+    type: "sub",
+    active: false,
+    children: [
+      {
+        path: "/refund-request",
+        title: "Refund Request",
+        type: "link",
+      },
+      {
+        path: "/all-refunds",
+        title: "All Refunds",
         type: "link",
       },
     ],

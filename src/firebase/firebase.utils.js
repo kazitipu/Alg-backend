@@ -292,22 +292,27 @@ export const rechargeUser = async (rechargeObj) => {
 };
 
 export const updateOrder = async (orderObj) => {
+  console.log(orderObj);
   const lotOrdersRef = firestore.doc(
     `orders${orderObj.shipmentMethod}/${orderObj.lotNo}`
   );
 
   try {
     const snapShot = await lotOrdersRef.get();
+    console.log(snapShot.data());
     const parcelObj = snapShot
       .data()
       .orders.find((parcel) => parcel.parcelId == orderObj.parcelId);
-    parcelObj.editApproved = true;
+    if (!orderObj.from) {
+      orderObj.editApproved = true;
+    }
+
     const filteredParcelArray = snapShot
       .data()
       .orders.filter((parcel) => parcel.parcelId !== orderObj.parcelId);
     await lotOrdersRef.update({
       lotNo: orderObj.lotNo,
-      orders: [...filteredParcelArray, parcelObj],
+      orders: [...filteredParcelArray, orderObj],
     });
     const updatedSnapShot = await lotOrdersRef.get();
     updateToMyParcelOfUserEditApproved(orderObj);
@@ -380,8 +385,11 @@ export const updateToMyParcelOfUserEditApproved = async (orderObj) => {
     console.log(snapShot.data());
     const parcelObj = snapShot
       .data()
-      .find((parcel) => parcel.parcelId == orderObj.parcelId);
-    parcelObj.editApproved = true;
+      .parcelArray.find((parcel) => parcel.parcelId == orderObj.parcelId);
+    if (!parcelObj.from) {
+      parcelObj.editApproved = true;
+    }
+
     const filteredArray = snapShot
       .data()
       .parcelArray.filter((parcel) => parcel.parcelId !== orderObj.parcelId);

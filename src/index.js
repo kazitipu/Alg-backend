@@ -34,6 +34,10 @@ import D2DRates from "./components/d2d-rates/d2dRates";
 import Payments from "./components/payments/payments";
 import PaymentsByDate from "./components/payments/paymentsByDate";
 
+// delivery
+import DeliveryLots from "./components/delivery/deliveryLots";
+import DeliveryD2DFreight from "./components/delivery/deliveryD2DFreight";
+
 //Pages
 import ProductToOrder from "./components/pages/product-to-order";
 import Create_page from "./components/pages/create-page";
@@ -217,6 +221,19 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/payments/:date`}
                   component={PaymentsByDate}
+                />
+
+                {/* delivery  */}
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/delivery/:shipmentMethod`}
+                  component={DeliveryLots}
+                />
+
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/delivery/d2d-freight/:shipmentMethodLotNo`}
+                  component={DeliveryD2DFreight}
                 />
 
                 {/* communication  */}

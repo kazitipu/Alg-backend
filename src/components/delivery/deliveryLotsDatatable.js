@@ -49,6 +49,7 @@ export class Datatable extends Component {
             Lot: lot ? lot.lotNo : "",
             Country: lot ? lot.selectCountry : "",
             Method: lot ? lot.shipmentMethod : "",
+
             Line: lot ? lot.shippingLine : "",
             Shipment_Date: lot ? lot.shipmentDate : "",
             Arrival_Date: lot ? lot.arrivalDate : "",
@@ -141,29 +142,17 @@ export class Datatable extends Component {
     console.log(myData);
     const newData = [];
     if (myData.length > 0) {
-      if (!this.props.calculation) {
-        myData.forEach((lot) => {
-          newData.push({
-            Lot: lot ? lot.lotNo : "",
-            Country: lot ? lot.selectCountry : "",
-            Method: lot ? lot.shipmentMethod : "",
-            Line: lot ? lot.shippingLine : "",
-            Shipment_Date: lot ? lot.shipmentDate : "",
-            Arrival_Date: lot ? lot.arrivalDate : "",
-          });
+      myData.forEach((lot) => {
+        newData.push({
+          Lot: lot ? lot.lotNo : "",
+          Country: lot ? lot.selectCountry : "",
+          Method: lot ? lot.shipmentMethod : "",
+
+          Line: lot ? lot.shippingLine : "",
+          Shipment_Date: lot ? lot.shipmentDate : "",
+          Arrival_Date: lot ? lot.arrivalDate : "",
         });
-      } else {
-        myData.forEach((lot) => {
-          newData.push({
-            Lot: lot ? lot.lotNo : "",
-            "C&F Bill": lot.cAndFBill ? `${lot.cAndFBill}Tk` : "0Tk",
-            "Freight Charge": lot.freightCharge
-              ? `${lot.freightCharge}Tk`
-              : "0Tk",
-            "Other Charge": lot.otherCharge ? `${lot.otherCharge}Tk` : `0Tk`,
-          });
-        });
-      }
+      });
     }
     const columns = [];
     for (var key in newData[0]) {
@@ -203,6 +192,7 @@ export class Datatable extends Component {
       },
       sortable: false,
     });
+
     if (multiSelectOption == true) {
       columns.push({
         Header: (
@@ -242,82 +232,6 @@ export class Datatable extends Component {
         },
       });
     } else {
-      if (this.props.calculation) {
-        columns.push(
-          {
-            Header: <b style={{ color: "red" }}>Total Expense</b>,
-            id: "delete",
-            accessor: (str) => "delete",
-            Cell: (row) => (
-              <div style={{ color: "red" }}>
-                {myData.length > 0
-                  ? myData.find((lot) => lot.lotNo === row.original.Lot)
-                      .totalExpense
-                  : "0"}
-                Tk
-              </div>
-            ),
-            style: {
-              textAlign: "center",
-            },
-            sortable: false,
-          },
-          {
-            Header: <b style={{ color: "green" }}>Total Revenue</b>,
-            id: "delete",
-            accessor: (str) => "delete",
-            Cell: (row) => (
-              <div style={{ color: "green" }}>
-                {myData.length > 0
-                  ? myData.find((lot) => lot.lotNo === row.original.Lot)
-                      .totalRevenue
-                  : "0"}
-                Tk
-              </div>
-            ),
-            style: {
-              textAlign: "center",
-            },
-            sortable: false,
-          },
-          {
-            Header: (
-              <b style={{ color: "green" }}>
-                Profit <span style={{ color: "black" }}>/</span>
-                <span style={{ color: "red" }}>Loss</span>
-              </b>
-            ),
-            id: "delete",
-            accessor: (str) => "delete",
-            Cell: (row) => {
-              if (myData.length > 0) {
-                const lotObj = myData.find(
-                  (lot) => lot.lotNo === row.original.Lot
-                );
-                if (lotObj.totalProfit) {
-                  return (
-                    <div style={{ color: "green" }}>
-                      {lotObj.totalProfit}Tk{" "}
-                    </div>
-                  );
-                }
-                if (lotObj.totalLoss) {
-                  return (
-                    <div style={{ color: "red" }}>{lotObj.totalLoss}Tk </div>
-                  );
-                }
-                return null;
-              }
-              return null;
-            },
-
-            style: {
-              textAlign: "center",
-            },
-            sortable: false,
-          }
-        );
-      }
       columns.push({
         Header: <b>Inspect</b>,
         id: "delete",
@@ -328,7 +242,7 @@ export class Datatable extends Component {
               className="btn btn-secondary"
               onClick={() =>
                 this.props.history.push(
-                  `${process.env.PUBLIC_URL}/orders/d2d-freight/${this.props.match.params.shipmentMethod}-${row.original.Lot}`
+                  `${process.env.PUBLIC_URL}/delivery/d2d-freight/${this.props.match.params.shipmentMethod}-${row.original.Lot}`
                 )
               }
             >
@@ -357,9 +271,10 @@ export class Datatable extends Component {
     );
   }
 }
+
 const mapStateToProps = (state) => {
   return {
     allLots: state.lots.lots,
   };
 };
-export default withRouter(connect(mapStateToProps)(Datatable));
+export default withRouter(connect(mapStateToProps, null)(Datatable));
