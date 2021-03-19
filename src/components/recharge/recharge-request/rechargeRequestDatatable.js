@@ -221,10 +221,10 @@ export class Datatable extends Component {
                   </div>
                 );
               }
-              if (rechargeRequest.status === "approved") {
+              if (rechargeRequest.status === "recharged") {
                 return (
                   <div style={{ color: "green" }}>
-                    <i className="icofont-checked"></i>&nbsp;
+                    <i className="icofont-like"></i>&nbsp;
                     {rechargeRequest.status}
                   </div>
                 );
@@ -252,10 +252,14 @@ export class Datatable extends Component {
             <div>
               <span style={{ cursor: "pointer", padding: "5px" }}>
                 <button
-                  className="btn"
+                  // className="btn"
                   style={{
                     backgroundColor: "green",
                     color: "white",
+                    fontSize: "70%",
+                    maxWidth: "80px",
+                    padding: "10px",
+                    border: "none",
                   }}
                   type="button"
                   onClick={() => {
@@ -267,23 +271,27 @@ export class Datatable extends Component {
                       );
                       this.props.updateRechargeRequestStatusRedux({
                         ...row.original,
-                        status: "approved",
+                        status: "recharged",
                         userId: rechargeRequest.userId,
                       });
                     }
                   }}
                 >
                   {" "}
-                  <i className="icofont-checked"></i>&nbsp; Approve
+                  <i className="icofont-checked"></i>&nbsp; Recharge
                 </button>
               </span>
 
               <span style={{ cursor: "pointer" }}>
                 <button
-                  className="btn"
+                  // className="btn"
                   style={{
                     backgroundColor: "red",
                     color: "white",
+                    fontSize: "70%",
+                    maxWidth: "80px",
+                    padding: "10px",
+                    border: "none",
                   }}
                   type="button"
                   onClick={() => {

@@ -637,6 +637,24 @@ export const updateRechargeRequestStatus = async (rechargeRequestObj) => {
       status: rechargeRequestObj.status,
     });
     const updatedRechargeRequestObj = await rechargeRequestRef.get();
+    const userRef = firestore.doc(`users/${rechargeRequestObj.userId}`);
+    const snapShot = await userRef.get();
+    const filteredRechargeRequestArray = snapShot
+      .data()
+      .rechargeRequestArray.filter(
+        (rechargeObj) =>
+          rechargeObj.rechargeId !== rechargeRequestObj["Recharge Id"]
+      );
+    let rechargeReqObj = snapShot
+      .data()
+      .rechargeRequestArray.find(
+        (rechargeObj) =>
+          rechargeObj.rechargeId === rechargeRequestObj["Recharge Id"]
+      );
+    rechargeReqObj.status = rechargeRequestObj.status;
+    await userRef.update({
+      rechargeRequestArray: [rechargeReqObj, ...filteredRechargeRequestArray],
+    });
     return updatedRechargeRequestObj.data();
   } catch (error) {
     alert(error);
