@@ -293,7 +293,11 @@ export class Tabset_user extends Component {
                         <td>{payment.paymentId}</td>
                         <td>{payment.paymentMethod}</td>
                         <td>{payment.amount}Tk</td>
-                        <td>{payment.paidInvoice}</td>
+                        <td>
+                          {payment.paidInvoice.map(
+                            (parcelId) => `${parcelId}, `
+                          )}
+                        </td>
                       </tr>
                     ))
                   : null}
@@ -335,7 +339,11 @@ export class Tabset_user extends Component {
                           <td>{transaction.paymentMethod}</td>
                           <td>{transaction.amount}Tk</td>
                           <td></td>
-                          <td>{transaction.paidInvoice}</td>
+                          <td>
+                            {transaction.paidInvoice.map(
+                              (parcelId) => `${parcelId}, `
+                            )}
+                          </td>
                         </tr>
                       )
                     )
