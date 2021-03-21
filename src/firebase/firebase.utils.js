@@ -334,7 +334,7 @@ export const updateOrderBeforeInvoice = async (orderObj) => {
       .orders.filter((parcel) => parcel.parcelId !== orderObj.parcelId);
     await lotOrdersRef.update({
       lotNo: orderObj.lotNo,
-      orders: [...filteredParcelArray, orderObj],
+      orders: [orderObj, ...filteredParcelArray],
     });
     const updatedSnapShot = await lotOrdersRef.get();
     updateToMyParcelOfUserBeforeInvoice(orderObj);
@@ -550,6 +550,19 @@ export const getAllBookings = async () => {
       bookingsArray.push(doc.data());
     });
     return bookingsArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+export const getAllRefundRequest = async () => {
+  const refundsCollectionRef = firestore.collection("refundRequest");
+  try {
+    const refunds = await refundsCollectionRef.get();
+    const refundsArray = [];
+    refunds.forEach((doc) => {
+      refundsArray.push(doc.data());
+    });
+    return refundsArray;
   } catch (error) {
     alert(error);
   }
@@ -912,6 +925,51 @@ export const updateBooking = async (bookingObj) => {
     alert(error);
   }
 };
+export const updateRefund = async (refundObj) => {
+  try {
+    // update refundStatus in main ordersArray
+    const lotOrdersRef = firestore.doc(
+      `orders${refundObj.shipmentMethod}/${refundObj.lotNo}`
+    );
+    const lotOrders = await lotOrdersRef.get();
+    const filteredParcelArray = lotOrders
+      .data()
+      .orders.filter((parcel) => parcel.parcelId !== refundObj.parcelId);
+    await lotOrdersRef.update({
+      lotNo: refundObj.lotNo,
+      orders: [refundObj, ...filteredParcelArray],
+    });
+    // create a recharge object
+
+    // update refundStatus in users parcelArray
+    // also input it in rechargeArray and transaction array of user
+    // input it in rechargeHistory and rechargeDays of admin
+    const userRef = firestore.doc(`users/${refundObj.customerUid}`);
+    const userSnapShot = await userRef.get();
+    const usersParcelArrayfiltered = userSnapShot
+      .data()
+      .parcelArray.filter((parcel) => parcel.parcelId !== refundObj.parcelId);
+    await userRef.update({
+      myWallet:
+        parseInt(userSnapShot.data().myWallet) +
+        parseInt(refundObj.refundAmount),
+
+      parcelArray: [refundObj, ...usersParcelArrayfiltered],
+    });
+
+    // update refund object status in refund request
+    const refundRef = firestore.doc(`refundRequest/${refundObj.refundId}`);
+    await refundRef.update({
+      refundStatus: refundObj.refundStatus,
+      refundAmount: refundObj.refundAmount,
+    });
+    const snapShot = await refundRef.get();
+    return snapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
+
 export const updateExpressRatesDocuments = async (countryObj) => {
   const countryRef = firestore.doc(
     `expressRatesDocuments/${countryObj.country}`

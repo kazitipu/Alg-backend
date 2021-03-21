@@ -11,6 +11,7 @@ import setExpressRatesParcelReducer from "./expressRatesParcel";
 import setD2DRatesReducer from "./d2dRates";
 import setUsersReducer from "./users";
 import setRechargeReducer from "./recharge";
+import setRefundsReducer from "./refunds";
 const rootReducer = combineReducers({
   bookings: setBookingsReducer,
   lots: setLotsReducer,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   expressRatesParcel: setExpressRatesParcelReducer,
   d2dRates: setD2DRatesReducer,
   recharge: setRechargeReducer,
+  refunds: setRefundsReducer,
 });
 
 export default rootReducer;

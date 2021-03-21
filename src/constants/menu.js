@@ -146,12 +146,12 @@ export const MENUITEMSFORADMIN = [
     active: false,
     children: [
       {
-        path: "/refund-request",
+        path: "/refund/refund-request",
         title: "Refund Request",
         type: "link",
       },
       {
-        path: "/all-refunds",
+        path: "/refund/all-refunds",
         title: "All Refunds",
         type: "link",
       },
@@ -405,12 +405,12 @@ export const MENUITEMSFORAGENT = [
     active: false,
     children: [
       {
-        path: "/refund-request",
+        path: "/refund/refund-request",
         title: "Refund Request",
         type: "link",
       },
       {
-        path: "/all-refunds",
+        path: "/refund/all-refunds",
         title: "All Refunds",
         type: "link",
       },

@@ -38,6 +38,11 @@ import PaymentsByDate from "./components/payments/paymentsByDate";
 import DeliveryLots from "./components/delivery/deliveryLots";
 import DeliveryD2DFreight from "./components/delivery/deliveryD2DFreight";
 
+// refund
+import RefundRequest from "./components/refund/refundRequest";
+import AllRefunds from "./components/refund/allRefunds";
+import AllRefundsByLots from "./components/refund/allRefundsByLot";
+
 //Pages
 import ProductToOrder from "./components/pages/product-to-order";
 import Create_page from "./components/pages/create-page";
@@ -71,6 +76,7 @@ import RechargeRequest from "./components/recharge/recharge-request/rechargeRequ
 import RechargeWallet from "./components/recharge/recharge-wallet/rechargeWallet";
 import RechargeHistory from "./components/recharge/recharge-history/rechargeHistory";
 import RechargeHistoryByDate from "./components/recharge/recharge-history/rechargeHistoryByDate";
+
 class Root extends Component {
   constructor(props) {
     super(props);
@@ -234,6 +240,23 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/delivery/d2d-freight/:shipmentMethodLotNo`}
                   component={DeliveryD2DFreight}
+                />
+
+                {/* refund  */}
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/refund/refund-request`}
+                  component={RefundRequest}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/refund/all-refunds`}
+                  component={AllRefunds}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/refund/all-refunds/:lotNo`}
+                  component={AllRefundsByLots}
                 />
 
                 {/* communication  */}
