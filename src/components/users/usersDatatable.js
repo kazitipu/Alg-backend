@@ -211,6 +211,32 @@ export class Datatable extends Component {
           sortable: false,
         },
         {
+          Header: <b style={{ color: "black" }}>Change Status</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => (
+            <div>
+              <button
+                className="btn btn-secondary"
+                type="button"
+                onClick={() => {
+                  const userObj = myData.find(
+                    (user) => user.uid === row.original.uid
+                  );
+                  console.log(userObj);
+                  this.props.startToggleModal(userObj);
+                }}
+              >
+                Change
+              </button>
+            </div>
+          ),
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
+        },
+        {
           Header: <b style={{ color: "darkorange" }}>Wallet Balance</b>,
           id: "delete",
           accessor: (str) => "delete",

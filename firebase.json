@@ -1,12 +1,8 @@
 {
   "hosting": {
-    "site": "admin-globalbuybd",
+    "site": "alg-admin-panel",
     "public": "build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",

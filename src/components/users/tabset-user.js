@@ -286,7 +286,7 @@ export class Tabset_user extends Component {
               </thead>
               <tbody>
                 {user && user.paymentArray.length > 0
-                  ? user.transactionArray.map((payment, index) => (
+                  ? user.paymentArray.map((payment, index) => (
                       <tr style={{ background: "#ff8084", color: "white" }}>
                         <th scope="row">{index + 1}</th>
                         <td>{payment.paidAt}</td>

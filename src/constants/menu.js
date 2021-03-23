@@ -245,6 +245,11 @@ export const MENUITEMSFORADMIN = [
         title: "Customers",
         type: "link",
       },
+      {
+        path: "/communication/notice",
+        title: "Notice",
+        type: "link",
+      },
     ],
   },
   {
@@ -502,6 +507,11 @@ export const MENUITEMSFORAGENT = [
       {
         path: "/communication/customers",
         title: "Customers",
+        type: "link",
+      },
+      {
+        path: "/communication/notice",
+        title: "Notice",
         type: "link",
       },
     ],

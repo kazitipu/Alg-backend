@@ -5,24 +5,48 @@ import data from "../../assets/data/listUser";
 import Datatable from "./usersDatatable";
 import { getAllUsers } from "../../firebase/firebase.utils";
 import { Search } from "react-feather";
+import ChangeUserStatusModal from "./changeUserStatusModal";
+import { connect } from "react-redux";
+import { getAllUsersRedux } from "../../actions/index";
 
 export class List_user extends Component {
   constructor(props) {
     super(props);
     this.state = {
       allUsers: [],
+      toggleModal: true,
+      userObj: null,
     };
   }
 
   componentDidMount = async () => {
-    const allUsers = await getAllUsers();
-    this.setState({ allUsers });
+    await this.props.getAllUsersRedux();
+    this.setState({ allUsers: this.props.allUsers });
+  };
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ allUsers: nextProps.allUsers });
+  };
+
+  startToggleModal = async (userObj) => {
+    if (userObj == null) {
+      this.setState({ toggleModal: !this.state.toggleModal, userObj: null });
+    } else {
+      this.setState({
+        toggleModal: !this.state.toggleModal,
+        userObj,
+      });
+    }
   };
 
   render() {
     const { allUsers } = this.state;
     return (
       <Fragment>
+        <ChangeUserStatusModal
+          toggleModal={this.state.toggleModal}
+          startToggleModal={this.startToggleModal}
+          userObj={this.state.userObj}
+        />
         <Breadcrumb title="User List" parent="User" />
         {/* <!-- Container-fluid starts--> */}
         <div className="container-fluid">
@@ -113,6 +137,7 @@ export class List_user extends Component {
                   <div className="clearfix"></div>
                   <div id="basicScenario" className="product-physical">
                     <Datatable
+                      startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
                       myData={allUsers}
@@ -133,4 +158,9 @@ export class List_user extends Component {
   }
 }
 
-export default List_user;
+const mapStateToProps = (state) => {
+  return {
+    allUsers: state.users.users,
+  };
+};
+export default connect(mapStateToProps, { getAllUsersRedux })(List_user);

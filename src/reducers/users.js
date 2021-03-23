@@ -13,13 +13,15 @@ const setUsersReducer = (state = INITIAL_STATE, action) => {
         ...state,
         users: [action.payload, ...filteredUsers],
       };
-    // case "UPLOAD_LOT":
-    //   return { ...state, lots: [...state.lots, action.payload] };
-    // case "UPDATE_LOT":
-    //   const filteredLot = state.lots.filter(
-    //     (lot) => lot.lotNo !== action.payload.lotNo
-    //   );
-    //   return { ...state, lots: [...filteredLot, action.payload] };
+    case "UPDATE_USER_STATUS":
+      const filterUsers = state.users.filter(
+        (user) => user.uid !== action.payload.uid
+      );
+      return {
+        ...state,
+        users: [action.payload, ...filterUsers],
+      };
+
     default:
       return { ...state };
   }

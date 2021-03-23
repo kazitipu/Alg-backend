@@ -12,6 +12,7 @@ import setD2DRatesReducer from "./d2dRates";
 import setUsersReducer from "./users";
 import setRechargeReducer from "./recharge";
 import setRefundsReducer from "./refunds";
+import setNoticesReducer from "./notices";
 const rootReducer = combineReducers({
   bookings: setBookingsReducer,
   lots: setLotsReducer,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   d2dRates: setD2DRatesReducer,
   recharge: setRechargeReducer,
   refunds: setRefundsReducer,
+  notices: setNoticesReducer,
 });
 
 export default rootReducer;

@@ -89,6 +89,24 @@ export const uploadLot = async (lotObj) => {
     );
   }
 };
+export const createNotice = async (noticeObj) => {
+  const noticeRef = firestore.doc(`notices/${noticeObj.id}`);
+  const snapShot = await noticeRef.get();
+  if (!snapShot.exists) {
+    try {
+      await noticeRef.set({
+        ...noticeObj,
+      });
+
+      const uploadedSnapShot = await noticeRef.get();
+      return uploadedSnapShot.data();
+    } catch (error) {
+      alert(error);
+    }
+  } else {
+    alert("there is already a Notice with similar Id, please try again later");
+  }
+};
 export const uploadExpressRatesDocuments = async (countryObj) => {
   const countryRef = firestore.doc(
     `expressRatesDocuments/${countryObj.country}`
@@ -378,6 +396,20 @@ export const updateToMyParcelOfUser = async (orderObj) => {
     alert(error);
   }
 };
+export const updateUserStatus = async (userObj) => {
+  const userRef = firestore.doc(`users/${userObj.uid}`);
+  try {
+    const snapShot = await userRef.get();
+    console.log(snapShot.data());
+    await userRef.update({
+      status: userObj.status,
+    });
+    const updatedSnapShot = await userRef.get();
+    return updatedSnapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
 export const updateToMyParcelOfUserEditApproved = async (orderObj) => {
   const userRef = firestore.doc(`users/${orderObj.customerUid}`);
   try {
@@ -492,6 +524,19 @@ export const getAllLots = async () => {
       lotsArray.push(doc.data());
     });
     return lotsArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+export const getAllNotices = async () => {
+  const noticesCollectionRef = firestore.collection("notices");
+  try {
+    const notices = await noticesCollectionRef.get();
+    const noticesArray = [];
+    notices.forEach((doc) => {
+      noticesArray.push(doc.data());
+    });
+    return noticesArray;
   } catch (error) {
     alert(error);
   }
@@ -851,6 +896,14 @@ export const deleteLot = async (id) => {
     alert(error);
   }
 };
+export const deleteNotice = async (id) => {
+  const noticeRef = firestore.doc(`notices/${id}`);
+  try {
+    await noticeRef.delete();
+  } catch (error) {
+    alert(error);
+  }
+};
 export const deleteExpressRatesDocuments = async (id) => {
   const countryRef = firestore.doc(`expressRatesDocuments/${id}`);
   const snapShot = await countryRef.get();
@@ -907,6 +960,16 @@ export const updateLot = async (lotObj) => {
   try {
     await lotRef.update({ ...lotObj });
     const snapShot = await lotRef.get();
+    return snapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
+export const updateNotice = async (noticeObj) => {
+  const noticeRef = firestore.doc(`notices/${noticeObj.id}`);
+  try {
+    await noticeRef.update({ ...noticeObj });
+    const snapShot = await noticeRef.get();
     return snapShot.data();
   } catch (error) {
     alert(error);

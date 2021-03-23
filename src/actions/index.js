@@ -29,12 +29,16 @@ import {
   getAllRechargeRequest,
   updateRechargeRequestStatus,
   rechargeUser,
+  updateUserStatus,
   getAllRechargeDays,
   getAllRechargesOfSingleDate,
   getAllPaymentDays,
   getAllPaymentsOfSingleDate,
   getAllRefundRequest,
   updateRefund,
+  createNotice,
+  updateNotice,
+  getAllNotices,
 } from "../firebase/firebase.utils";
 
 export const getAllUsersRedux = () => async (dispatch) => {
@@ -328,6 +332,14 @@ export const rechargeUserRedux = (rechargeObj) => async (dispatch) => {
   });
 };
 
+export const updateUserStatusRedux = (userObj) => async (dispatch) => {
+  const updatedUserObj = await updateUserStatus(userObj);
+  dispatch({
+    type: "UPDATE_USER_STATUS",
+    payload: updatedUserObj,
+  });
+};
+
 export const getAllRechargeDayRedux = () => async (dispatch) => {
   const rechargeDaysArray = await getAllRechargeDays();
   dispatch({ type: "GET_ALL_RECHARGE_DAY", payload: rechargeDaysArray });
@@ -366,4 +378,20 @@ export const getAllRefundRequestRedux = () => async (dispatch) => {
 export const updateRefundRedux = (refundObj) => async (dispatch) => {
   const updatedRefundObj = await updateRefund(refundObj);
   dispatch({ type: "UPDATE_REFUND", payload: updatedRefundObj });
+};
+
+// notice
+export const createNoticeRedux = (noticeObj) => async (dispatch) => {
+  const createdNoticeObj = await createNotice(noticeObj);
+  dispatch({ type: "CREATE_NOTICE", payload: createdNoticeObj });
+};
+
+export const getAllNoticesRedux = () => async (dispatch) => {
+  const noticesArray = await getAllNotices();
+  dispatch({ type: "GET_ALL_NOTICES", payload: noticesArray });
+};
+
+export const updateNoticeRedux = (noticeObj) => async (dispatch) => {
+  const updatedNoticeObj = await updateNotice(noticeObj);
+  dispatch({ type: "UPDATE_NOTICE", payload: updatedNoticeObj });
 };
