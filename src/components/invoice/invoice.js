@@ -6,9 +6,14 @@ import { getAllLotsRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
 export class Invoice extends Component {
-  state = {};
+  state = { searchFor: "" };
   componentDidMount = async () => {
     this.props.getAllLotsRedux();
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -65,11 +70,10 @@ export class Invoice extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search Lot"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
-                            // className="d-sm-none mobile-search"
-                            onClick={() => this.handleSearchClick()}
+                          // className="d-sm-none mobile-search"
                           >
                             <Search
                               style={{
@@ -89,7 +93,15 @@ export class Invoice extends Component {
                   <div id="basicScenario" className="product-list">
                     <Datatable
                       multiSelectOption={false}
-                      myData={this.props.allLots}
+                      myData={
+                        !this.state.searchFor
+                          ? this.props.allLots
+                          : this.props.allLots.filter((lot) =>
+                              lot.lotNo
+                                .toLowerCase()
+                                .includes(this.state.searchFor.toLowerCase())
+                            )
+                      }
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"

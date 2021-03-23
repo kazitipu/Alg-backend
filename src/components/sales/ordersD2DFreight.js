@@ -14,6 +14,7 @@ export class OrdersD2DFreight extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       allOrders: [],
       toggleModalSelectLot: true,
       toggleModalCreateOrder: true,
@@ -75,6 +76,11 @@ export class OrdersD2DFreight extends Component {
       },
       console.log(fixedLot)
     );
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -167,11 +173,10 @@ export class OrdersD2DFreight extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search Order"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
-                            // className="d-sm-none mobile-search"
-                            onClick={() => this.handleSearchClick()}
+                          // className="d-sm-none mobile-search"
                           >
                             <Search
                               style={{
@@ -206,7 +211,17 @@ export class OrdersD2DFreight extends Component {
                       this.startToggleModalAdditionalInfo
                     }
                     multiSelectOption={false}
-                    myData={allOrders}
+                    myData={
+                      !this.state.searchFor
+                        ? allOrders
+                        : allOrders.filter(
+                            (orderObj) =>
+                              orderObj.shippingMark
+                                .toLowerCase()
+                                .includes(this.state.searchFor) ||
+                              orderObj.cartonNo.includes(this.state.searchFor)
+                          )
+                    }
                     pageSize={10}
                     pagination={true}
                     class="-striped -highlight"

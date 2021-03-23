@@ -13,6 +13,7 @@ export class RechargeRequest extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       open: false,
 
       toggleModal: true,
@@ -40,6 +41,27 @@ export class RechargeRequest extends Component {
         singleLot: lotObj,
       });
     }
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  getRechargeRequestArray = () => {
+    if (!this.state.searchFor) {
+      return this.props.allRechargeRequests;
+    }
+
+    let filterByStatus = this.props.allRechargeRequests.filter(
+      (rechargeRequest) =>
+        rechargeRequest.status.toLowerCase().includes(this.state.searchFor)
+    );
+    let filterByMethod = this.props.allRechargeRequests.filter(
+      (rechargeRequest) =>
+        rechargeRequest.method.toLowerCase().includes(this.state.searchFor)
+    );
+    return [...filterByStatus, ...filterByMethod];
   };
 
   render() {
@@ -117,12 +139,11 @@ export class RechargeRequest extends Component {
                             name="searchFor"
                             value={this.state.searchFor}
                             type="search"
-                            placeholder="Search lot"
-                            onChange={this.handleChange}
+                            placeholder="Search recharge Request"
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
-                            // className="d-sm-none mobile-search"
-                            onClick={() => this.handleSearchClick()}
+                          // className="d-sm-none mobile-search"
                           >
                             <Search
                               style={{
@@ -136,19 +157,7 @@ export class RechargeRequest extends Component {
                         </div>
                       </form>
                     </li>
-                    <li>
-                      {/* <button
-                        className="btn"
-                        style={{
-                          backgroundColor: "rgb(68, 0, 97)",
-                          color: "white",
-                        }}
-                        type="button"
-                        onClick={() => this.startToggleModal(null)}
-                      >
-                        Text
-                      </button> */}
-                    </li>
+                    <li></li>
                   </div>
                 </div>
                 <div className="card-body">
@@ -158,7 +167,7 @@ export class RechargeRequest extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.props.allRechargeRequests}
+                      myData={this.getRechargeRequestArray()}
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"
@@ -179,6 +188,7 @@ export class RechargeRequest extends Component {
 const mapStateToProps = (state) => {
   return {
     allRechargeRequests: state.recharge.rechargeRequestArray,
+    allUser: state.users.users,
   };
 };
 

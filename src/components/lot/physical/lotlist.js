@@ -15,7 +15,7 @@ export class LotList extends Component {
     super(props);
     this.state = {
       open: false,
-
+      searchFor: "",
       toggleModal: true,
       singleLot: null,
     };
@@ -35,6 +35,11 @@ export class LotList extends Component {
         singleLot: lotObj,
       });
     }
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -113,11 +118,11 @@ export class LotList extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search lot"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
-                            // className="d-sm-none mobile-search"
-                            onClick={() => this.handleSearchClick()}
+                          // className="d-sm-none mobile-search"
+                          // onClick={() => this.handleSearchClick()}
                           >
                             <Search
                               style={{
@@ -149,7 +154,15 @@ export class LotList extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.props.allLots}
+                      myData={
+                        !this.state.searchFor
+                          ? this.props.allLots
+                          : this.props.allLots.filter((lotObj) =>
+                              lotObj.lotNo
+                                .toLowerCase()
+                                .includes(this.state.searchFor.toLowerCase())
+                            )
+                      }
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"

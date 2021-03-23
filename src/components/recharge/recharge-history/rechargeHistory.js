@@ -13,6 +13,7 @@ export class RechargeHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       open: false,
 
       toggleModal: true,
@@ -40,6 +41,11 @@ export class RechargeHistory extends Component {
         singleLot: lotObj,
       });
     }
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -78,7 +84,7 @@ export class RechargeHistory extends Component {
                         color: "#ff8084",
                       }}
                     ></i>
-                    Text or Mail
+                    Recharge History
                   </h5>
                   <div
                     style={{
@@ -117,8 +123,8 @@ export class RechargeHistory extends Component {
                             name="searchFor"
                             value={this.state.searchFor}
                             type="search"
-                            placeholder="Search lot"
-                            onChange={this.handleChange}
+                            placeholder="Search Day"
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -145,7 +151,13 @@ export class RechargeHistory extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.props.allDays}
+                      myData={
+                        !this.state.searchFor
+                          ? this.props.allDays
+                          : this.props.allDays.filter((day) =>
+                              day.date.includes(this.state.searchFor)
+                            )
+                      }
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"

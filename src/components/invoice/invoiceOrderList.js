@@ -8,6 +8,7 @@ export class OrdersD2D extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       allOrders: [],
       toggleModalSelectLot: true,
       toggleModalCreateOrder: true,
@@ -34,6 +35,11 @@ export class OrdersD2D extends Component {
   };
   componentWillReceiveProps = (nextProps) => {
     this.setState({ allOrders: nextProps.orders });
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -91,7 +97,7 @@ export class OrdersD2D extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search Order"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -115,7 +121,17 @@ export class OrdersD2D extends Component {
                 <div className="card-body order-datatable">
                   <Datatable
                     multiSelectOption={false}
-                    myData={allOrders}
+                    myData={
+                      !this.state.searchFor
+                        ? allOrders
+                        : allOrders.filter(
+                            (order) =>
+                              order.shippingMark
+                                .toLowerCase()
+                                .includes(this.state.searchFor) ||
+                              order.cartonNo.includes(this.state.searchFor)
+                          )
+                    }
                     pageSize={10}
                     pagination={true}
                     class="-striped -highlight"

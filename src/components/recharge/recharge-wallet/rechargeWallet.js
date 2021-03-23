@@ -12,19 +12,13 @@ export class RechargeWallet extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       open: false,
-
       toggleModal: true,
       userObj: null,
     };
   }
-  // onOpenModal = () => {
-  //     this.setState({ open: true });
-  // };
 
-  // onCloseModal = () => {
-  //     this.setState({ open: false });
-  // };
   componentDidMount = async () => {};
 
   startToggleModal = async (userObj) => {
@@ -36,6 +30,11 @@ export class RechargeWallet extends Component {
         userObj: userObj,
       });
     }
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -113,8 +112,8 @@ export class RechargeWallet extends Component {
                             name="searchFor"
                             value={this.state.searchFor}
                             type="search"
-                            placeholder="Search lot"
-                            onChange={this.handleChange}
+                            placeholder="Search user"
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -154,7 +153,19 @@ export class RechargeWallet extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.props.allUser}
+                      myData={
+                        !this.state.searchFor
+                          ? this.props.allUser
+                          : this.props.allUser.filter(
+                              (user) =>
+                                user.displayName
+                                  .toLowerCase()
+                                  .includes(
+                                    this.state.searchFor.toLowerCase()
+                                  ) ||
+                                user.userId.includes(this.state.searchFor)
+                            )
+                      }
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"

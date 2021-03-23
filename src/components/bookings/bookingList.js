@@ -18,6 +18,7 @@ export class BookingList extends Component {
       toggleModal: true,
       singleLot: null,
       bookingIdArray: [],
+      searchFor: "",
     };
   }
 
@@ -67,6 +68,11 @@ export class BookingList extends Component {
         toggleModal: !this.state.toggleModal,
       });
     }
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -147,7 +153,7 @@ export class BookingList extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search Booking"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -174,7 +180,15 @@ export class BookingList extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.state.bookingsArray}
+                      myData={
+                        !this.state.searchFor
+                          ? this.state.bookingsArray
+                          : this.state.bookingsArray.filter((bookingObj) =>
+                              bookingObj.bookingId
+                                .toString()
+                                .includes(this.state.searchFor)
+                            )
+                      }
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"

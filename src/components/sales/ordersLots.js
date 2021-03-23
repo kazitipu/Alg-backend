@@ -11,6 +11,7 @@ export class CalculationLots extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       allLotsD2D: [],
       allLotsFreight: [],
       toggleModalSelectLot: true,
@@ -57,11 +58,11 @@ export class CalculationLots extends Component {
       toggleModalSelectLot: !this.state.toggleModalSelectLot,
       fixedLot,
     });
-    // if (button !== "close") {
-    //   this.setState({
-    //     toggleModalCreateOrder: !this.state.toggleModalCreateOrder,
-    //   });
-    // }
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -153,7 +154,7 @@ export class CalculationLots extends Component {
                                 value={this.state.searchFor}
                                 type="search"
                                 placeholder="Search Lot"
-                                onChange={this.handleChange}
+                                onChange={this.handleSearchBarChange}
                               />
                               <span
                                 // className="d-sm-none mobile-search"
@@ -213,8 +214,22 @@ export class CalculationLots extends Component {
                         multiSelectOption={false}
                         myData={
                           this.props.match.params.shipmentMethod == "D2D"
-                            ? allLotsD2D
-                            : allLotsFreight
+                            ? !this.state.searchFor
+                              ? allLotsD2D
+                              : allLotsD2D.filter((lotObj) =>
+                                  lotObj.lotNo
+                                    .toLowerCase()
+                                    .includes(
+                                      this.state.searchFor.toLowerCase()
+                                    )
+                                )
+                            : !this.state.searchFor
+                            ? allLotsFreight
+                            : allLotsFreight.filter((lotObj) =>
+                                lotObj.lotNo
+                                  .toLowerCase()
+                                  .includes(this.state.searchFor.toLowerCase())
+                              )
                         }
                         pageSize={10}
                         pagination={true}
