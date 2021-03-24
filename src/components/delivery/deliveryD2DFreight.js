@@ -14,6 +14,7 @@ export class DeliveryD2DFreight extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       allOrders: [],
       toggleModalAdditionalInfo: true,
       toggleModalDeliveryAndNote: true,
@@ -65,8 +66,27 @@ export class DeliveryD2DFreight extends Component {
     }
   };
 
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  getMydata = () => {
+    const { searchFor, allOrders } = this.state;
+    if (!searchFor) {
+      return allOrders;
+    }
+    const filterByTrackingNoAndShippingMark = allOrders.filter(
+      (order) =>
+        order.trackingNo.toLowerCase().includes(searchFor.toLowerCase()) ||
+        order.shippingMark.toLowerCase().includes(searchFor.toLowerCase())
+    );
+
+    return [...filterByTrackingNoAndShippingMark];
+  };
+
   render() {
-    const { allOrders } = this.state;
+    const { allOrders, searchFor } = this.state;
     const lotNo = this.props.match.params.shipmentMethodLotNo.split("-")[1];
     return (
       <Fragment>
@@ -147,7 +167,7 @@ export class DeliveryD2DFreight extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search Order"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -177,7 +197,7 @@ export class DeliveryD2DFreight extends Component {
                       this.startToggleModalDeliveryAndNote
                     }
                     multiSelectOption={true}
-                    myData={allOrders}
+                    myData={this.getMydata()}
                     pageSize={10}
                     pagination={true}
                     class="-striped -highlight"

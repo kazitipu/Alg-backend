@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Tabs, TabList, TabPanel, Tab } from "react-tabs";
-import "./tabset-user.css";
+
 import { connect } from "react-redux";
 
 export class Tabset_user extends Component {

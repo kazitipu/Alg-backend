@@ -174,15 +174,6 @@ export class LoginTabset extends Component {
                     Login
                   </button>
                 </div>
-                {/* <div className="form-footer">
-                                    <span>Or Login up with social platforms</span>
-                                    <ul className="social">
-                                        <li><a className="fa fa-facebook" href=""></a></li>
-                                        <li><a className="fa fa-twitter" href=""></a></li>
-                                        <li><a className="fa fa-instagram" href=""></a></li>
-                                        <li><a className="fa fa-pinterest" href=""></a></li>
-                                    </ul>
-                                </div> */}
               </form>
             </TabPanel>
             <TabPanel>
@@ -236,15 +227,23 @@ export class LoginTabset extends Component {
                   />
                 </div>
                 <div className="form-group">
-                  <input
-                    required=""
+                  <select
+                    className="custom-select"
                     name="registerStatus"
                     value={this.state.registerStatus}
                     onChange={this.handleChange}
-                    type="text"
-                    className="form-control"
-                    placeholder="admin status"
-                  />
+                    required
+                    style={{
+                      borderRadius: "10rem",
+                      paddingLeft: "25px",
+                      color: "gray",
+                    }}
+                  >
+                    <option value="">Select admin status</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Employee">Employee</option>
+                  </select>
                 </div>
                 <div className="form-terms">
                   <div className="custom-control custom-checkbox mr-sm-2">
@@ -259,7 +258,7 @@ export class LoginTabset extends Component {
                         id="chk-ani2"
                         type="checkbox"
                       />
-                      I agree all statements in{" "}
+                      I agree all statements in
                       <span>
                         <a href="">Terms &amp; Conditions</a>
                       </span>
@@ -271,15 +270,6 @@ export class LoginTabset extends Component {
                     Register
                   </button>
                 </div>
-                {/* <div className="form-footer">
-                                    <span>Or Sign up with social platforms</span>
-                                    <ul className="social">
-                                        <li><a className="fa fa-facebook" href=""></a></li>
-                                        <li><a className="fa fa-twitter" href=""></a></li>
-                                        <li><a className="fa fa-instagram" href=""></a></li>
-                                        <li><a className="fa fa-pinterest" href=""></a></li>
-                                    </ul>
-                                </div> */}
               </form>
             </TabPanel>
           </Tabs>

@@ -41,34 +41,6 @@ export const createAdminProfileDocument = async (userAuth, additionalData) => {
   return adminRef;
 };
 
-export const uploadImage = async (file) => {
-  const imageRef = storage.ref(`products/${file.name}`);
-
-  await imageRef.put(file);
-  var imgUrl = [];
-  await imageRef.getDownloadURL().then((url) => {
-    console.log(url);
-    imgUrl.push(url);
-  });
-  // var uploadTask = imageRef.put(file)
-  // uploadTask.on('state_changed',
-  // (snapShot)=>{
-  //   var progress = (snapShot.bytesTransferred / snapShot.totalBytes) * 100;
-  //   // alert(`upload is ${progress}% done`)
-  // },
-  // (error)=>{
-  //   alert(error)
-  // },
-  // ()=>{
-  //   // alert('successfully uploaded the file')
-  //   imageRef.getDownloadURL().then((url)=>{
-  //     imgUrl.push(url)
-  //     console.log(imgUrl[0])
-  //   }).catch((error)=>alert(error))
-  // })
-
-  return imgUrl[0];
-};
 export const uploadLot = async (lotObj) => {
   const lotRef = firestore.doc(`lots/${lotObj.lotNo}`);
   const snapShot = await lotRef.get();
@@ -528,6 +500,48 @@ export const getAllLots = async () => {
     alert(error);
   }
 };
+
+export const uploadImage = async (currentUser, file) => {
+  const imageRef = storage.ref(`users/${file.name}`);
+  try {
+    await imageRef.put(file);
+    var imgUrl = [];
+    await imageRef.getDownloadURL().then((url) => {
+      console.log(url);
+      imgUrl.push(url);
+    });
+    const userRef = firestore.doc(`users/${currentUser.uid}`);
+    const snapShot = await userRef.get();
+    console.log(snapShot.data());
+    try {
+      userRef.update({
+        imageUrl: imgUrl[0],
+      });
+    } catch (error) {
+      alert(error);
+    }
+    const updatedSnapShot = await userRef.get();
+    return updatedSnapShot.data();
+  } catch (error) {
+    return null;
+  }
+};
+
+export const updateUser = async (currentUser) => {
+  const userRef = firestore.doc(`users/${currentUser.uid}`);
+  const snapShot = await userRef.get();
+  console.log(snapShot.data());
+  try {
+    userRef.update({
+      ...currentUser,
+    });
+  } catch (error) {
+    alert(error);
+  }
+  const updatedSnapShot = await userRef.get();
+  return updatedSnapShot.data();
+};
+
 export const getAllNotices = async () => {
   const noticesCollectionRef = firestore.collection("notices");
   try {

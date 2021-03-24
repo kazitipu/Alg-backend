@@ -12,6 +12,7 @@ export class RechargeHistoryByDate extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       allRecharges: [],
       toggleModalSelectLot: true,
       toggleModalCreateOrder: true,
@@ -67,6 +68,31 @@ export class RechargeHistoryByDate extends Component {
       },
       console.log(fixedLot)
     );
+  };
+
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  getMydata = () => {
+    const { searchFor, allRecharges } = this.state;
+    if (!searchFor) {
+      return allRecharges;
+    }
+    const filterByUserNameAndId = allRecharges.filter(
+      (recharge) =>
+        recharge.Name.toLowerCase().includes(searchFor.toLowerCase()) ||
+        recharge.Id.includes(searchFor.toLowerCase())
+    );
+    const filterByReceitNoAndPaymentMethod = allRecharges.filter(
+      (recharge) =>
+        recharge.paymentMethod
+          .toLowerCase()
+          .includes(searchFor.toLowerCase()) ||
+        recharge.receitNo.toLowerCase().includes(searchFor.toLowerCase())
+    );
+    return [...filterByReceitNoAndPaymentMethod, ...filterByUserNameAndId];
   };
 
   render() {
@@ -141,7 +167,7 @@ export class RechargeHistoryByDate extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search Recharge"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -174,7 +200,7 @@ export class RechargeHistoryByDate extends Component {
                       this.startToggleModalAdditionalInfo
                     }
                     multiSelectOption={false}
-                    myData={allRecharges}
+                    myData={this.getMydata()}
                     pageSize={10}
                     pagination={true}
                     class="-striped -highlight"

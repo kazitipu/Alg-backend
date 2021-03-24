@@ -50,7 +50,7 @@ class AdditionalInfoModal extends Component {
                 role="document"
               >
                 <div
-                  className="modal-content visible-modal-content-2"
+                  className="modal-content visible-modal-content-3"
                   style={{ backgroundColor: "#4e074e" }}
                 >
                   <div className="modal-body p-0">

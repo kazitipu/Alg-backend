@@ -1,130 +1,148 @@
-import React, { Component ,Fragment} from 'react'
+import React, { Component, Fragment } from "react";
+import Breadcrumb from "../common/breadcrumb";
+import Tabset_profile from "./tabset-profile";
+import { connect } from "react-redux";
+import man from "../../assets/images/dashboard/user2.jpg";
+import UpdateProfileModal from "./updateProfileModal";
+import { uploadImageRedux } from "../../actions/index";
 
-import designer from '../../assets/images/dashboard/designer.jpg';
-import Tabset_profile from './tabset-profile';
-import Breadcrumb from '../common/breadcrumb';
-import {connect} from 'react-redux'
-import {auth,uploadImage,updateProfileImage} from '../../firebase/firebase.utils'
-import {updateProfileImageRedux} from '../../actions'
+export class MyProfile extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pictures: [man],
+      file: "",
+      toggleModal: true,
+      currentAdmin: null,
+    };
+  }
 
-export class Profile extends Component {
-    constructor(props){
-        super(props)
-        this.state={
-            admin:null,
-            pictures:'',
-            file:''
-        }
+  _handleImgChange = async (e, i) => {
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    const { pictures } = this.state;
+
+    reader.onloadend = () => {
+      pictures[i] = reader.result;
+      this.setState({
+        file: file,
+        pictures,
+        currentAdmin: null,
+      });
+    };
+    if (file) {
+      const { currentAdmin } = this.props;
+      reader.readAsDataURL(file);
+      const imgUrl = await this.props.uploadImageRedux(currentAdmin, file);
+      console.log(imgUrl);
+      pictures[i] = imgUrl;
+      this.setState({
+        pictures,
+      });
+      console.log(pictures);
     }
-    _handleImgChange= async (e) => {
-        e.preventDefault();
-
-        let reader = new FileReader();
-        let file = e.target.files[0];
-        var { pictures } = this.state;
-
-        reader.onloadend = () => {
-            pictures = reader.result;
-            this.setState({
-                file: file,
-                pictures,
-            });
-        }
-        if (file){
-            reader.readAsDataURL(file)
-            const imgUrl =await uploadImage(file)
-            pictures = imgUrl
-            await updateProfileImage(imgUrl,this.props.currentAdmin.adminId)
-            this.props.updateProfileImageRedux(imgUrl)
-            this.setState({
-                pictures
-            })
-            console.log(pictures)
-        }  
-      
+  };
+  startToggleModal = async (currentAdmin) => {
+    if (currentAdmin == null) {
+      this.setState({
+        toggleModal: !this.state.toggleModal,
+        currentAdmin: null,
+      });
+    } else {
+      this.setState({
+        toggleModal: !this.state.toggleModal,
+        currentAdmin: currentAdmin,
+      });
     }
-   
-    render() {  
-        const {currentAdmin} = this.props
-        var {pictures} = this.state
-        if (currentAdmin){
-            return (
-                <Fragment>
-                    <Breadcrumb title="Profile" parent="Settings" />
-                     <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-xl-4">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="profile-details text-center">
-                                    <div className="file-upload-product">
-                                    <div className="box-input-file">
-                                      
-                                      {currentAdmin.image?<img src={currentAdmin.image} alt="" className="img-fluid img-90 rounded-circle blur-up lazyloaded" />:<><img src={pictures} alt="" className="img-fluid img-90 rounded-circle blur-up lazyloaded" /><input className="upload input-field" type="file" onChange={this._handleImgChange} /></>}  
-                                     
-                                    </div></div>
-                                        <h5 className="f-w-600 f-16 mb-0">{currentAdmin.name}</h5>
-                                        <span>{currentAdmin.email}</span>
-                                        <div className="social">
-                                            <div className="form-group btn-showcase">
-                                                <button className="btn social-btn btn-fb d-inline-block"> <i className="fa fa-facebook"></i></button>
-                                                <button className="btn social-btn btn-twitter d-inline-block"><i className="fa fa-google"></i></button>
-                                                <button className="btn social-btn btn-google d-inline-block mr-0"><i className="fa fa-twitter"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div className="project-status">
-                                        <h5 className="f-w-600 f-16">Employee Status</h5>
-                                        <div className="media">
-                                            <div className="media-body">
-                                                <h6>Performance <span className="pull-right">80%</span></h6>
-                                                <div className="progress sm-progress-bar">
-                                                    <div className="progress-bar bg-primary" role="progressbar" style={{width: '90%'}} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="media">
-                                            <div className="media-body">
-                                                <h6>Overtime <span className="pull-right">60%</span></h6>
-                                                <div className="progress sm-progress-bar">
-                                                    <div className="progress-bar bg-secondary" role="progressbar" style={{width: '60%'}} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="media">
-                                            <div className="media-body">
-                                                <h6>Leaves taken <span className="pull-right">50%</span></h6>
-                                                <div className="progress sm-progress-bar">
-                                                    <div className="progress-bar bg-danger" role="progressbar" style={{width: '50%'}} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-xl-8">
-                            <div className="card profile-card">
-                                <div className="card-body">
-                                    <Tabset_profile currentAdmin={currentAdmin}/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  };
+
+  render() {
+    const { currentAdmin } = this.props;
+    console.log(currentAdmin);
+    return (
+      <Fragment>
+        <UpdateProfileModal
+          toggleModal={this.state.toggleModal}
+          startToggleModal={this.startToggleModal}
+          currentAdmin={this.state.currentAdmin}
+        />
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="card">
+                <div className="card-header">
+                  <div
+                    className="box-input-file"
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    {currentAdmin && currentAdmin.imageUrl ? (
+                      <img
+                        className="img-60 rounded-circle lazyloaded blur-up"
+                        src={currentAdmin.imageUrl}
+                        alt="#"
+                        style={{ zIndex: 10, cursor: "pointer" }}
+                        onClick={() => {
+                          document.getElementById("upload-image-input").click();
+                        }}
+                      />
+                    ) : (
+                      <img
+                        className="img-60 rounded-circle lazyloaded blur-up"
+                        src={this.state.pictures[0]}
+                        alt="#"
+                        style={{ zIndex: 10, cursor: "pointer" }}
+                        onClick={() => {
+                          document.getElementById("upload-image-input").click();
+                        }}
+                      />
+                    )}
+                    <input
+                      id="upload-image-input"
+                      className="upload"
+                      type="file"
+                      style={{
+                        position: "absolute",
+                        zIndex: 5,
+                        maxWidth: "50px",
+                        marginTop: "20px",
+                      }}
+                      onChange={(e) => this._handleImgChange(e, 0)}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      fontSize: "200%",
+                      marginTop: "10px",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {currentAdmin && currentAdmin.displayName}
+                  </div>
                 </div>
-                </Fragment>
-            )
-        }else{
-            return <div>loading</div>
-        }
-        
-    }
+                <div className="card-body">
+                  <Tabset_profile
+                    currentAdmin={currentAdmin}
+                    startToggleModal={this.startToggleModal}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Fragment>
+    );
+  }
 }
 
-const mapStateToProps =(state) =>{
-    return{
-        currentAdmin:state.admins.currentAdmin
-    }
-}
-export default connect(mapStateToProps,{updateProfileImageRedux})(Profile)
+const mapStateToProps = (state) => {
+  return {
+    currntAdmin: state.admins.currentAdmin,
+  };
+};
+
+export default connect(mapStateToProps, { uploadImageRedux })(MyProfile);

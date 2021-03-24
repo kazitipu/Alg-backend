@@ -13,6 +13,7 @@ export class RefundRequest extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       open: false,
       refundsArray: [],
       toggleModal: true,
@@ -57,8 +58,13 @@ export class RefundRequest extends Component {
     }
   };
 
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
   render() {
-    const { open } = this.state;
+    const { open, searchFor, refundsArray } = this.state;
 
     console.log(this.props);
     return (
@@ -133,8 +139,8 @@ export class RefundRequest extends Component {
                             name="searchFor"
                             value={this.state.searchFor}
                             type="search"
-                            placeholder="Search Refund"
-                            onChange={this.handleChange}
+                            placeholder="Search Refund Request"
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -161,7 +167,15 @@ export class RefundRequest extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.state.refundsArray}
+                      myData={
+                        !searchFor
+                          ? refundsArray
+                          : refundsArray.filter((parcel) =>
+                              parcel.parcelId
+                                .toLowerCase()
+                                .includes(searchFor.toLowerCase())
+                            )
+                      }
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"

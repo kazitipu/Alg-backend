@@ -50,6 +50,7 @@ export class Datatable extends Component {
         newData.push({
           "Parcel Id": order.parcelId,
           Customer: order.shippingMark,
+          "Tracking No": order.trackingNo,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,
@@ -249,6 +250,7 @@ export class Datatable extends Component {
         newData.push({
           "Parcel Id": order.parcelId,
           Customer: order.shippingMark,
+          "Tracking No": order.trackingNo,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,

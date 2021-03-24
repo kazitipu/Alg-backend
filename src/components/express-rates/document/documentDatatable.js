@@ -47,11 +47,11 @@ export class Datatable extends Component {
       myData.forEach((country) => {
         newData.push({
           Country: country.country,
-          "0.5kg": `${country.half}tk`,
-          "1kg": `${country.one}tk`,
-          "1.5kg": `${country.oneAndHalf}tk`,
-          "2kg": `${country.two}tk`,
-          "2.5kg": `${country.twoAndHalf}tk`,
+          "0.5kg": `${country["0.5"]}tk`,
+          "1kg": `${country["1"]}tk`,
+          "1.5kg": `${country["1.5"]}tk`,
+          "2kg": `${country["2"]}tk`,
+          "2.5kg": `${country["2.5"]}tk`,
         });
       });
       return (
@@ -97,11 +97,12 @@ export class Datatable extends Component {
       myData.forEach((country) => {
         newData.push({
           Country: country.country,
-          "0.5kg": `${country.half}tk`,
-          "1kg": `${country.one}tk`,
-          "1.5kg": `${country.oneAndHalf}tk`,
-          "2kg": `${country.two}tk`,
-          "2.5kg": `${country.twoAndHalf}tk`,
+          Country: country.country,
+          "0.5kg": `${country["0.5"]}tk`,
+          "1kg": `${country["1"]}tk`,
+          "1.5kg": `${country["1.5"]}tk`,
+          "2kg": `${country["2"]}tk`,
+          "2.5kg": `${country["2.5"]}tk`,
         });
       });
     }

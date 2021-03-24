@@ -13,6 +13,7 @@ export class List_user extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       allUsers: [],
       toggleModal: true,
       userObj: null,
@@ -38,8 +39,15 @@ export class List_user extends Component {
     }
   };
 
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+    console.log(this.state.searchFor);
+  };
+
   render() {
-    const { allUsers } = this.state;
+    const { allUsers, searchFor } = this.state;
+    console.log(searchFor);
     return (
       <Fragment>
         <ChangeUserStatusModal
@@ -112,7 +120,7 @@ export class List_user extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search user"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -140,7 +148,17 @@ export class List_user extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={allUsers}
+                      myData={
+                        !searchFor
+                          ? allUsers
+                          : allUsers.filter(
+                              (user) =>
+                                user.userId.includes(searchFor) ||
+                                user.displayName
+                                  .toLowerCase()
+                                  .includes(searchFor.toLowerCase())
+                            )
+                      }
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"

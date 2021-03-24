@@ -9,6 +9,7 @@ export class CommunicationByCustomers extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       allUsers: [],
       toggleModal: true,
       singleLot: null,
@@ -32,8 +33,13 @@ export class CommunicationByCustomers extends Component {
     }
   };
 
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
   render() {
-    const { allUsers } = this.state;
+    const { allUsers, searchFor } = this.state;
     return (
       <Fragment>
         <TextOrMailModal
@@ -102,7 +108,7 @@ export class CommunicationByCustomers extends Component {
                         value={this.state.searchFor}
                         type="search"
                         placeholder="Search customer"
-                        onChange={this.handleChange}
+                        onChange={this.handleSearchBarChange}
                       />
                       <span
                         // className="d-sm-none mobile-search"
@@ -171,7 +177,17 @@ export class CommunicationByCustomers extends Component {
                   startToggleModal={this.startToggleModal}
                   history={this.props.history}
                   multiSelectOption={false}
-                  myData={allUsers}
+                  myData={
+                    !searchFor
+                      ? allUsers
+                      : allUsers.filter(
+                          (user) =>
+                            user.userId.includes(searchFor) ||
+                            user.displayName
+                              .toLowerCase()
+                              .includes(searchFor.toLowerCase())
+                        )
+                  }
                   pageSize={10}
                   pagination={true}
                   class="-striped -highlight"

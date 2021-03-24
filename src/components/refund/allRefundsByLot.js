@@ -12,6 +12,7 @@ export class AllRefundsByLots extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       open: false,
       refundsArray: [],
       toggleModal: true,
@@ -39,8 +40,13 @@ export class AllRefundsByLots extends Component {
     }
   };
 
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
   render() {
-    const { open } = this.state;
+    const { open, refundsArray, searchFor } = this.state;
     const { lotNo } = this.props.match.params;
 
     console.log(this.props);
@@ -111,7 +117,7 @@ export class AllRefundsByLots extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search Refund"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -137,7 +143,19 @@ export class AllRefundsByLots extends Component {
                     <Datatable
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.state.refundsArray}
+                      myData={
+                        !searchFor
+                          ? refundsArray
+                          : refundsArray.filter(
+                              (parcel) =>
+                                parcel.parcelId
+                                  .toLowerCase()
+                                  .includes(searchFor.toLowerCase()) ||
+                                parcel.refundStatus
+                                  .toLowerCase()
+                                  .includes(searchFor.toLowerCase())
+                            )
+                      }
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"

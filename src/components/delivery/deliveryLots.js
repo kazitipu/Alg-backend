@@ -11,6 +11,7 @@ export class DeliveryLots extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       allLotsD2D: [],
       allLotsFreight: [],
       toggleModalSelectLot: true,
@@ -37,8 +38,13 @@ export class DeliveryLots extends Component {
     }
   };
 
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
   render() {
-    const { allLotsD2D, allLotsFreight } = this.state;
+    const { allLotsD2D, allLotsFreight, searchFor } = this.state;
     return (
       <>
         {this.props.match.params.shipmentMethod !== "express" ? (
@@ -108,7 +114,7 @@ export class DeliveryLots extends Component {
                                 value={this.state.searchFor}
                                 type="search"
                                 placeholder="Search Lot"
-                                onChange={this.handleChange}
+                                onChange={this.handleSearchBarChange}
                               />
                               <span
                                 // className="d-sm-none mobile-search"
@@ -135,8 +141,20 @@ export class DeliveryLots extends Component {
                         multiSelectOption={false}
                         myData={
                           this.props.match.params.shipmentMethod == "D2D"
-                            ? allLotsD2D
-                            : allLotsFreight
+                            ? !searchFor
+                              ? allLotsD2D
+                              : allLotsD2D.filter((lotObj) =>
+                                  lotObj.lotNo
+                                    .toLowerCase()
+                                    .includes(searchFor.toLowerCase())
+                                )
+                            : !searchFor
+                            ? allLotsFreight
+                            : allLotsFreight.filter((lotObj) =>
+                                lotObj.lotNo
+                                  .toLowerCase()
+                                  .includes(searchFor.toLowerCase())
+                              )
                         }
                         pageSize={10}
                         pagination={true}

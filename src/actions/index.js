@@ -39,6 +39,8 @@ import {
   createNotice,
   updateNotice,
   getAllNotices,
+  uploadImage,
+  updateUser,
 } from "../firebase/firebase.utils";
 
 export const getAllUsersRedux = () => async (dispatch) => {
@@ -394,4 +396,20 @@ export const getAllNoticesRedux = () => async (dispatch) => {
 export const updateNoticeRedux = (noticeObj) => async (dispatch) => {
   const updatedNoticeObj = await updateNotice(noticeObj);
   dispatch({ type: "UPDATE_NOTICE", payload: updatedNoticeObj });
+};
+
+export const uploadImageRedux = (currentUser, file) => async (dispatch) => {
+  const updatedUserObj = await uploadImage(currentUser, file);
+  dispatch({
+    type: "SET_IMAGE_URL",
+    payload: updatedUserObj,
+  });
+};
+
+export const updateUserRedux = (updatedUser) => async (dispatch) => {
+  const updatedUserObj = await updateUser(updatedUser);
+  dispatch({
+    type: "UPDATE_USER",
+    payload: updatedUserObj,
+  });
 };

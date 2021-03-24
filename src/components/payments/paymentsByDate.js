@@ -11,6 +11,7 @@ export class PaymentsByDate extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       allPayments: [],
     };
   }
@@ -25,12 +26,30 @@ export class PaymentsByDate extends Component {
     this.setState({ allPayments: nextProps.payments });
   };
 
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  getMydata = () => {
+    const { allPayments, searchFor } = this.state;
+    if (!searchFor) {
+      return allPayments;
+    }
+    const filterByUserNameAndId = allPayments.filter(
+      (payment) =>
+        payment.Name.toLowerCase().includes(searchFor.toLowerCase()) ||
+        payment.Id.includes(searchFor.toLowerCase())
+    );
+    return filterByUserNameAndId;
+  };
+
   render() {
     const { allPayments } = this.state;
     const { date } = this.props.match.params;
     return (
       <Fragment>
-        <Breadcrumb title="Recharge-history" parent="Recharge" />
+        <Breadcrumb title="Payment-history" parent="Payment" />
 
         <div className="container-fluid">
           <div className="row">
@@ -96,8 +115,8 @@ export class PaymentsByDate extends Component {
                             name="searchFor"
                             value={this.state.searchFor}
                             type="search"
-                            placeholder="Search Recharge"
-                            onChange={this.handleChange}
+                            placeholder="Search Payment"
+                            onChange={this.handleSearchBarChange}
                           />
                           <span
                             // className="d-sm-none mobile-search"
@@ -130,7 +149,7 @@ export class PaymentsByDate extends Component {
                       this.startToggleModalAdditionalInfo
                     }
                     multiSelectOption={false}
-                    myData={allPayments}
+                    myData={this.getMydata()}
                     pageSize={10}
                     pagination={true}
                     class="-striped -highlight"

@@ -13,19 +13,14 @@ export class CommunicationByLots extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFor: "",
       open: false,
 
       toggleModal: true,
       singleLot: null,
     };
   }
-  // onOpenModal = () => {
-  //     this.setState({ open: true });
-  // };
 
-  // onCloseModal = () => {
-  //     this.setState({ open: false });
-  // };
   componentDidMount = async () => {
     this.props.getAllLotsRedux();
   };
@@ -42,8 +37,13 @@ export class CommunicationByLots extends Component {
     }
   };
 
+  handleSearchBarChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
   render() {
-    const { open } = this.state;
+    const { open, searchFor } = this.state;
 
     console.log(this.props);
     return (
@@ -118,12 +118,9 @@ export class CommunicationByLots extends Component {
                             value={this.state.searchFor}
                             type="search"
                             placeholder="Search lot"
-                            onChange={this.handleChange}
+                            onChange={this.handleSearchBarChange}
                           />
-                          <span
-                            // className="d-sm-none mobile-search"
-                            onClick={() => this.handleSearchClick()}
-                          >
+                          <span onClick={() => this.handleSearchClick()}>
                             <Search
                               style={{
                                 marginTop: "5px",
@@ -158,7 +155,15 @@ export class CommunicationByLots extends Component {
                       startToggleModal={this.startToggleModal}
                       history={this.props.history}
                       multiSelectOption={false}
-                      myData={this.props.allLots}
+                      myData={
+                        !searchFor
+                          ? this.props.allLots
+                          : this.props.allLots.filter((lot) =>
+                              lot.lotNo
+                                .toLowerCase()
+                                .includes(searchFor.toLowerCase())
+                            )
+                      }
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"
