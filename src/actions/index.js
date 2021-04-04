@@ -6,8 +6,6 @@ import {
   getAllLots,
   uploadOrder,
   updateOrder,
-  updateOrderBeforeInvoice,
-  updateOrderAfterInvoice,
   getAllOrdersOfSingleLot,
   deleteSingleOrder,
   getSingleOrder,
@@ -116,18 +114,19 @@ export const updateProfileImageRedux = (imgUrl) => {
 };
 
 // Orders
-
 export const getAllOrdersOfSingleLotRedux = (lotObj) => async (dispatch) => {
   const ordersArray = await getAllOrdersOfSingleLot(lotObj);
   dispatch({ type: "GET_ALL_ORDERS", payload: ordersArray });
   return ordersArray;
 };
+
 export const deleteSingleOrderRedux = (orderObj) => async (dispatch) => {
   await deleteSingleOrder(orderObj);
   dispatch({ type: "DELETE_SINGLE_ORDER", payload: orderObj });
 };
-export const getSingleOrderRedux = (orderObj) => async (dispatch) => {
-  const resultOrderObj = await getSingleOrder(orderObj);
+
+export const getSingleOrderRedux = (parcelId) => async (dispatch) => {
+  const resultOrderObj = await getSingleOrder(parcelId);
   dispatch({ type: "GET_SINGLE_ORDER", payload: resultOrderObj });
 };
 
@@ -142,12 +141,12 @@ export const updateOrderRedux = (orderObj) => async (dispatch) => {
   return updatedOrderObj;
 };
 export const updateOrderBeforeInvoiceRedux = (orderObj) => async (dispatch) => {
-  const updatedOrderObj = await updateOrderBeforeInvoice(orderObj);
+  const updatedOrderObj = await updateOrder(orderObj);
   dispatch({ type: "UPDATE_ORDER", payload: updatedOrderObj });
   return updatedOrderObj;
 };
 export const updateOrderAfterInvoiceRedux = (orderObj) => async (dispatch) => {
-  const updatedOrderObj = await updateOrderAfterInvoice(orderObj);
+  const updatedOrderObj = await updateOrder(orderObj);
   dispatch({ type: "UPDATE_ORDER", payload: updatedOrderObj });
   return updatedOrderObj;
 };

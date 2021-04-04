@@ -177,7 +177,7 @@ export class CalculationLots extends Component {
                             <button
                               className="btn"
                               style={{
-                                backgroundColor: "rgb(68, 0, 97)",
+                                backgroundColor: "rgb(68 0 97)",
                                 color: "white",
                               }}
                               type="button"

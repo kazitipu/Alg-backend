@@ -66,9 +66,7 @@ const mapStateToProps = (state) => {
   //     })
   // })
   return {
-    pendingOrders: state.orders.orders.filter(
-      (order) => order.status === "order_pending"
-    ),
+    pendingOrders: [],
     unverifiedPayments: unVerifiedPaymentsArray,
   };
 };

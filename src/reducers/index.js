@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import setAdminsReducer from "./admins";
-import setOrdersReducer from "./orders";
+
 import setPaymentsReducer from "./payments";
 import setProductsReducer from "./products";
 import setLotsReducer from "./lots";
@@ -17,7 +17,6 @@ const rootReducer = combineReducers({
   bookings: setBookingsReducer,
   lots: setLotsReducer,
   users: setUsersReducer,
-  orders: setOrdersReducer,
   payments: setPaymentsReducer,
   admins: setAdminsReducer,
   products: setProductsReducer,

@@ -244,18 +244,23 @@ export class Datatable extends Component {
             }}
           >
             <span
-              onClick={() => {
+              onClick={async () => {
+                const lotNo = this.props.match.params.shipmentMethodLotNo.split(
+                  "-"
+                )[1];
+                const cartonNo = row.original.Carton;
+                const parcelId = `${lotNo}-${cartonNo}`;
+                console.log(parcelId);
+                console.log(myData);
+                const orderObj = myData.find(
+                  (order) => order.parcelId == parcelId
+                );
+                console.log(orderObj);
+                await this.props.deleteSingleOrderRedux(orderObj);
                 let data = myData;
                 data.splice(row.index, 1);
                 this.setState({ myData: data });
                 console.log(row);
-                this.props.deleteSingleOrderRedux({
-                  lotNo: this.props.match.params.shipmentMethodLotNo.split(
-                    "-"
-                  )[1],
-                  cartonNo: row.original.Carton,
-                });
-
                 toast.success("Successfully Deleted !");
               }}
             >

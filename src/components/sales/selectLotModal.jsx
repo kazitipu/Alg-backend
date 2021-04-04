@@ -58,7 +58,7 @@ class SelectLotModal extends Component {
             role="document"
           >
             <div
-              className="modal-content visible-modal-content-2"
+              className="modal-content visible-modal-content-3"
               style={{ backgroundColor: "rgb(68 0 97)" }}
             >
               <div className="modal-body p-0">

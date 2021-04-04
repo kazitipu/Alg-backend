@@ -45,10 +45,12 @@ export class App extends Component {
     this.props.getAllUsersRedux();
     this.props.getAllLotsRedux();
     auth.onAuthStateChanged((adminAuth) => {
-      var admin = this.props.admins.find(
-        (admin) => admin.adminId == adminAuth.uid
-      );
-      this.props.setCurrentAdmin(admin);
+      if (adminAuth) {
+        var admin = this.props.admins.find(
+          (admin) => admin.adminId == adminAuth.uid
+        );
+        this.props.setCurrentAdmin(admin);
+      }
     });
   };
   ChangeRtl(divName) {

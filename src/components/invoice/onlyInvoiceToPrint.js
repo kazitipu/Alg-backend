@@ -1,7 +1,4 @@
 import React, { Component, Fragment } from "react";
-import Breadcrumb from "../../components/common/breadcrumb";
-import data from "../../assets/data/invoice";
-import Datatable from "../../components/invoice/invoiceDatatable";
 import {
   getSingleOrderRedux,
   updateOrderAfterInvoiceRedux,
@@ -22,18 +19,9 @@ export class OnlyInvoieToPrint extends Component {
       lotNo,
       cartonNo,
     ] = this.props.match.params.orderId.split("-");
+    const parcelId = `${lotNo}-${cartonNo}`;
+    await this.props.getSingleOrderRedux(parcelId);
 
-    if (shipmentMethod.includes("D2D")) {
-      await this.props.getSingleOrderRedux({
-        shipmentMethod: "D2D",
-        orderId: `${lotNo}-${cartonNo}`,
-      });
-    } else {
-      await this.props.getSingleOrderRedux({
-        shipmentMethod: "Freight",
-        orderId: `${lotNo}-${cartonNo}`,
-      });
-    }
     console.log(this.props.orderObj);
     if (this.props.orderObj) {
       this.setState({

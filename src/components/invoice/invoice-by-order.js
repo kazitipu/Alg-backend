@@ -21,19 +21,8 @@ export class InvoiceByOrder extends Component {
       lotNo,
       cartonNo,
     ] = this.props.match.params.orderId.split("-");
-
-    if (shipmentMethod.includes("D2D")) {
-      await this.props.getSingleOrderRedux({
-        shipmentMethod: "D2D",
-        orderId: `${lotNo}-${cartonNo}`,
-      });
-    } else {
-      await this.props.getSingleOrderRedux({
-        shipmentMethod: "Freight",
-        orderId: `${lotNo}-${cartonNo}`,
-      });
-    }
-    console.log(this.props.orderObj);
+    const parcelId = `${lotNo}-${cartonNo}`;
+    await this.props.getSingleOrderRedux(parcelId);
     if (this.props.orderObj) {
       this.setState({
         userObj: this.props.users.find(

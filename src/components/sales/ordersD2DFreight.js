@@ -192,8 +192,9 @@ export class OrdersD2DFreight extends Component {
                     </li>
                     <li>
                       <button
-                        className="btn btn-primary"
+                        className="btn"
                         type="button"
+                        style={{ background: "rgb(68 0 97)", color: "white" }}
                         onClick={() => this.startToggleModalSelectLot(lotNo)}
                       >
                         Create Order
