@@ -59,6 +59,7 @@ class CreateOrderModal extends Component {
       }
     }
     console.log(this.state.packagingCost);
+    const dateofWarehouseReceive = new Date().toLocaleDateString();
     const uploadedOrder = await this.props.uploadOrderRedux({
       shipmentMethod: this.props.singleLot.shipmentMethod.includes("D2D")
         ? "D2D"
@@ -67,6 +68,7 @@ class CreateOrderModal extends Component {
       parcelId: `${this.props.singleLot.lotNo}-${this.state.cartonNo}`,
       ...this.state,
       totalCbm: (cbm_height * cbm_width * cbm_length) / 1000000,
+      dateofWarehouseReceive: dateofWarehouseReceive,
     });
     if (uploadedOrder) {
       toast.success("Successfully added order");
@@ -244,7 +246,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -268,7 +270,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -303,7 +305,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -326,7 +328,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -347,7 +349,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -370,7 +372,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -391,7 +393,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -414,7 +416,7 @@ class CreateOrderModal extends Component {
                                 <label
                                   style={{
                                     color: "white",
-                                    marginBottom: "0px",
+                                    marginBottom: "5px",
                                     fontSize: "130%",
                                   }}
                                 >
@@ -492,7 +494,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -519,7 +521,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -550,7 +552,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >

@@ -1017,11 +1017,11 @@ export class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    allOrders: state.orders.orders,
-    allPayments: state.payments.payments,
-    allAdmins: state.admins.admins,
-    allProducts: state.products.products,
-    currentAdmin: state.admins.currentAdmin,
+    allOrders: [],
+    allPayments: [],
+    allAdmins: [],
+    allProducts: [],
+    currentAdmin: [],
   };
 };
 export default connect(mapStateToProps, null)(Dashboard);

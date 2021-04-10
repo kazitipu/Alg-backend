@@ -52,14 +52,22 @@ class CreateLotModal extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
+    let shipmentStatusScore;
+    const { shipmentStatus } = this.state;
+    if (shipmentStatus === "Abroad Warehouse") shipmentStatusScore = 1;
+    if (shipmentStatus === "Abroad Customs") shipmentStatusScore = 2;
+    if (shipmentStatus === "Ready to Fly") shipmentStatusScore = 3;
+    if (shipmentStatus === "Bangladesh Customs") shipmentStatusScore = 4;
+    if (shipmentStatus === "Local Warehouse") shipmentStatusScore = 5;
+
     console.log(this.state);
     console.log(this.props.singleLot);
     if (this.props.singleLot === null) {
-      await this.props.uploadLotRedux(this.state);
+      await this.props.uploadLotRedux({ ...this.state, shipmentStatusScore });
       toast.success("Successfully created new lot");
     } else {
-      await this.props.updateLotRedux(this.state);
-      toast.success("successfully updated new lot");
+      await this.props.updateLotRedux({ ...this.state, shipmentStatusScore });
+      toast.success("successfully updated lot");
     }
 
     this.setState({
