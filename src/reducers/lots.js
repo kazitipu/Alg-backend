@@ -5,12 +5,12 @@ const setLotsReducer = (state = INITIAL_STATE, action) => {
     case "GET_ALL_LOTS":
       return { ...state, lots: [...action.payload] };
     case "UPLOAD_LOT":
-      return { ...state, lots: [...state.lots, action.payload] };
+      return { ...state, lots: [action.payload, ...state.lots] };
     case "UPDATE_LOT":
       const filteredLot = state.lots.filter(
         (lot) => lot.lotNo !== action.payload.lotNo
       );
-      return { ...state, lots: [...filteredLot, action.payload] };
+      return { ...state, lots: [action.payload, ...filteredLot] };
 
     default:
       return { ...state };

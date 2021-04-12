@@ -3,9 +3,8 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deleteOrder } from "../../firebase/firebase.utils";
 import { withRouter } from "react-router-dom";
-import InvoiceModal from "./invoiceModal";
+import InvoiceModal from "./invoiceModal.jsx";
 export class Datatable extends Component {
   constructor(props) {
     super(props);
@@ -144,6 +143,13 @@ export class Datatable extends Component {
     }
   };
 
+  handleChange = (e) => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value }, () => {
+      console.log(this.state);
+    });
+  };
+
   render() {
     const { pageSize, myClass, multiSelectOption, pagination } = this.props;
     console.log(this.props);
@@ -230,16 +236,41 @@ export class Datatable extends Component {
         },
       });
     } else {
-      columns.push({
-        Header: <b>Invoice</b>,
-        id: "delete",
-        accessor: (str) => "delete",
-        Cell: (row) => this.renderButton(row, myData),
-        style: {
-          textAlign: "center",
+      columns.push(
+        {
+          Header: <b>Price/kg</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => {
+            const [
+              shipmentMethod,
+              lotNo,
+            ] = this.props.match.params.shipmentMethodLotNo.split("-");
+            const parcelId = `${lotNo}-${row.original.Carton}`;
+            return (
+              <input
+                name={`${parcelId}`}
+                value={this.state[parcelId]}
+                onChange={this.handleChange}
+              />
+            );
+          },
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
         },
-        sortable: false,
-      });
+        {
+          Header: <b>Invoice</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => this.renderButton(row, myData),
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
+        }
+      );
     }
 
     return (
@@ -256,6 +287,17 @@ export class Datatable extends Component {
           startToggleModalInvoice={this.startToggleModalInvoice}
           parcelObj={this.state.parcelObj}
         />
+        <button
+          className="btn btn-secondary"
+          onClick={this.handleUpdatePriceClick}
+          style={{
+            position: "absolute",
+            marginTop: "40px",
+            right: "40px",
+          }}
+        >
+          Update
+        </button>
       </Fragment>
     );
   }

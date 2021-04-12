@@ -105,8 +105,8 @@ class CreateLotModal extends Component {
             role="document"
           >
             <div
-              className="modal-content visible-modal-content"
-              style={{ backgroundColor: "#ff8084" }}
+              className="modal-content visible-modal-content-3"
+              style={{ backgroundColor: "rgb(68 0 97)" }}
             >
               <div className="modal-body p-0">
                 <section className="pos-rel bg-light-gray">
@@ -269,7 +269,12 @@ class CreateLotModal extends Component {
                               }}
                             >
                               <div>
-                                <div style={{ color: "white" }}>
+                                <div
+                                  style={{
+                                    color: "white",
+                                    marginBottom: "5px",
+                                  }}
+                                >
                                   Shipment Date
                                 </div>
                                 <input
@@ -284,7 +289,12 @@ class CreateLotModal extends Component {
                                 />
                               </div>
                               <div>
-                                <div style={{ color: "white" }}>
+                                <div
+                                  style={{
+                                    color: "white",
+                                    marginBottom: "5px",
+                                  }}
+                                >
                                   Arrival Date(approx)
                                 </div>
                                 <input

@@ -14,7 +14,8 @@ export class BookingList extends Component {
     super(props);
     this.state = {
       open: false,
-      bookingsArray: [],
+      bookingsArrayRequested: [],
+      bookingsArraySuccess: [],
       toggleModal: true,
       singleLot: null,
       bookingIdArray: [],
@@ -23,36 +24,24 @@ export class BookingList extends Component {
   }
 
   componentDidMount = async () => {
-    await this.props.getAllBookingsRedux();
-    if (this.props.allBookings.length > 0) {
-      if (this.props.match.params.bookingStatus === "Pending") {
-        const bookingsArray = this.props.allBookings.filter(
-          (booking) => booking.bookingStatus === "Pending"
-        );
-        this.setState({ bookingsArray });
-      }
-      if (this.props.match.params.bookingStatus === "Success") {
-        const bookingsArray = this.props.allBookings.filter(
-          (booking) => booking.bookingStatus === "Success"
-        );
-        this.setState({ bookingsArray });
-      }
+    if (this.props.match.params.bookingStatus === "Pending") {
+      await this.props.getAllBookingsRedux("Pending");
+    }
+    if (this.props.match.params.bookingStatus === "Success") {
+      await this.props.getAllBookingsRedux("Success");
     }
   };
 
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.allBookings.length > 0) {
+  componentWillReceiveProps = async (nextProps) => {
+    if (
+      nextProps.match.params.bookingStatus !==
+      this.props.match.params.bookingStatus
+    ) {
       if (nextProps.match.params.bookingStatus === "Pending") {
-        const bookingsArray = nextProps.allBookings.filter(
-          (booking) => booking.bookingStatus === "Pending"
-        );
-        this.setState({ bookingsArray });
+        await nextProps.getAllBookingsRedux("Pending");
       }
       if (nextProps.match.params.bookingStatus === "Success") {
-        const bookingsArray = nextProps.allBookings.filter(
-          (booking) => booking.bookingStatus === "Success"
-        );
-        this.setState({ bookingsArray });
+        await nextProps.getAllBookingsRedux("Success");
       }
     }
   };
@@ -122,7 +111,6 @@ export class BookingList extends Component {
                       justifyContent: "space-around",
                     }}
                   >
-                    {" "}
                     <li
                       style={{
                         border: "1px solid gainsboro",
@@ -182,8 +170,8 @@ export class BookingList extends Component {
                       multiSelectOption={false}
                       myData={
                         !this.state.searchFor
-                          ? this.state.bookingsArray
-                          : this.state.bookingsArray.filter((bookingObj) =>
+                          ? this.props.allBookings
+                          : this.props.allBookings.filter((bookingObj) =>
                               bookingObj.bookingId
                                 .toString()
                                 .includes(this.state.searchFor)

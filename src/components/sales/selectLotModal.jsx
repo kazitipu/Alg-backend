@@ -120,8 +120,10 @@ class SelectLotModal extends Component {
                                 <ul
                                   className="below-searchbar-recommendation"
                                   style={{
-                                    display: this.state.showSuggestion
-                                      ? "flex"
+                                    display: !this.props.fixedLot
+                                      ? this.state.showSuggestion
+                                        ? "flex"
+                                        : "none"
                                       : "none",
                                   }}
                                 >

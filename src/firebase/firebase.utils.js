@@ -360,7 +360,7 @@ export const getAllProducts = async () => {
 export const getAllLots = async () => {
   const lotsCollectionRef = firestore.collection("lots");
   try {
-    const lots = await lotsCollectionRef.get();
+    const lots = await lotsCollectionRef.orderBy("shipmentDate", "desc").get();
     const lotsArray = [];
     lots.forEach((doc) => {
       lotsArray.push(doc.data());
@@ -470,8 +470,10 @@ export const getAllRechargeRequest = async () => {
   }
 };
 
-export const getAllBookings = async () => {
-  const bookingsCollectionRef = firestore.collection("bookingRequest");
+export const getAllBookings = async (bookingStatus) => {
+  const bookingsCollectionRef = firestore
+    .collection("bookingRequest")
+    .where("bookingStatus", "==", bookingStatus);
   try {
     const bookings = await bookingsCollectionRef.get();
     const bookingsArray = [];

@@ -4,8 +4,8 @@
   transition: top 1s, opacity 1s !important;
 }
 
-.visible-modal-content-2 {
+.visible-modal-content-3 {
   /* background-image: url("../../../assets/images/dashboard/login-bg.png"); */
   background-size: cover;
-  box-shadow: rgb(233, 109, 109) 1px 5px 24px 0px;
+  box-shadow: rgb(30, 0, 32) 1px 5px 24px 0px;
 }

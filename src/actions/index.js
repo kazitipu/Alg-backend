@@ -81,8 +81,8 @@ export const rechargeAdminredux = (adminIdArray, balance) => {
 };
 
 // bookings
-export const getAllBookingsRedux = () => async (dispatch) => {
-  const bookingsArray = await getAllBookings();
+export const getAllBookingsRedux = (bookingStatus) => async (dispatch) => {
+  const bookingsArray = await getAllBookings(bookingStatus);
   dispatch({ type: "GET_ALL_BOOKINGS", payload: bookingsArray });
 };
 export const updateBookingRedux = (bookingObj) => async (dispatch) => {
