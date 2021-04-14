@@ -384,8 +384,8 @@ export const getAllPaymentsOfSingleDateRedux = (date) => async (dispatch) => {
 };
 
 // refund
-export const getAllRefundRequestRedux = () => async (dispatch) => {
-  const refundsArray = await getAllRefundRequest();
+export const getAllRefundRequestRedux = (refundStatus) => async (dispatch) => {
+  const refundsArray = await getAllRefundRequest(refundStatus);
   dispatch({ type: "GET_ALL_REFUNDS", payload: refundsArray });
 };
 

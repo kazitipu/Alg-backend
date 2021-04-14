@@ -27,7 +27,7 @@ export class App extends Component {
     console.log(this.props.history);
     await this.props.getAllBookingsRedux("Pending");
     await this.props.getAllRechargeRequestRedux();
-    await this.props.getAllRefundRequestRedux();
+    await this.props.getAllRefundRequestRedux("Pending");
     await this.props.getAllAdminsRedux();
     await this.props.getAllUsersRedux();
     auth.onAuthStateChanged((adminAuth) => {

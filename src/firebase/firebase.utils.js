@@ -463,7 +463,8 @@ export const getAllPaymentDays = async () => {
 export const getAllRechargeRequest = async () => {
   const rechargeRequestCollectionRef = firestore
     .collection("rechargeRequest")
-    .limit(500);
+    .where("status", "==", "pending");
+
   try {
     const rechargeRequest = await rechargeRequestCollectionRef.get();
     const rechargeRequestArray = [];

@@ -46,7 +46,12 @@ export class Dashboard extends Component {
   };
 
   render() {
-    const { allPayments, allAdmins, allOrders, allProducts } = this.props;
+    const {
+      allAdmins,
+      allBookingRequest,
+      allRechargeRequest,
+      allRefundRequest,
+    } = this.props;
 
     const lineData = {
       labels: ["100", "200", "300", "400", "500", "600", "700", "800"],
@@ -211,7 +216,10 @@ export class Dashboard extends Component {
                           Booking Request
                         </span>
                         <h3 className="mb-0">
-                          Tk <CountUp className="counter" end={780} />
+                          <CountUp
+                            className="counter"
+                            end={allBookingRequest.length}
+                          />
                         </h3>
                       </div>
                     </div>
@@ -235,8 +243,10 @@ export class Dashboard extends Component {
                           Recharge Request
                         </span>
                         <h3 className="mb-0">
-                          Tk
-                          <CountUp className="counter" end={670} />
+                          <CountUp
+                            className="counter"
+                            end={allRechargeRequest.length}
+                          />
                           <small></small>
                         </h3>
                       </div>
@@ -261,7 +271,10 @@ export class Dashboard extends Component {
                           Refund Request
                         </span>
                         <h3 className="mb-0">
-                          <CountUp className="counter" end={25} />
+                          <CountUp
+                            className="counter"
+                            end={allRefundRequest.length}
+                          />
                           <small></small>
                         </h3>
                       </div>
@@ -286,7 +299,7 @@ export class Dashboard extends Component {
                           Total Admins
                         </span>
                         <h3 className="mb-0">
-                          <CountUp className="counter" end={350} />
+                          <CountUp className="counter" end={allAdmins.length} />
                           <small></small>
                         </h3>
                       </div>
@@ -316,427 +329,365 @@ export class Dashboard extends Component {
             <div className="col-xl-6 xl-100">
               <div className="card">
                 <div className="card-header">
-                  <h5>Pending Orders</h5>
+                  <h5>Booking Request</h5>
                 </div>
                 <div className="card-body">
                   <div className="user-status table-responsive latest-order-table">
                     <table className="table table-bordernone">
                       <thead>
                         <tr>
-                          <th scope="col">Order ID</th>
-                          <th scope="col">Order Total</th>
-                          <th scope="col">Customer</th>
-                          <th scope="col">Phone</th>
+                          <th scope="col">Booking ID</th>
+                          <th scope="col">Product</th>
+                          <th scope="col">Weight</th>
+                          <th scope="col">Country</th>
                         </tr>
                       </thead>
-                      {this.props.currentAdmin &&
-                      this.props.currentAdmin.status == "admin" ? (
-                        <tbody>
-                          {allOrders
-                            ? allOrders
-                                .filter(
-                                  (order) => order.status === "order_pending"
-                                )
-                                .slice(0, 5)
-                                .map((order) => (
-                                  <tr key={order.orderId}>
-                                    <td className="font-danger">
-                                      {order.orderId}
-                                    </td>
-                                    <td className="font-danger">
-                                      Tk {order.paymentStatus.total}
-                                    </td>
-                                    <td className="font-danger">
-                                      {order.otherInformation.first_name}
-                                      {order.otherInformation.last_name}
-                                    </td>
-                                    <td className="font-danger">
-                                      {order.otherInformation.phone}
-                                    </td>
-                                  </tr>
-                                ))
-                            : null}
-                        </tbody>
-                      ) : (
-                        <tbody>
-                          {allOrders
-                            ? allOrders
-                                .filter((order) => order.status === "ordered")
-                                .filter(
-                                  (order) =>
-                                    order.orderTo ===
-                                    this.props.currentAdmin.name
-                                )
-                                .slice(0, 5)
-                                .map((order) => (
-                                  <tr key={order.orderId}>
-                                    <td className="font-danger">
-                                      {order.orderId}
-                                    </td>
-                                    <td className="font-danger">
-                                      Tk {order.paymentStatus.total}
-                                    </td>
-                                    <td className="font-danger">
-                                      {order.otherInformation.first_name}
-                                      {order.otherInformation.last_name}
-                                    </td>
-                                    <td className="font-danger">
-                                      {order.otherInformation.phone}
-                                    </td>
-                                  </tr>
-                                ))
-                            : null}
-                        </tbody>
-                      )}
+
+                      <tbody>
+                        <tr>
+                          <td className="font-danger"></td>
+                          <td className="font-danger"></td>
+                          <td className="font-danger"></td>
+                          <td className="font-danger"></td>
+                        </tr>
+                      </tbody>
                     </table>
-                    {this.props.currentAdmin &&
-                    this.props.currentAdmin.status == "admin" ? (
-                      <Link
-                        to={`${process.env.PUBLIC_URL}/sales/order_pending`}
-                        className="btn btn-primary"
-                      >
-                        View All Pending Orders
-                      </Link>
-                    ) : (
-                      <Link
-                        to={`${process.env.PUBLIC_URL}/sales/ordered`}
-                        className="btn btn-primary"
-                      >
-                        View All Pending Orders
-                      </Link>
-                    )}
+
+                    <Link
+                      to={`${process.env.PUBLIC_URL}/sales/order_pending`}
+                      className="btn btn-primary"
+                    >
+                      View All Booking Request
+                    </Link>
                   </div>
                 </div>
               </div>
             </div>
-            {this.props.currentAdmin &&
-            this.props.currentAdmin.status == "admin" ? (
-              <>
-                <div className="col-xl-3 col-md-6 xl-50">
-                  <div className="card order-graph sales-carousel">
-                    <div className="card-header">
-                      <h6>Total Sales</h6>
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="small-chartjs">
-                            <div
-                              className="flot-chart-placeholder"
-                              id="simple-line-chart-sparkline-3"
-                            >
-                              <Chart
-                                height={"60px"}
-                                chartType="LineChart"
-                                loader={<div>Loading Chart</div>}
-                                data={[
-                                  ["x", "time"],
-                                  [0, 20],
-                                  [1, 5],
-                                  [2, 120],
-                                  [3, 10],
-                                  [4, 140],
-                                  [5, 15],
-                                ]}
-                                options={LineOptions}
-                                legend_toggle
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="value-graph">
-                            <h3>
-                              42%{" "}
-                              <span>
-                                <i className="fa fa-angle-up font-primary"></i>
-                              </span>
-                            </h3>
+
+            <>
+              <div className="col-xl-3 col-md-6 xl-50">
+                <div className="card order-graph sales-carousel">
+                  <div className="card-header">
+                    <h6>Total Sales</h6>
+                    <div className="row">
+                      <div className="col-6">
+                        <div className="small-chartjs">
+                          <div
+                            className="flot-chart-placeholder"
+                            id="simple-line-chart-sparkline-3"
+                          >
+                            <Chart
+                              height={"60px"}
+                              chartType="LineChart"
+                              loader={<div>Loading Chart</div>}
+                              data={[
+                                ["x", "time"],
+                                [0, 20],
+                                [1, 5],
+                                [2, 120],
+                                [3, 10],
+                                [4, 140],
+                                [5, 15],
+                              ]}
+                              options={LineOptions}
+                              legend_toggle
+                            />
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="card-body">
-                      <div className="media">
-                        <div className="media-body">
-                          <span>Sales Last Month</span>
-                          <h2 className="mb-0">9054</h2>
-                          <p>
-                            0.25%{" "}
+                      <div className="col-6">
+                        <div className="value-graph">
+                          <h3>
+                            42%{" "}
                             <span>
-                              <i className="fa fa-angle-up"></i>
+                              <i className="fa fa-angle-up font-primary"></i>
                             </span>
-                          </p>
-                          <h5 className="f-w-600 f-16">
-                            Gross sales of August
-                          </h5>
-                          <p>
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting
-                          </p>
+                          </h3>
                         </div>
-                        <div className="bg-primary b-r-8">
-                          <div className="small-box">
-                            <Briefcase />
-                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-body">
+                    <div className="media">
+                      <div className="media-body">
+                        <span>Sales Last Month</span>
+                        <h2 className="mb-0">9054</h2>
+                        <p>
+                          0.25%{" "}
+                          <span>
+                            <i className="fa fa-angle-up"></i>
+                          </span>
+                        </p>
+                        <h5 className="f-w-600 f-16">Gross sales of August</h5>
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting
+                        </p>
+                      </div>
+                      <div className="bg-primary b-r-8">
+                        <div className="small-box">
+                          <Briefcase />
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-3 col-md-6 xl-50">
-                  <div className="card order-graph sales-carousel">
-                    <div className="card-header">
-                      <h6>Total purchase</h6>
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="small-chartjs">
-                            <div
-                              className="flot-chart-placeholder"
-                              id="simple-line-chart-sparkline"
-                            >
-                              <Chart
-                                height={"60px"}
-                                chartType="LineChart"
-                                loader={<div>Loading Chart</div>}
-                                data={[
-                                  ["x", "time"],
-                                  [0, 85],
-                                  [1, 83],
-                                  [2, 90],
-                                  [3, 70],
-                                  [4, 85],
-                                  [5, 60],
-                                  [6, 65],
-                                  [7, 63],
-                                  [8, 68],
-                                  [9, 68],
-                                  [10, 65],
-                                  [11, 40],
-                                  [12, 60],
-                                  [13, 75],
-                                  [14, 70],
-                                  [15, 90],
-                                ]}
-                                options={LineOptions1}
-                                legend_toggle
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="value-graph">
-                            <h3>
-                              20%{" "}
-                              <span>
-                                <i className="fa fa-angle-up font-secondary"></i>
-                              </span>
-                            </h3>
+              </div>
+              <div className="col-xl-3 col-md-6 xl-50">
+                <div className="card order-graph sales-carousel">
+                  <div className="card-header">
+                    <h6>Total purchase</h6>
+                    <div className="row">
+                      <div className="col-6">
+                        <div className="small-chartjs">
+                          <div
+                            className="flot-chart-placeholder"
+                            id="simple-line-chart-sparkline"
+                          >
+                            <Chart
+                              height={"60px"}
+                              chartType="LineChart"
+                              loader={<div>Loading Chart</div>}
+                              data={[
+                                ["x", "time"],
+                                [0, 85],
+                                [1, 83],
+                                [2, 90],
+                                [3, 70],
+                                [4, 85],
+                                [5, 60],
+                                [6, 65],
+                                [7, 63],
+                                [8, 68],
+                                [9, 68],
+                                [10, 65],
+                                [11, 40],
+                                [12, 60],
+                                [13, 75],
+                                [14, 70],
+                                [15, 90],
+                              ]}
+                              options={LineOptions1}
+                              legend_toggle
+                            />
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="card-body">
-                      <div className="media">
-                        <div className="media-body">
-                          <span>Monthly Purchase</span>
-                          <h2 className="mb-0">2154</h2>
-                          <p>
-                            0.13%{" "}
+                      <div className="col-6">
+                        <div className="value-graph">
+                          <h3>
+                            20%{" "}
                             <span>
-                              <i className="fa fa-angle-up"></i>
+                              <i className="fa fa-angle-up font-secondary"></i>
                             </span>
-                          </p>
-                          <h5 className="f-w-600 f-16">Avg Gross purchase</h5>
-                          <p>
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting
-                          </p>
+                          </h3>
                         </div>
-                        <div className="bg-secondary b-r-8">
-                          <div className="small-box">
-                            <CreditCard />
-                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-body">
+                    <div className="media">
+                      <div className="media-body">
+                        <span>Monthly Purchase</span>
+                        <h2 className="mb-0">2154</h2>
+                        <p>
+                          0.13%{" "}
+                          <span>
+                            <i className="fa fa-angle-up"></i>
+                          </span>
+                        </p>
+                        <h5 className="f-w-600 f-16">Avg Gross purchase</h5>
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting
+                        </p>
+                      </div>
+                      <div className="bg-secondary b-r-8">
+                        <div className="small-box">
+                          <CreditCard />
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-3 col-md-6 xl-50">
-                  <div className="card order-graph sales-carousel">
-                    <div className="card-header">
-                      <h6>Total cash transaction</h6>
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="small-chartjs">
-                            <div
-                              className="flot-chart-placeholder"
-                              id="simple-line-chart-sparkline-2"
-                            >
-                              <Chart
-                                height={"60px"}
-                                chartType="LineChart"
-                                loader={<div>Loading Chart</div>}
-                                data={[
-                                  ["x", "time"],
-                                  [0, 85],
-                                  [1, 83],
-                                  [2, 90],
-                                  [3, 70],
-                                  [4, 85],
-                                  [5, 60],
-                                  [6, 65],
-                                  [7, 63],
-                                  [8, 68],
-                                  [9, 68],
-                                  [10, 65],
-                                  [11, 40],
-                                  [12, 60],
-                                  [13, 75],
-                                  [14, 70],
-                                  [15, 90],
-                                ]}
-                                options={LineOptions2}
-                                legend_toggle
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="value-graph">
-                            <h3>
-                              28%{" "}
-                              <span>
-                                <i className="fa fa-angle-up font-warning"></i>
-                              </span>
-                            </h3>
+              </div>
+              <div className="col-xl-3 col-md-6 xl-50">
+                <div className="card order-graph sales-carousel">
+                  <div className="card-header">
+                    <h6>Total cash transaction</h6>
+                    <div className="row">
+                      <div className="col-6">
+                        <div className="small-chartjs">
+                          <div
+                            className="flot-chart-placeholder"
+                            id="simple-line-chart-sparkline-2"
+                          >
+                            <Chart
+                              height={"60px"}
+                              chartType="LineChart"
+                              loader={<div>Loading Chart</div>}
+                              data={[
+                                ["x", "time"],
+                                [0, 85],
+                                [1, 83],
+                                [2, 90],
+                                [3, 70],
+                                [4, 85],
+                                [5, 60],
+                                [6, 65],
+                                [7, 63],
+                                [8, 68],
+                                [9, 68],
+                                [10, 65],
+                                [11, 40],
+                                [12, 60],
+                                [13, 75],
+                                [14, 70],
+                                [15, 90],
+                              ]}
+                              options={LineOptions2}
+                              legend_toggle
+                            />
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="card-body">
-                      <div className="media">
-                        <div className="media-body">
-                          <span>Cash on hand</span>
-                          <h2 className="mb-0">4672</h2>
-                          <p>
-                            0.8%{" "}
+                      <div className="col-6">
+                        <div className="value-graph">
+                          <h3>
+                            28%{" "}
                             <span>
-                              <i className="fa fa-angle-up"></i>
+                              <i className="fa fa-angle-up font-warning"></i>
                             </span>
-                          </p>
-                          <h5 className="f-w-600 f-16">Details about cash</h5>
-                          <p>
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting
-                          </p>
+                          </h3>
                         </div>
-                        <div className="bg-warning b-r-8">
-                          <div className="small-box">
-                            <ShoppingCart />
-                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-body">
+                    <div className="media">
+                      <div className="media-body">
+                        <span>Cash on hand</span>
+                        <h2 className="mb-0">4672</h2>
+                        <p>
+                          0.8%{" "}
+                          <span>
+                            <i className="fa fa-angle-up"></i>
+                          </span>
+                        </p>
+                        <h5 className="f-w-600 f-16">Details about cash</h5>
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting
+                        </p>
+                      </div>
+                      <div className="bg-warning b-r-8">
+                        <div className="small-box">
+                          <ShoppingCart />
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-3 col-md-6 xl-50">
-                  <div className="card order-graph sales-carousel">
-                    <div className="card-header">
-                      <h6>Daily Deposits</h6>
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="small-chartjs">
-                            <div
-                              className="flot-chart-placeholder"
-                              id="simple-line-chart-sparkline-1"
-                            >
-                              <Chart
-                                height={"60px"}
-                                chartType="LineChart"
-                                loader={<div>Loading Chart</div>}
-                                data={[
-                                  ["x", "time"],
-                                  [0, 85],
-                                  [1, 83],
-                                  [2, 90],
-                                  [3, 70],
-                                  [4, 85],
-                                  [5, 60],
-                                  [6, 65],
-                                  [7, 63],
-                                  [8, 68],
-                                  [9, 68],
-                                  [10, 65],
-                                  [11, 40],
-                                  [12, 60],
-                                  [13, 75],
-                                  [14, 70],
-                                  [15, 90],
-                                ]}
-                                options={LineOptions3}
-                                legend_toggle
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="value-graph">
-                            <h3>
-                              75%{" "}
-                              <span>
-                                <i className="fa fa-angle-up font-danger"></i>
-                              </span>
-                            </h3>
+              </div>
+              <div className="col-xl-3 col-md-6 xl-50">
+                <div className="card order-graph sales-carousel">
+                  <div className="card-header">
+                    <h6>Daily Deposits</h6>
+                    <div className="row">
+                      <div className="col-6">
+                        <div className="small-chartjs">
+                          <div
+                            className="flot-chart-placeholder"
+                            id="simple-line-chart-sparkline-1"
+                          >
+                            <Chart
+                              height={"60px"}
+                              chartType="LineChart"
+                              loader={<div>Loading Chart</div>}
+                              data={[
+                                ["x", "time"],
+                                [0, 85],
+                                [1, 83],
+                                [2, 90],
+                                [3, 70],
+                                [4, 85],
+                                [5, 60],
+                                [6, 65],
+                                [7, 63],
+                                [8, 68],
+                                [9, 68],
+                                [10, 65],
+                                [11, 40],
+                                [12, 60],
+                                [13, 75],
+                                [14, 70],
+                                [15, 90],
+                              ]}
+                              options={LineOptions3}
+                              legend_toggle
+                            />
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="card-body">
-                      <div className="media">
-                        <div className="media-body">
-                          <span>Security Deposits</span>
-                          <h2 className="mb-0">5782</h2>
-                          <p>
-                            0.25%{" "}
+                      <div className="col-6">
+                        <div className="value-graph">
+                          <h3>
+                            75%{" "}
                             <span>
-                              <i className="fa fa-angle-up"></i>
+                              <i className="fa fa-angle-up font-danger"></i>
                             </span>
-                          </p>
-                          <h5 className="f-w-600 f-16">Gross sales of June</h5>
-                          <p>
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting
-                          </p>
+                          </h3>
                         </div>
-                        <div className="bg-danger b-r-8">
-                          <div className="small-box">
-                            <Calendar />
-                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-body">
+                    <div className="media">
+                      <div className="media-body">
+                        <span>Security Deposits</span>
+                        <h2 className="mb-0">5782</h2>
+                        <p>
+                          0.25%{" "}
+                          <span>
+                            <i className="fa fa-angle-up"></i>
+                          </span>
+                        </p>
+                        <h5 className="f-w-600 f-16">Gross sales of June</h5>
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting
+                        </p>
+                      </div>
+                      <div className="bg-danger b-r-8">
+                        <div className="small-box">
+                          <Calendar />
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-sm-12">
-                  <div className="card">
-                    <div className="card-header">
-                      <h5>Buy / Sell</h5>
-                    </div>
-                    <div className="card-body sell-graph">
-                      <Line
-                        data={buyData}
-                        options={buyOption}
-                        width={700}
-                        height={350}
-                      />
-                    </div>
+              </div>
+              <div className="col-sm-12">
+                <div className="card">
+                  <div className="card-header">
+                    <h5>Buy / Sell</h5>
+                  </div>
+                  <div className="card-body sell-graph">
+                    <Line
+                      data={buyData}
+                      options={buyOption}
+                      width={700}
+                      height={350}
+                    />
                   </div>
                 </div>
-              </>
-            ) : null}
+              </div>
+            </>
+
             <div className="col-xl-6 xl-100">
               <div className="card height-equal">
                 <div className="card-header">
-                  <h5>Products to Order</h5>
+                  <h5>Refund Request</h5>
                 </div>
                 <div className="card-body">
                   <div className="user-status table-responsive products-table">
@@ -751,58 +702,23 @@ export class Dashboard extends Component {
                       {this.props.currentAdmin &&
                       this.props.currentAdmin.status == "admin" ? (
                         <tbody>
-                          {allOrders
-                            ? allOrders
-                                .filter((order) => order.status === "ordered")
-                                .slice(0, 6)
-                                .map((order, i) => (
-                                  <tr key={order.orderId}>
-                                    <td>{order.orderId}</td>
-                                    <td className="font-danger">
-                                      Tk {order.paymentStatus.total}
-                                    </td>
-                                    {i % 2 === 0 ? (
-                                      <td className="font-secondary">
-                                        {order.orderTo}
-                                      </td>
-                                    ) : (
-                                      <td className="font-primary">
-                                        {order.orderTo}
-                                      </td>
-                                    )}
-                                  </tr>
-                                ))
-                            : null}
+                          <tr>
+                            <td></td>
+                            <td className="font-danger">Tk</td>
+
+                            <td className="font-secondary"></td>
+
+                            <td className="font-primary"></td>
+                          </tr>
                         </tbody>
                       ) : (
                         <tbody>
-                          {allOrders
-                            ? allOrders
-                                .filter((order) => order.status === "ordered")
-                                .filter(
-                                  (order) =>
-                                    order.orderTo ===
-                                    this.props.currentAdmin.name
-                                )
-                                .slice(0, 6)
-                                .map((order, i) => (
-                                  <tr key={order.orderId}>
-                                    <td>{order.orderId}</td>
-                                    <td className="font-danger">
-                                      Tk {order.paymentStatus.total}
-                                    </td>
-                                    {i % 2 === 0 ? (
-                                      <td className="font-secondary">
-                                        {order.orderTo}
-                                      </td>
-                                    ) : (
-                                      <td className="font-primary">
-                                        {order.orderTo}
-                                      </td>
-                                    )}
-                                  </tr>
-                                ))
-                            : null}
+                          <tr>
+                            <td></td>
+                            <td className="font-danger">Tk</td>
+
+                            <td className="font-secondary"></td>
+                          </tr>
                         </tbody>
                       )}
                     </table>
@@ -848,14 +764,7 @@ export class Dashboard extends Component {
                                     <div className="d-inline-block">
                                       <h6>
                                         {admin.name}
-                                        <span className="text-muted digits">
-                                          (
-                                          {
-                                            admin.successfully_delivered_orders
-                                              .length
-                                          }
-                                          )
-                                        </span>
+                                        <span className="text-muted digits"></span>
                                       </h6>
                                     </div>
                                   </div>
@@ -870,13 +779,6 @@ export class Dashboard extends Component {
                                       {i % 2 === 0 ? (
                                         <div
                                           className="progress-bar bg-primary"
-                                          style={{
-                                            width:
-                                              20 +
-                                              admin
-                                                .successfully_delivered_orders
-                                                .length,
-                                          }}
                                           role="progressbar"
                                           aria-valuenow="50"
                                           aria-valuemin="0"
@@ -885,13 +787,6 @@ export class Dashboard extends Component {
                                       ) : (
                                         <div
                                           className="progress-bar bg-secondary"
-                                          style={{
-                                            width:
-                                              20 +
-                                              admin
-                                                .successfully_delivered_orders
-                                                .length,
-                                          }}
                                           role="progressbar"
                                           aria-valuenow="50"
                                           aria-valuemin="0"
@@ -1070,11 +965,10 @@ export class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    allOrders: [],
-    allPayments: [],
-    allAdmins: [],
-    allProducts: [],
-    currentAdmin: [],
+    allAdmins: state.admins.admins,
+    allRechargeRequest: state.recharge.rechargeRequestArray,
+    allRefundRequest: state.refunds.refunds,
+    allBookingRequest: state.bookings.bookings,
   };
 };
 export default connect(mapStateToProps, null)(Dashboard);
