@@ -428,8 +428,11 @@ export const getAllNotices = async () => {
 
 export const getAllRechargeDays = async () => {
   const rechargeDaysCollectionRef = firestore.collection("rechargeDays");
+
   try {
-    const rechargeDays = await rechargeDaysCollectionRef.get();
+    const rechargeDays = await rechargeDaysCollectionRef
+      .orderBy("date", "desc")
+      .get();
     const rechargeDaysArray = [];
     rechargeDays.forEach((doc) => {
       rechargeDaysArray.push(doc.data());
@@ -441,7 +444,9 @@ export const getAllRechargeDays = async () => {
   }
 };
 export const getAllPaymentDays = async () => {
-  const paymentDaysCollectionRef = firestore.collection("paymentDays");
+  const paymentDaysCollectionRef = firestore
+    .collection("paymentDays")
+    .orderBy("date", "desc");
   try {
     const paymentDays = await paymentDaysCollectionRef.get();
     const paymentDaysArray = [];
@@ -456,7 +461,9 @@ export const getAllPaymentDays = async () => {
 };
 
 export const getAllRechargeRequest = async () => {
-  const rechargeRequestCollectionRef = firestore.collection("rechargeRequest");
+  const rechargeRequestCollectionRef = firestore
+    .collection("rechargeRequest")
+    .limit(500);
   try {
     const rechargeRequest = await rechargeRequestCollectionRef.get();
     const rechargeRequestArray = [];
@@ -474,6 +481,7 @@ export const getAllBookings = async (bookingStatus) => {
   const bookingsCollectionRef = firestore
     .collection("bookingRequest")
     .where("bookingStatus", "==", bookingStatus);
+
   try {
     const bookings = await bookingsCollectionRef.get();
     const bookingsArray = [];

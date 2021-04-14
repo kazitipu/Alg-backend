@@ -12,10 +12,13 @@ const setOrdersAlgReducer = (state = INITIAL_STATE, action) => {
           : [...state.orders],
       };
     case "UPDATE_ORDER":
+      const filteredArray = state.orders.filter(
+        (order) => order.parcelId !== action.payload.parcelId
+      );
       return {
         ...state,
         orders: action.payload
-          ? [action.payload, ...state.orders]
+          ? [action.payload, ...filteredArray]
           : [...state.orders],
       };
 

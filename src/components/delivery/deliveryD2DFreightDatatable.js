@@ -56,9 +56,13 @@ export class Datatable extends Component {
           Quantity: order.quantity,
           CBM: order.totalCbm,
           grossWeight: `${order.grossWeight}kg`,
-          "Delivery Address": order.deliveryAddress,
+          "Delivery Address": order.deliveryAddress
+            ? order.delilveryAddress
+            : "Alg office",
           // "Delivery Cost": <input style={{ borderColor: "inherit",maxWidth: '-webkit-fill-available' }} />,
-          "Delivery Cost": `${order.localDeliveryCost} Tk`,
+          "Delivery Cost": `${
+            order.localDeliveryCost ? order.localDeliveryCost : "0"
+          } Tk`,
         });
       });
       return (
@@ -208,11 +212,11 @@ export class Datatable extends Component {
       const parcelObj = array.find((parcel) => parcel.parcelId === parcelId);
       let backgroundColor;
       let icofont;
-      if (parcelObj.invoiceStatus === "Not created") {
+      if (parcelObj.invoiceStatus === "Not Created") {
         backgroundColor = "purple";
         icofont = "icofont-exclamation-circle";
       }
-      if (parcelObj.invoiceStatus === "Not paid") {
+      if (parcelObj.invoiceStatus === "Not Paid") {
         backgroundColor = "red";
         icofont = "icofont-close-circled";
       }
@@ -256,9 +260,13 @@ export class Datatable extends Component {
           Quantity: order.quantity,
           CBM: order.totalCbm,
           grossWeight: `${order.grossWeight}kg`,
-          "Delivery Address": order.deliveryAddress,
+          "Delivery Address": order.deliveryAddress
+            ? order.delilveryAddress
+            : "Alg office",
           // "Delivery Cost": <input style={{ borderColor: "inherit",maxWidth: '-webkit-fill-available' }} />,
-          "Delivery Cost": `${order.localDeliveryCost} Tk`,
+          "Delivery Cost": `${
+            order.localDeliveryCost ? order.localDeliveryCost : "0"
+          } Tk`,
         });
       });
     }

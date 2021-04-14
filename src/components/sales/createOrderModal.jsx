@@ -69,6 +69,7 @@ class CreateOrderModal extends Component {
       ...this.state,
       totalCbm: (cbm_height * cbm_width * cbm_length) / 1000000,
       dateofWarehouseReceive: dateofWarehouseReceive,
+      invoiceStatus: "Not Created",
     });
     if (uploadedOrder) {
       toast.success("Successfully added order");

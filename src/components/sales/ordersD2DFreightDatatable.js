@@ -45,9 +45,13 @@ export class Datatable extends Component {
     if (myData.length > 0) {
       const newData = [];
       myData.forEach((order) => {
+        const userObj = this.props.allUsers.find(
+          (userObj) => userObj.uid === order.customerUid
+        );
         //  this is not affecting my output see line 104
         newData.push({
-          Customer: order.shippingMark,
+          CustomerId: order.customer,
+          Name: userObj ? userObj.displayName : null,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,
@@ -142,8 +146,12 @@ export class Datatable extends Component {
     const newData = [];
     if (myData.length > 0) {
       myData.forEach((order) => {
+        const userObj = this.props.allUsers.find(
+          (userObj) => userObj.uid === order.customerUid
+        );
         newData.push({
-          Customer: order.shippingMark,
+          CustomerId: order.customer,
+          Name: userObj ? userObj.displayName : null,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,
@@ -302,4 +310,11 @@ export class Datatable extends Component {
   }
 }
 
-export default withRouter(connect(null, { deleteSingleOrderRedux })(Datatable));
+const mapStateToProps = (state) => {
+  return {
+    allUsers: state.users.users,
+  };
+};
+export default withRouter(
+  connect(mapStateToProps, { deleteSingleOrderRedux })(Datatable)
+);

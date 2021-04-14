@@ -5,9 +5,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { withRouter } from "react-router-dom";
 import InvoiceModal from "./invoiceModal.jsx";
+import { connect } from "react-redux";
+import { updateOrderRedux } from "../../actions";
 export class Datatable extends Component {
   constructor(props) {
     super(props);
+    this.input = React.createRef();
     this.state = {
       checkedValues: [],
       myData: this.props.myData,
@@ -15,6 +18,27 @@ export class Datatable extends Component {
       parcelObj: null,
     };
   }
+
+  componentDidMount = () => {
+    const { myData } = this.props;
+    if (myData.length > 0) {
+      myData.forEach((order) => {
+        this.setState({ [order.parcelId]: order.ratePerKg }, () => {
+          console.log(this.state);
+        });
+      });
+    }
+  };
+  componentWillReceiveProps = (nextProps) => {
+    const { myData } = nextProps;
+    if (myData.length > 0) {
+      myData.forEach((order) => {
+        this.setState({ [order.parcelId]: order.ratePerKg }, () => {
+          console.log(this.state);
+        });
+      });
+    }
+  };
 
   startToggleModalInvoice = async (parcelObj) => {
     if (parcelObj) {
@@ -60,8 +84,12 @@ export class Datatable extends Component {
       const newData = [];
       myData.forEach((order) => {
         //  this is not affecting my output see line 104
+        const userObj = this.props.allUser.find(
+          (user) => user.uid === order.customerUid
+        );
         newData.push({
-          Customer: order.shippingMark,
+          CustomerId: order.customer,
+          Name: userObj ? userObj.displayName : null,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,
@@ -93,6 +121,52 @@ export class Datatable extends Component {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  handleInvoiceButtonClick = async (parcelObj) => {
+    const ratePerKg = this.state[parcelObj.parcelId];
+    console.log(ratePerKg);
+    if (ratePerKg) {
+      const updatedOrder = await this.props.updateOrderRedux({
+        ...parcelObj,
+        ratePerKg,
+        invoiceGenerated: true,
+        invoiceStatus: "Not Paid",
+      });
+      if (updatedOrder) {
+        toast.success(
+          `Successfully generated invoice for ${parcelObj.parcelId}`
+        );
+        this.props.history.push(
+          `${process.env.PUBLIC_URL}/invoice-by-orderId/${parcelObj.shipmentMethod}-${parcelObj.parcelId}`
+        );
+      } else {
+        alert("An error occured. try again later.");
+      }
+    } else {
+      alert("Before generating invoice first set the rate.");
+    }
+  };
+
+  handleUpdatePriceClick = async () => {
+    console.log("handle update price is clicked");
+    const parcelIdArray = Object.keys(this.state);
+    console.log(parcelIdArray);
+    const { myData } = this.props;
+    const filteredArray = myData.filter((order) =>
+      parcelIdArray.includes(order.parcelId)
+    );
+    console.log(filteredArray);
+    const updatedArrayOfOrder = filteredArray.map((order) => {
+      order.ratePerKg = this.state[order.parcelId];
+      order.invoiceGenerated = true;
+      order.invoiceStatus = "Not Paid";
+      return order;
+    });
+    updatedArrayOfOrder.forEach(async (order) => {
+      await this.props.updateOrderRedux(order);
+    });
+    console.log(updatedArrayOfOrder);
+  };
+
   renderButton = (row, array) => {
     if (array.length > 0) {
       const lotNo = this.props.match.params.shipmentMethodLotNo.split("-")[1];
@@ -112,7 +186,7 @@ export class Datatable extends Component {
                 borderRadius: "1rem",
               }}
               onClick={() => {
-                this.startToggleModalInvoice(parcelObj);
+                this.handleInvoiceButtonClick(parcelObj);
               }}
             >
               <i className="icofont-tick-mark">&nbsp;ready to pay</i>
@@ -132,7 +206,7 @@ export class Datatable extends Component {
                 borderRadius: "1rem",
               }}
               onClick={() => {
-                this.startToggleModalInvoice(parcelObj);
+                this.handleInvoiceButtonClick(parcelObj);
               }}
             >
               <i className="icofont-spinner">&nbsp;generate</i>
@@ -145,9 +219,7 @@ export class Datatable extends Component {
 
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value }, () => {
-      console.log(this.state);
-    });
+    console.log(value);
   };
 
   render() {
@@ -158,8 +230,12 @@ export class Datatable extends Component {
     const newData = [];
     if (myData.length > 0) {
       myData.forEach((order) => {
+        const userObj = this.props.allUser.find(
+          (user) => user.uid === order.customerUid
+        );
         newData.push({
-          Customer: order.shippingMark,
+          CustomerId: order.customer,
+          Name: userObj ? userObj.displayName : null,
           Carton: order.cartonNo,
           Product: order.productName,
           Quantity: order.quantity,
@@ -248,10 +324,17 @@ export class Datatable extends Component {
             ] = this.props.match.params.shipmentMethodLotNo.split("-");
             const parcelId = `${lotNo}-${row.original.Carton}`;
             return (
+              // <input
+              //   type="number"
+              //   name={`${parcelId}`}
+              //   value={this.state[parcelId]}
+              //   onChange={this.handleChange}
+              // />
               <input
-                name={`${parcelId}`}
-                value={this.state[parcelId]}
-                onChange={this.handleChange}
+                id={parcelId}
+                type="number"
+                ref={this.input}
+                defaultValue={this.state[parcelId]}
               />
             );
           },
@@ -303,4 +386,11 @@ export class Datatable extends Component {
   }
 }
 
-export default withRouter(Datatable);
+const mapStateToProps = (state) => {
+  return {
+    allUser: state.users.users,
+  };
+};
+export default withRouter(
+  connect(mapStateToProps, { updateOrderRedux })(Datatable)
+);

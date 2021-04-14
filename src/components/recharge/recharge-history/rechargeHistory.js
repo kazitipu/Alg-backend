@@ -20,13 +20,7 @@ export class RechargeHistory extends Component {
       singleLot: null,
     };
   }
-  // onOpenModal = () => {
-  //     this.setState({ open: true });
-  // };
 
-  // onCloseModal = () => {
-  //     this.setState({ open: false });
-  // };
   componentDidMount = async () => {
     this.props.getAllRechargeDayRedux();
   };

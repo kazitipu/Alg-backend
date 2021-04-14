@@ -126,7 +126,7 @@ export class OrdersD2D extends Component {
                         ? allOrders
                         : allOrders.filter(
                             (order) =>
-                              order.shippingMark
+                              order.customer
                                 .toLowerCase()
                                 .includes(this.state.searchFor) ||
                               order.cartonNo.includes(this.state.searchFor)

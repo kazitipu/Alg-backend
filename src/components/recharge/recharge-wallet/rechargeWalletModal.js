@@ -110,7 +110,7 @@ class RechargeWalletModal extends Component {
             role="document"
           >
             <div
-              className="modal-content visible-modal-content-2"
+              className="modal-content visible-modal-content-3"
               style={{
                 backgroundColor: "green",
 

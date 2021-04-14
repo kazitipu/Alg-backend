@@ -39,7 +39,7 @@ class InvoiceModal extends Component {
         `${process.env.PUBLIC_URL}/invoice-by-orderId/${parcelObj.shipmentMethod}-${parcelObj.parcelId}`
       );
     } else {
-      alert("there was an error occured. try again later.");
+      alert("An error occured. try again later.");
     }
   };
 
