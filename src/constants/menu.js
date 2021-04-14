@@ -252,29 +252,7 @@ export const MENUITEMSFORADMIN = [
       },
     ],
   },
-  {
-    title: "Localization",
-    icon: Chrome,
-    type: "sub",
-    active: false,
-    children: [
-      {
-        path: "/localization/currency-rates",
-        title: "Currency Converter",
-        type: "link",
-      },
-      {
-        path: "/localization/shipping-charges",
-        title: "Shipping charges",
-        type: "link",
-      },
-      {
-        path: "/localization/shipping-charge/add-product",
-        title: "Add Product Shipping charge",
-        type: "link",
-      },
-    ],
-  },
+
   {
     title: "Settings",
     icon: Settings,
@@ -516,29 +494,7 @@ export const MENUITEMSFORAGENT = [
       },
     ],
   },
-  {
-    title: "Localization",
-    icon: Chrome,
-    type: "sub",
-    active: false,
-    children: [
-      {
-        path: "/localization/currency-rates",
-        title: "Currency Converter",
-        type: "link",
-      },
-      {
-        path: "/localization/shipping-charges",
-        title: "Shipping charges",
-        type: "link",
-      },
-      {
-        path: "/localization/shipping-charge/add-product",
-        title: "Add Product Shipping charge",
-        type: "link",
-      },
-    ],
-  },
+
   {
     title: "Settings",
     icon: Settings,

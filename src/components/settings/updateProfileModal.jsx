@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import "./updateProfileModal.css";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-import { updateUserRedux } from "../../actions/index";
+import { updateAdminRedux } from "../../actions/index";
 class UpdateProfileModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayName: "",
+      name: "",
       additionalEmail: "",
       mobileNo: "",
       address: "",
@@ -16,16 +16,18 @@ class UpdateProfileModal extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const { user } = nextProps;
+    const { currentAdmin } = nextProps;
     console.log("create Lot modal component will receive props is called");
-    if (user != null) {
+    if (currentAdmin != null) {
       this.setState(
         {
-          displayName: user.displayName ? user.displayName : "",
-          additionlEmail: user.additionalEmail ? user.additionalEmail : "",
-          mobileNo: user.mobileNo ? user.mobileNo : "",
-          address: user.address ? user.address : "",
-          company: user.company ? user.company : "",
+          name: currentAdmin.name ? currentAdmin.name : "",
+          additionlEmail: currentAdmin.additionalEmail
+            ? currentAdmin.additionalEmail
+            : "",
+          mobileNo: currentAdmin.mobileNo ? currentAdmin.mobileNo : "",
+          address: currentAdmin.address ? currentAdmin.address : "",
+          company: currentAdmin.company ? currentAdmin.company : "",
         },
         () => {
           console.log(this.state);
@@ -33,7 +35,7 @@ class UpdateProfileModal extends Component {
       );
     } else {
       this.setState({
-        displayName: "",
+        name: "",
         additionalEmail: "",
         mobileNo: "",
         address: "",
@@ -45,20 +47,11 @@ class UpdateProfileModal extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     console.log(this.state);
-    const { user } = this.props;
-    await this.props.updateUserRedux({ ...user, ...this.state });
-
-    // console.log(this.props.singleLot);
-    // if (this.props.singleLot === null) {
-    //   await this.props.uploadLotRedux(this.state);
-    //   toast.success("Successfully created new lot");
-    // } else {
-    //   await this.props.updateLotRedux(this.state);
-    //   toast.success("successfully updated new lot");
-    // }
+    const { currentAdmin } = this.props;
+    await this.props.updateAdminRedux({ ...currentAdmin, ...this.state });
 
     this.setState({
-      displayName: "",
+      name: "",
       additionalEmail: "",
       mobileNo: "",
       address: "",
@@ -66,10 +59,12 @@ class UpdateProfileModal extends Component {
     });
     this.props.startToggleModal(null);
   };
+
   handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   };
+
   render() {
     return (
       <>
@@ -137,12 +132,12 @@ class UpdateProfileModal extends Component {
                               </label>
                               <input
                                 type="text"
-                                name="displayName"
+                                name="name"
                                 className="form-control"
                                 placeholder="Enter Full Name"
                                 style={{ fontSize: "1rem" }}
                                 onChange={this.handleChange}
-                                value={this.state.displayName}
+                                value={this.state.name}
                                 required
                               />
                             </div>
@@ -262,4 +257,4 @@ class UpdateProfileModal extends Component {
   }
 }
 
-export default connect(null, { updateUserRedux })(UpdateProfileModal);
+export default connect(null, { updateAdminRedux })(UpdateProfileModal);

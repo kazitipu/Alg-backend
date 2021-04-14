@@ -20,16 +20,10 @@ export class AllRefunds extends Component {
   }
 
   componentDidMount = async () => {
-    await this.props.getAllRefundRequestRedux();
+    await this.props.getAllRefundRequestRedux("Claimed");
     const { allRefunds } = this.props;
     if (allRefunds.length > 0) {
-      const lotsArray = [
-        ...new Set(
-          allRefunds
-            .filter((refund) => refund.refundStatus !== "Pending")
-            .map((refund) => refund.lotNo)
-        ),
-      ];
+      const lotsArray = [...new Set(allRefunds.map((refund) => refund.lotNo))];
       this.setState({ lotsArray });
     }
   };
@@ -37,13 +31,7 @@ export class AllRefunds extends Component {
   componentWillReceiveProps = (nextProps) => {
     const { allRefunds } = nextProps;
     if (allRefunds.length > 0) {
-      const lotsArray = [
-        ...new Set(
-          allRefunds
-            .filter((refund) => refund.refundStatus !== "Pending")
-            .map((refund) => refund.lotNo)
-        ),
-      ];
+      const lotsArray = [...new Set(allRefunds.map((refund) => refund.lotNo))];
       this.setState({ lotsArray });
     }
   };

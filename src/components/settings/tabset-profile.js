@@ -10,61 +10,6 @@ export class Tabset_profile extends Component {
     return t.toLocaleDateString();
   };
 
-  renderOrderStatus = (lotNo) => {
-    if (this.props.allLots.length > 0) {
-      const lotObj = this.props.allLots.find((lot) => lot.lotNo === lotNo);
-      console.log(lotObj);
-      let backgroundColor;
-      let icofont;
-      if (lotObj.shipmentStatus === "Bangladesh Customs") {
-        backgroundColor = "#f99322";
-        icofont = "icofont-hand";
-      }
-      if (lotObj.shipmentStatus === "Local Warehouse") {
-        backgroundColor = "darkgreen";
-        icofont = "icofont-tick-boxed";
-      }
-      if (lotObj.shipmentStatus === "Ready to Fly") {
-        backgroundColor = "#b11ad8";
-        icofont = "icofont-airplane-alt";
-      }
-      if (lotObj.shipmentStatus === "Abroad Customs") {
-        backgroundColor = "#ffbc58";
-        icofont = "icofont-police";
-      }
-      if (lotObj.shipmentStatus === "Abroad Warehouse") {
-        backgroundColor = "#13c9ca";
-        icofont = "icofont-building-alt";
-      }
-      return (
-        <div
-          className=" icon-left no-shadow align-self-center my_parcel_update_button"
-          style={{
-            // background: backgroundColor,
-            fontSize: "85%",
-            fontFamily: "sans-serif",
-            // color: "white",
-            padding: "7px",
-            color: backgroundColor,
-          }}
-        >
-          <i className={icofont}></i> {lotObj.shipmentStatus}
-        </div>
-      );
-    }
-    return null;
-  };
-  getPaymentMethod = (recharge) => {
-    if (recharge.paymentMethod === "Cash") {
-      return "Cash";
-    }
-    if (recharge.paymentMethod === "Bank") {
-      return recharge.bankName;
-    }
-    if (recharge.paymentMethod === "Mobile Banking") {
-      return recharge.mobileBanking;
-    }
-  };
   render() {
     const { currentAdmin } = this.props;
     if (currentAdmin) {
@@ -92,7 +37,7 @@ export class Tabset_profile extends Component {
                   className="col-xl-8 col-md-7"
                   style={{ textTransform: "capitalize" }}
                 >
-                  {currentAdmin && currentAdmin.displayName}
+                  {currentAdmin && currentAdmin.name}
                 </div>
               </div>
 
@@ -145,14 +90,7 @@ export class Tabset_profile extends Component {
                   {currentAdmin && currentAdmin.adminId}
                 </div>
               </div>
-              <div className="form-group row">
-                <label className="col-xl-3 col-md-4">
-                  <span>*</span> Uid
-                </label>
-                <div className="col-xl-8 col-md-7">
-                  {currentAdmin && currentAdmin.uid}
-                </div>
-              </div>
+
               <div className="form-group row">
                 <label className="col-xl-3 col-md-4">
                   <span>*</span> Created At
@@ -181,9 +119,4 @@ export class Tabset_profile extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    allLots: state.lots.lots,
-  };
-};
-export default connect(mapStateToProps)(Tabset_profile);
+export default connect(null)(Tabset_profile);

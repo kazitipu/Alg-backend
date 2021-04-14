@@ -9,6 +9,7 @@ class ChangeStatusModal extends Component {
     this.state = {
       bookingStatus: "",
       chinaOffice: "",
+      totalCost: "",
     };
   }
 
@@ -142,6 +143,27 @@ class ChangeStatusModal extends Component {
                                   <option value="Address-4">Address-4</option>
                                   <option value="Address-5">Address-5</option>
                                 </select>
+                              </div>
+                            </div>
+                            <div className="form-row mb-4">
+                              <div className="col">
+                                <label
+                                  style={{
+                                    color: "white",
+                                    marginBottom: "5px",
+                                  }}
+                                >
+                                  Total Cost
+                                </label>
+                                <input
+                                  type="text"
+                                  name="totalCost"
+                                  placeholder="Enter Total Cost"
+                                  className="form-control"
+                                  onChange={this.handleChange}
+                                  value={this.state.totalCost}
+                                  required
+                                />
                               </div>
                             </div>
 

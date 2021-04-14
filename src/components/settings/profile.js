@@ -82,7 +82,12 @@ export class MyProfile extends Component {
                         className="img-60 rounded-circle lazyloaded blur-up"
                         src={currentAdmin.imageUrl}
                         alt="#"
-                        style={{ zIndex: 10, cursor: "pointer" }}
+                        style={{
+                          zIndex: 10,
+                          cursor: "pointer",
+                          maxWidth: "60px",
+                          maxHeight: "60px",
+                        }}
                         onClick={() => {
                           document.getElementById("upload-image-input").click();
                         }}
@@ -121,7 +126,7 @@ export class MyProfile extends Component {
                       textTransform: "capitalize",
                     }}
                   >
-                    {currentAdmin && currentAdmin.displayName}
+                    {currentAdmin && currentAdmin.name}
                   </div>
                 </div>
                 <div className="card-body">
@@ -141,7 +146,7 @@ export class MyProfile extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    currntAdmin: state.admins.currentAdmin,
+    currentAdmin: state.admins.currentAdmin,
   };
 };
 

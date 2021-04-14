@@ -20,12 +20,12 @@ export class AllRefundsByLots extends Component {
   }
 
   componentDidMount = async () => {
-    await this.props.getAllRefundRequestRedux();
+    await this.props.getAllRefundRequestRedux("Claimed");
     const { allRefunds } = this.props;
     if (allRefunds.length > 0) {
-      const refundsArray = allRefunds
-        .filter((refund) => refund.refundStatus !== "Pending")
-        .filter((refund) => refund.lotNo === this.props.match.params.lotNo);
+      const refundsArray = allRefunds.filter(
+        (refund) => refund.lotNo === this.props.match.params.lotNo
+      );
       this.setState({ refundsArray });
     }
   };
@@ -33,9 +33,9 @@ export class AllRefundsByLots extends Component {
   componentWillReceiveProps = (nextProps) => {
     const { allRefunds } = nextProps;
     if (allRefunds.length > 0) {
-      const refundsArray = allRefunds
-        .filter((refund) => refund.refundStatus !== "Pending")
-        .map((refund) => refund.lotNo);
+      const refundsArray = allRefunds.filter(
+        (refund) => refund.lotNo === this.props.match.params.lotNo
+      );
       this.setState({ refundsArray });
     }
   };

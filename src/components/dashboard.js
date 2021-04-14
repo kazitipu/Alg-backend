@@ -193,104 +193,108 @@ export class Dashboard extends Component {
         <Breadcrumb title="Dashboard" parent="Dashboard" />
         <div className="container-fluid">
           <div className="row">
-            {this.props.currentAdmin &&
-            this.props.currentAdmin.status == "admin" ? (
-              <>
-                <div className="col-xl-3 col-md-6 xl-50">
-                  <div className="card o-hidden widget-cards">
-                    <div className="bg-warning card-body">
-                      <div className="media static-top-widget row">
-                        <div className="icons-widgets col-4">
-                          <div className="align-self-center text-center">
-                            <Navigation className="font-warning" />
-                          </div>
+            <>
+              <div className="col-xl-3 col-md-6 xl-50">
+                <div className="card o-hidden widget-cards">
+                  <div className="bg-warning card-body">
+                    <div className="media static-top-widget row">
+                      <div className="icons-widgets col-4">
+                        <div className="align-self-center text-center">
+                          <Navigation className="font-warning" />
                         </div>
-                        <div className="media-body col-8">
-                          <span className="m-0">Earnings</span>
-                          <h3 className="mb-0">
-                            Tk{" "}
-                            <CountUp
-                              className="counter"
-                              end={this.getTotalPaymentAmount(allPayments)}
-                            />
-                            <small>so far</small>
-                          </h3>
-                        </div>
+                      </div>
+                      <div className="media-body col-8">
+                        <span
+                          className="m-0"
+                          style={{ fontWeight: "bold", fontSize: "130%" }}
+                        >
+                          Booking Request
+                        </span>
+                        <h3 className="mb-0">
+                          Tk <CountUp className="counter" end={780} />
+                        </h3>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-3 col-md-6 xl-50">
-                  <div className="card o-hidden  widget-cards">
-                    <div className="bg-secondary card-body">
-                      <div className="media static-top-widget row">
-                        <div className="icons-widgets col-4">
-                          <div className="align-self-center text-center">
-                            <Box className="font-secondary" />
-                          </div>
+              </div>
+              <div className="col-xl-3 col-md-6 xl-50">
+                <div className="card o-hidden  widget-cards">
+                  <div className="bg-secondary card-body">
+                    <div className="media static-top-widget row">
+                      <div className="icons-widgets col-4">
+                        <div className="align-self-center text-center">
+                          <Box className="font-secondary" />
                         </div>
-                        <div className="media-body col-8">
-                          <span className="m-0">Products</span>
-                          <h3 className="mb-0">
-                            <CountUp
-                              className="counter"
-                              end={allProducts ? allProducts.length : ""}
-                            />
-                            <small>available</small>
-                          </h3>
-                        </div>
+                      </div>
+                      <div className="media-body col-8">
+                        <span
+                          className="m-0"
+                          style={{ fontWeight: "bold", fontSize: "130%" }}
+                        >
+                          Recharge Request
+                        </span>
+                        <h3 className="mb-0">
+                          Tk
+                          <CountUp className="counter" end={670} />
+                          <small></small>
+                        </h3>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-3 col-md-6 xl-50">
-                  <div className="card o-hidden widget-cards">
-                    <div className="bg-primary card-body">
-                      <div className="media static-top-widget row">
-                        <div className="icons-widgets col-4">
-                          <div className="align-self-center text-center">
-                            <MessageSquare className="font-primary" />
-                          </div>
+              </div>
+              <div className="col-xl-3 col-md-6 xl-50">
+                <div className="card o-hidden widget-cards">
+                  <div className="bg-primary card-body">
+                    <div className="media static-top-widget row">
+                      <div className="icons-widgets col-4">
+                        <div className="align-self-center text-center">
+                          <MessageSquare className="font-primary" />
                         </div>
-                        <div className="media-body col-8">
-                          <span className="m-0">Orders</span>
-                          <h3 className="mb-0">
-                            <CountUp
-                              className="counter"
-                              end={allOrders ? allOrders.length : ""}
-                            />
-                            <small>total placed</small>
-                          </h3>
-                        </div>
+                      </div>
+                      <div className="media-body col-8">
+                        <span
+                          className="m-0"
+                          style={{ fontWeight: "bold", fontSize: "130%" }}
+                        >
+                          Refund Request
+                        </span>
+                        <h3 className="mb-0">
+                          <CountUp className="counter" end={25} />
+                          <small></small>
+                        </h3>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-3 col-md-6 xl-50">
-                  <div className="card o-hidden widget-cards">
-                    <div className="bg-danger card-body">
-                      <div className="media static-top-widget row">
-                        <div className="icons-widgets col-4">
-                          <div className="align-self-center text-center">
-                            <Users className="font-danger" />
-                          </div>
+              </div>
+              <div className="col-xl-3 col-md-6 xl-50">
+                <div className="card o-hidden widget-cards">
+                  <div className="bg-danger card-body">
+                    <div className="media static-top-widget row">
+                      <div className="icons-widgets col-4">
+                        <div className="align-self-center text-center">
+                          <Users className="font-danger" />
                         </div>
-                        <div className="media-body col-8">
-                          <span className="m-0">Suppliers</span>
-                          <h3 className="mb-0">
-                            <CountUp
-                              className="counter"
-                              end={allAdmins ? allAdmins.length : ""}
-                            />
-                            <small> persons</small>
-                          </h3>
-                        </div>
+                      </div>
+                      <div className="media-body col-8">
+                        <span
+                          className="m-0"
+                          style={{ fontWeight: "bold", fontSize: "130%" }}
+                        >
+                          Total Admins
+                        </span>
+                        <h3 className="mb-0">
+                          <CountUp className="counter" end={350} />
+                          <small></small>
+                        </h3>
                       </div>
                     </div>
                   </div>
                 </div>
-              </>
-            ) : null}
+              </div>
+            </>
 
             <div className="col-xl-6 xl-100">
               <div className="card">
@@ -343,7 +347,7 @@ export class Dashboard extends Component {
                                       Tk {order.paymentStatus.total}
                                     </td>
                                     <td className="font-danger">
-                                      {order.otherInformation.first_name}{" "}
+                                      {order.otherInformation.first_name}
                                       {order.otherInformation.last_name}
                                     </td>
                                     <td className="font-danger">
@@ -351,7 +355,7 @@ export class Dashboard extends Component {
                                     </td>
                                   </tr>
                                 ))
-                            : ""}
+                            : null}
                         </tbody>
                       ) : (
                         <tbody>
@@ -373,7 +377,7 @@ export class Dashboard extends Component {
                                       Tk {order.paymentStatus.total}
                                     </td>
                                     <td className="font-danger">
-                                      {order.otherInformation.first_name}{" "}
+                                      {order.otherInformation.first_name}
                                       {order.otherInformation.last_name}
                                     </td>
                                     <td className="font-danger">
@@ -381,7 +385,7 @@ export class Dashboard extends Component {
                                     </td>
                                   </tr>
                                 ))
-                            : ""}
+                            : null}
                         </tbody>
                       )}
                     </table>
@@ -768,7 +772,7 @@ export class Dashboard extends Component {
                                     )}
                                   </tr>
                                 ))
-                            : ""}
+                            : null}
                         </tbody>
                       ) : (
                         <tbody>
@@ -798,7 +802,7 @@ export class Dashboard extends Component {
                                     )}
                                   </tr>
                                 ))
-                            : ""}
+                            : null}
                         </tbody>
                       )}
                     </table>
@@ -824,7 +828,7 @@ export class Dashboard extends Component {
                         <tr>
                           <th scope="col">Name</th>
                           <th scope="col">Designation</th>
-
+                          <th scope="col">Skill Level</th>
                           <th scope="col">Experience</th>
                         </tr>
                       </thead>
@@ -842,16 +846,65 @@ export class Dashboard extends Component {
                                       title=""
                                     />
                                     <div className="d-inline-block">
-                                      <h6>{admin.name} </h6>
+                                      <h6>
+                                        {admin.name}
+                                        <span className="text-muted digits">
+                                          (
+                                          {
+                                            admin.successfully_delivered_orders
+                                              .length
+                                          }
+                                          )
+                                        </span>
+                                      </h6>
                                     </div>
                                   </div>
                                 </td>
                                 <td>{admin.status}</td>
-
+                                <td>
+                                  <div className="progress-showcase">
+                                    <div
+                                      className="progress"
+                                      style={{ height: 8 }}
+                                    >
+                                      {i % 2 === 0 ? (
+                                        <div
+                                          className="progress-bar bg-primary"
+                                          style={{
+                                            width:
+                                              20 +
+                                              admin
+                                                .successfully_delivered_orders
+                                                .length,
+                                          }}
+                                          role="progressbar"
+                                          aria-valuenow="50"
+                                          aria-valuemin="0"
+                                          aria-valuemax="100"
+                                        ></div>
+                                      ) : (
+                                        <div
+                                          className="progress-bar bg-secondary"
+                                          style={{
+                                            width:
+                                              20 +
+                                              admin
+                                                .successfully_delivered_orders
+                                                .length,
+                                          }}
+                                          role="progressbar"
+                                          aria-valuenow="50"
+                                          aria-valuemin="0"
+                                          aria-valuemax="100"
+                                        ></div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </td>
                                 <td className="digits">2 Year</td>
                               </tr>
                             ))
-                          : ""}
+                          : null}
                       </tbody>
                     </table>
                   </div>

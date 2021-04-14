@@ -3,23 +3,15 @@ import Sidebar from "./common/sidebar_components/sidebar";
 import Right_sidebar from "./common/right-sidebar";
 import Footer from "./common/footer";
 import Header from "./common/header_components/header";
-import {
-  getAllOrders,
-  getAllPayments,
-  getAllAdmins,
-  getAllProducts,
-  getAllAliProducts,
-  auth,
-} from "../firebase/firebase.utils";
+import { auth } from "../firebase/firebase.utils";
 import { connect } from "react-redux";
 import {
-  setAllOrders,
-  setAllPayments,
-  setAllAdmins,
-  setAllProducts,
+  getAllAdminsRedux,
+  getAllBookingsRedux,
+  getAllRechargeRequestRedux,
+  getAllRefundRequestRedux,
   setCurrentAdmin,
   getAllUsersRedux,
-  getAllLotsRedux,
 } from "../actions";
 
 export class App extends Component {
@@ -33,17 +25,11 @@ export class App extends Component {
 
   componentDidMount = async () => {
     console.log(this.props.history);
-    const allOrdersArray = await getAllOrders();
-    const allPaymentsArray = await getAllPayments();
-    const allAdminsArray = await getAllAdmins();
-    const allProductsArray = await getAllProducts();
-    const allAliProductsArray = await getAllAliProducts();
-    this.props.setAllOrders(allOrdersArray);
-    this.props.setAllPayments(allPaymentsArray);
-    this.props.setAllAdmins(allAdminsArray);
-    this.props.setAllProducts([...allAliProductsArray, ...allProductsArray]);
-    this.props.getAllUsersRedux();
-    this.props.getAllLotsRedux();
+    await this.props.getAllBookingsRedux("Pending");
+    await this.props.getAllRechargeRequestRedux();
+    await this.props.getAllRefundRequestRedux();
+    await this.props.getAllAdminsRedux();
+    await this.props.getAllUsersRedux();
     auth.onAuthStateChanged((adminAuth) => {
       if (adminAuth) {
         var admin = this.props.admins.find(
@@ -87,14 +73,16 @@ export class App extends Component {
 const mapStateToProps = (state) => {
   return {
     admins: state.admins.admins,
+    allBookingRequest: [],
+    allRefundRequest: [],
+    allRechargeRequest: [],
   };
 };
 export default connect(mapStateToProps, {
-  setAllOrders,
-  setAllPayments,
-  setAllAdmins,
-  setAllProducts,
+  getAllAdminsRedux,
+  getAllBookingsRedux,
+  getAllRechargeRequestRedux,
+  getAllRefundRequestRedux,
   setCurrentAdmin,
   getAllUsersRedux,
-  getAllLotsRedux,
 })(App);

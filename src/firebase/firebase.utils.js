@@ -371,7 +371,7 @@ export const getAllLots = async () => {
   }
 };
 
-export const uploadImage = async (currentUser, file) => {
+export const uploadImage = async (currentAdmin, file) => {
   const imageRef = storage.ref(`users/${file.name}`);
   try {
     await imageRef.put(file);
@@ -380,35 +380,35 @@ export const uploadImage = async (currentUser, file) => {
       console.log(url);
       imgUrl.push(url);
     });
-    const userRef = firestore.doc(`users/${currentUser.uid}`);
-    const snapShot = await userRef.get();
+    const adminRef = firestore.doc(`admins/${currentAdmin.adminId}`);
+    const snapShot = await adminRef.get();
     console.log(snapShot.data());
     try {
-      userRef.update({
+      adminRef.update({
         imageUrl: imgUrl[0],
       });
     } catch (error) {
       alert(error);
     }
-    const updatedSnapShot = await userRef.get();
+    const updatedSnapShot = await adminRef.get();
     return updatedSnapShot.data();
   } catch (error) {
     return null;
   }
 };
 
-export const updateUser = async (currentUser) => {
-  const userRef = firestore.doc(`users/${currentUser.uid}`);
-  const snapShot = await userRef.get();
+export const updateAdmin = async (currentAdmin) => {
+  const adminRef = firestore.doc(`admins/${currentAdmin.adminId}`);
+  const snapShot = await adminRef.get();
   console.log(snapShot.data());
   try {
-    userRef.update({
-      ...currentUser,
+    adminRef.update({
+      ...currentAdmin,
     });
   } catch (error) {
     alert(error);
   }
-  const updatedSnapShot = await userRef.get();
+  const updatedSnapShot = await adminRef.get();
   return updatedSnapShot.data();
 };
 
@@ -493,8 +493,10 @@ export const getAllBookings = async (bookingStatus) => {
     alert(error);
   }
 };
-export const getAllRefundRequest = async () => {
-  const refundsCollectionRef = firestore.collection("refundRequest");
+export const getAllRefundRequest = async (refundStatus) => {
+  const refundsCollectionRef = firestore
+    .collection("refundRequest")
+    .where("refundStatus", "==", refundStatus);
   try {
     const refunds = await refundsCollectionRef.get();
     const refundsArray = [];

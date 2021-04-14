@@ -24,6 +24,7 @@ import {
   uploadD2DRates,
   deleteD2DRates,
   getAllUsers,
+  getAllAdmins,
   getAllRechargeRequest,
   updateRechargeRequestStatus,
   rechargeUser,
@@ -38,7 +39,7 @@ import {
   updateNotice,
   getAllNotices,
   uploadImage,
-  updateUser,
+  updateAdmin,
 } from "../firebase/firebase.utils";
 
 export const getAllUsersRedux = () => async (dispatch) => {
@@ -48,18 +49,30 @@ export const getAllUsersRedux = () => async (dispatch) => {
     payload: allUsers,
   });
 };
+
+export const getAllAdminsRedux = () => async (dispatch) => {
+  const allAdmins = await getAllAdmins();
+  dispatch({
+    type: "SET_ALL_ADMINS",
+    payload: allAdmins,
+  });
+};
+
 export const setAllOrders = (ordersArray) => ({
   type: "SET_ALL_ORDERS",
   payload: ordersArray,
 });
+
 export const setAllPayments = (paymentsArray) => ({
   type: "SET_ALL_PAYMENTS",
   payload: paymentsArray,
 });
+
 export const setAllAdmins = (adminsArray) => ({
   type: "SET_ALL_ADMINS",
   payload: adminsArray,
 });
+
 export const setCurrentAdmin = (adminObj) => ({
   type: "SET_CURRENT_ADMIN",
   payload: adminObj,
@@ -397,18 +410,18 @@ export const updateNoticeRedux = (noticeObj) => async (dispatch) => {
   dispatch({ type: "UPDATE_NOTICE", payload: updatedNoticeObj });
 };
 
-export const uploadImageRedux = (currentUser, file) => async (dispatch) => {
-  const updatedUserObj = await uploadImage(currentUser, file);
+export const uploadImageRedux = (currentAdmin, file) => async (dispatch) => {
+  const updatedAdminObj = await uploadImage(currentAdmin, file);
   dispatch({
-    type: "SET_IMAGE_URL",
-    payload: updatedUserObj,
+    type: "UPDATE_ADMIN",
+    payload: updatedAdminObj,
   });
 };
 
-export const updateUserRedux = (updatedUser) => async (dispatch) => {
-  const updatedUserObj = await updateUser(updatedUser);
+export const updateAdminRedux = (updatedAdmin) => async (dispatch) => {
+  const updatedUserObj = await updateAdmin(updatedAdmin);
   dispatch({
-    type: "UPDATE_USER",
+    type: "UPDATE_ADMIN",
     payload: updatedUserObj,
   });
 };

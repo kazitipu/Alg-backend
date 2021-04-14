@@ -24,23 +24,20 @@ export class RefundRequest extends Component {
   }
 
   componentDidMount = async () => {
-    await this.props.getAllRefundRequestRedux();
+    await this.props.getAllRefundRequestRedux("Pending");
     const { allRefunds } = this.props;
     if (allRefunds.length > 0) {
-      const refundsArray = allRefunds.filter(
-        (refund) => refund.refundStatus === "Pending"
-      );
-      this.setState({ refundsArray });
+      this.setState({ refundsArray: allRefunds });
     }
   };
 
   componentWillReceiveProps = (nextProps) => {
     const { allRefunds } = nextProps;
-    if (allRefunds.length > 0) {
-      const refundsArray = allRefunds.filter(
-        (refund) => refund.refundStatus === "Pending"
-      );
-      this.setState({ refundsArray });
+    if (
+      allRefunds.length > 0 &&
+      allRefunds.length !== this.props.allRefunds.length
+    ) {
+      this.setState({ refundsArray: allRefunds });
     }
   };
 
