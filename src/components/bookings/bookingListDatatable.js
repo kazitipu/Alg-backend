@@ -116,7 +116,6 @@ export class Datatable extends Component {
       if (row.original["Shipment Method"] == "D2D") {
         return (
           <div>
-            <h3>Other Information</h3>
             <p style={{ marginBottom: "0px" }}>
               Ship By:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
@@ -130,26 +129,32 @@ export class Datatable extends Component {
               </span>
             </p>
             <p style={{ marginBottom: "0px" }}>
-              Total Weight:&nbsp;
+              Per Kg:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
-                {bookingObj.weight}
-                kg ({bookingObj.perKg}tk/kg)
+                {bookingObj.perKg}Tk
               </span>
             </p>
             <p style={{ marginBottom: "0px" }}>
               Total Cost:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
                 {bookingObj.result}
-                tk
+                Tk
               </span>
             </p>
+            <img
+              style={{
+                maxHeight: "200px",
+                maxWidth: "200px",
+                marginTop: "20px",
+              }}
+              src={bookingObj.imageUrl}
+            />
           </div>
         );
       }
       if (row.original["Shipment Method"] == "Express") {
         return (
           <div>
-            <h3>Other Information</h3>
             <p style={{ marginBottom: "0px" }}>
               Parcel To:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
@@ -180,7 +185,6 @@ export class Datatable extends Component {
       if (row.original["Shipment Method"] == "Freight") {
         return (
           <div>
-            <h3>Other Information</h3>
             <p style={{ marginBottom: "0px" }}>
               Ship By:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
@@ -194,19 +198,139 @@ export class Datatable extends Component {
               </span>
             </p>
             <p style={{ marginBottom: "0px" }}>
-              Total Weight:&nbsp;
+              Ship To:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
-                {bookingObj.totalWeight}
-                kg
+                {bookingObj.shipToFreight}
               </span>
             </p>
             <p style={{ marginBottom: "0px" }}>
-              Chargeable Weight:&nbsp;
+              Port of Origin:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
-                {bookingObj.chargeableWeight}
-                kg
+                {bookingObj.portOfOrigin}
               </span>
             </p>
+            <p style={{ marginBottom: "0px" }}>
+              Port of Destination:&nbsp;
+              <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
+                {bookingObj.portOfDestination}
+              </span>
+            </p>
+            <div className="row ">
+              <div className="col">
+                <div
+                  className="center-head"
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginBottom: "0px",
+                  }}
+                >
+                  <span
+                    className="bg-light-gray"
+                    style={{
+                      fontSize: "130%",
+                      fontWeight: "bold",
+                      marginBottom: "0px",
+                      padding: "0px",
+                      color: bookingObj.pick_up ? "white" : "gainsboro",
+                    }}
+                  >
+                    <i
+                      className="icofont-truck-loaded"
+                      style={{
+                        fontSize: "100%",
+                        border: bookingObj.pick_up
+                          ? "1px solid white"
+                          : "1px solid gainsboro",
+                        borderRadius: "10rem",
+                        padding: "5px",
+                        backgroundColor: bookingObj.pick_up
+                          ? "orange"
+                          : "white",
+                      }}
+                    ></i>
+                  </span>
+                  <span
+                    className="bg-light-gray"
+                    style={{
+                      fontSize: "130%",
+                      fontWeight: "bold",
+                      marginBottom: "0px",
+                      padding: "0px",
+                      color: bookingObj.port_of_origin ? "white" : "gainsboro",
+                    }}
+                  >
+                    <i
+                      className="icofont-home"
+                      style={{
+                        fontSize: "100%",
+                        border: bookingObj.port_of_origin
+                          ? "1px solid white"
+                          : "1px solid gainsboro",
+                        borderRadius: "10rem",
+                        padding: "5px",
+                        backgroundColor: bookingObj.port_of_origin
+                          ? "orange"
+                          : "white",
+                      }}
+                    ></i>
+                  </span>
+                  <span
+                    className="bg-light-gray"
+                    style={{
+                      fontSize: "130%",
+                      fontWeight: "bold",
+                      marginBottom: "0px",
+                      padding: "0px",
+                      color: bookingObj.port_of_destination
+                        ? "white"
+                        : "gainsboro",
+                    }}
+                  >
+                    <i
+                      className="icofont-ui-home"
+                      style={{
+                        fontSize: "100%",
+                        border: bookingObj.port_of_destination
+                          ? "1px solid white"
+                          : "1px solid gainsboro",
+                        borderRadius: "10rem",
+                        padding: "5px",
+                        backgroundColor: bookingObj.port_of_destination
+                          ? "orange"
+                          : "white",
+                      }}
+                    ></i>
+                  </span>
+                  <span
+                    className="bg-light-gray"
+                    style={{
+                      fontSize: "130%",
+                      fontWeight: "bold",
+                      marginBottom: "0px",
+                      padding: "0px",
+                      color: bookingObj.delivery ? "white" : "gainsboro",
+                    }}
+                  >
+                    <i
+                      className="icofont-truck-alt"
+                      style={{
+                        fontSize: "100%",
+                        border: bookingObj.delivery
+                          ? "1px solid white"
+                          : "1px solid gainsboro",
+                        borderRadius: "10rem",
+                        padding: "5px",
+                        backgroundColor: bookingObj.delivery
+                          ? "orange"
+                          : "white",
+                      }}
+                    ></i>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         );
       }
@@ -286,39 +410,210 @@ export class Datatable extends Component {
                       borderBottom: "2px solid gainsboro",
                     }}
                   >
-                    <div>
-                      <h3>Product Information</h3>
-                      <p style={{ marginBottom: "0px" }}>
-                        Product Name:&nbsp;
-                        <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                          {this.renderProductName(myData, row)}
-                        </span>
-                      </p>
-                      <p style={{ marginBottom: "0px" }}>
-                        Brand/Non-Brand:&nbsp;{" "}
-                        <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                          {myData.length > 0
-                            ? myData.find(
-                                (booking) =>
-                                  booking.bookingId ===
-                                  row.original["Booking Id"]
-                              ).productBrand
-                            : ""}
-                        </span>
-                      </p>
-                      <p style={{ marginBottom: "0px" }}>
-                        Product Contains:&nbsp;{" "}
-                        <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                          {myData.length > 0
-                            ? myData.find(
-                                (booking) =>
-                                  booking.bookingId ===
-                                  row.original["Booking Id"]
-                              ).productContains
-                            : ""}
-                        </span>
-                      </p>
-                    </div>
+                    {row.original["Shipment Method"] !== "Express" ? (
+                      <div>
+                        <p style={{ marginBottom: "0px" }}>
+                          Product Name:&nbsp;
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {this.renderProductName(myData, row)}
+                          </span>
+                        </p>
+                        <p style={{ marginBottom: "0px" }}>
+                          Total Weight:&nbsp;
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {myData.length > 0
+                              ? myData.find(
+                                  (booking) =>
+                                    booking.bookingId ===
+                                    row.original["Booking Id"]
+                                ).weight
+                              : ""}
+                            kg
+                          </span>
+                        </p>
+                        <p style={{ marginBottom: "0px" }}>
+                          Total CBM:&nbsp;
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {myData.length > 0
+                              ? myData.find(
+                                  (booking) =>
+                                    booking.bookingId ===
+                                    row.original["Booking Id"]
+                                ).totalCbm
+                              : ""}
+                          </span>
+                        </p>
+                        <p style={{ marginBottom: "0px" }}>
+                          Product Quantity:&nbsp;{" "}
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {myData.length > 0
+                              ? myData.find(
+                                  (booking) =>
+                                    booking.bookingId ===
+                                    row.original["Booking Id"]
+                                ).productQuantity
+                              : ""}
+                          </span>
+                        </p>
+                        <p style={{ marginBottom: "0px" }}>
+                          Carton Quantity:&nbsp;{" "}
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {myData.length > 0
+                              ? myData.find(
+                                  (booking) =>
+                                    booking.bookingId ===
+                                    row.original["Booking Id"]
+                                ).ctnQuantity
+                              : ""}
+                          </span>
+                        </p>
+                        {row.original["Shipment Method"] === "Freight" ? (
+                          <>
+                            <p style={{ marginBottom: "0px" }}>
+                              Container Size:&nbsp;{" "}
+                              <span
+                                style={{ color: "#ff8084", fontSize: "130%" }}
+                              >
+                                {myData.length > 0
+                                  ? myData.find(
+                                      (booking) =>
+                                        booking.bookingId ===
+                                        row.original["Booking Id"]
+                                    ).containerSize
+                                  : ""}
+                              </span>
+                            </p>
+                            <p style={{ marginBottom: "0px" }}>
+                              CNF Service:&nbsp;{" "}
+                              <span
+                                style={{ color: "#ff8084", fontSize: "130%" }}
+                              >
+                                {myData.length > 0
+                                  ? myData.find(
+                                      (booking) =>
+                                        booking.bookingId ===
+                                        row.original["Booking Id"]
+                                    ).cnfService
+                                  : ""}
+                              </span>
+                            </p>
+                          </>
+                        ) : (
+                          <p style={{ marginBottom: "0px" }}>
+                            Brand/Non-Brand:&nbsp;{" "}
+                            <span
+                              style={{ color: "#ff8084", fontSize: "130%" }}
+                            >
+                              {myData.length > 0
+                                ? myData.find(
+                                    (booking) =>
+                                      booking.bookingId ===
+                                      row.original["Booking Id"]
+                                  ).productBrand
+                                : ""}
+                            </span>
+                          </p>
+                        )}
+
+                        <p style={{ marginBottom: "0px" }}>
+                          Product Contains:&nbsp;{" "}
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {myData.length > 0
+                              ? myData.find(
+                                  (booking) =>
+                                    booking.bookingId ===
+                                    row.original["Booking Id"]
+                                ).productContains
+                              : ""}
+                          </span>
+                        </p>
+                      </div>
+                    ) : (
+                      <></>
+                      // <div>
+                      //   <p style={{ marginBottom: "0px" }}>
+                      //     Product Name:&nbsp;
+                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                      //       {this.renderProductName(myData, row)}
+                      //     </span>
+                      //   </p>
+                      //   <p style={{ marginBottom: "0px" }}>
+                      //     Total Weight:&nbsp;
+                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                      //       {myData.length > 0
+                      //         ? myData.find(
+                      //             (booking) =>
+                      //               booking.bookingId ===
+                      //               row.original["Booking Id"]
+                      //           ).weight
+                      //         : ""}
+                      //       kg
+                      //     </span>
+                      //   </p>
+                      //   <p style={{ marginBottom: "0px" }}>
+                      //     Total CBM:&nbsp;
+                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                      //       {myData.length > 0
+                      //         ? myData.find(
+                      //             (booking) =>
+                      //               booking.bookingId ===
+                      //               row.original["Booking Id"]
+                      //           ).totalCbm
+                      //         : ""}
+                      //       kg
+                      //     </span>
+                      //   </p>
+                      //   <p style={{ marginBottom: "0px" }}>
+                      //     Product Quantity:&nbsp;
+                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                      //       {myData.length > 0
+                      //         ? myData.find(
+                      //             (booking) =>
+                      //               booking.bookingId ===
+                      //               row.original["Booking Id"]
+                      //           ).productQuantity
+                      //         : ""}
+                      //     </span>
+                      //   </p>
+                      //   <p style={{ marginBottom: "0px" }}>
+                      //     Carton Quantity:&nbsp;{" "}
+                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                      //       {myData.length > 0
+                      //         ? myData.find(
+                      //             (booking) =>
+                      //               booking.bookingId ===
+                      //               row.original["Booking Id"]
+                      //           ).ctnQuantity
+                      //         : ""}
+                      //     </span>
+                      //   </p>
+                      //   <p style={{ marginBottom: "0px" }}>
+                      //     Brand/Non-Brand:&nbsp;{" "}
+                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                      //       {myData.length > 0
+                      //         ? myData.find(
+                      //             (booking) =>
+                      //               booking.bookingId ===
+                      //               row.original["Booking Id"]
+                      //           ).productBrand
+                      //         : ""}
+                      //     </span>
+                      //   </p>
+                      //   <p style={{ marginBottom: "0px" }}>
+                      //     Product Contains:&nbsp;{" "}
+                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                      //       {myData.length > 0
+                      //         ? myData.find(
+                      //             (booking) =>
+                      //               booking.bookingId ===
+                      //               row.original["Booking Id"]
+                      //           ).productContains
+                      //         : ""}
+                      //     </span>
+                      //   </p>
+                      // </div>
+                    )}
+
                     <div
                       style={{
                         minHeight: "100%",
@@ -327,9 +622,6 @@ export class Datatable extends Component {
                     ></div>
                     {this.renderOtherInformation(myData, row)}
                   </div>
-                  {/* <div style={{ marginTop: "20px" }}>
-                   
-                  </div> */}
                 </Popover.Content>
               </Popover>
             }
