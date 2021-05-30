@@ -176,9 +176,17 @@ export class Datatable extends Component {
             <p style={{ marginBottom: "0px" }}>
               Total Cost:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
-                {bookingObj.total}
+                {bookingObj.total} TK
               </span>
             </p>
+            <img
+              style={{
+                maxHeight: "200px",
+                maxWidth: "200px",
+                marginTop: "20px",
+              }}
+              src={bookingObj.imageUrl}
+            />
           </div>
         );
       }
@@ -529,89 +537,122 @@ export class Datatable extends Component {
                         </p>
                       </div>
                     ) : (
-                      <></>
-                      // <div>
-                      //   <p style={{ marginBottom: "0px" }}>
-                      //     Product Name:&nbsp;
-                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                      //       {this.renderProductName(myData, row)}
-                      //     </span>
-                      //   </p>
-                      //   <p style={{ marginBottom: "0px" }}>
-                      //     Total Weight:&nbsp;
-                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                      //       {myData.length > 0
-                      //         ? myData.find(
-                      //             (booking) =>
-                      //               booking.bookingId ===
-                      //               row.original["Booking Id"]
-                      //           ).weight
-                      //         : ""}
-                      //       kg
-                      //     </span>
-                      //   </p>
-                      //   <p style={{ marginBottom: "0px" }}>
-                      //     Total CBM:&nbsp;
-                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                      //       {myData.length > 0
-                      //         ? myData.find(
-                      //             (booking) =>
-                      //               booking.bookingId ===
-                      //               row.original["Booking Id"]
-                      //           ).totalCbm
-                      //         : ""}
-                      //       kg
-                      //     </span>
-                      //   </p>
-                      //   <p style={{ marginBottom: "0px" }}>
-                      //     Product Quantity:&nbsp;
-                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                      //       {myData.length > 0
-                      //         ? myData.find(
-                      //             (booking) =>
-                      //               booking.bookingId ===
-                      //               row.original["Booking Id"]
-                      //           ).productQuantity
-                      //         : ""}
-                      //     </span>
-                      //   </p>
-                      //   <p style={{ marginBottom: "0px" }}>
-                      //     Carton Quantity:&nbsp;{" "}
-                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                      //       {myData.length > 0
-                      //         ? myData.find(
-                      //             (booking) =>
-                      //               booking.bookingId ===
-                      //               row.original["Booking Id"]
-                      //           ).ctnQuantity
-                      //         : ""}
-                      //     </span>
-                      //   </p>
-                      //   <p style={{ marginBottom: "0px" }}>
-                      //     Brand/Non-Brand:&nbsp;{" "}
-                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                      //       {myData.length > 0
-                      //         ? myData.find(
-                      //             (booking) =>
-                      //               booking.bookingId ===
-                      //               row.original["Booking Id"]
-                      //           ).productBrand
-                      //         : ""}
-                      //     </span>
-                      //   </p>
-                      //   <p style={{ marginBottom: "0px" }}>
-                      //     Product Contains:&nbsp;{" "}
-                      //     <span style={{ color: "#ff8084", fontSize: "130%" }}>
-                      //       {myData.length > 0
-                      //         ? myData.find(
-                      //             (booking) =>
-                      //               booking.bookingId ===
-                      //               row.original["Booking Id"]
-                      //           ).productContains
-                      //         : ""}
-                      //     </span>
-                      //   </p>
-                      // </div>
+                      <div style={{ maxWidth: "40%" }}>
+                        <p style={{ marginBottom: "0px" }}>
+                          Product Name:&nbsp;
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {this.renderProductName(myData, row)}
+                          </span>
+                        </p>
+
+                        <p style={{ marginBottom: "0px" }}>
+                          Product Total Cost:&nbsp;
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {myData.length > 0
+                              ? myData.find(
+                                  (booking) =>
+                                    booking.bookingId ===
+                                    row.original["Booking Id"]
+                                ).productsTotalCost
+                              : ""}{" "}
+                            TK
+                          </span>
+                        </p>
+                        <p style={{ marginBottom: "0px" }}>
+                          Carton Quantity:&nbsp;{" "}
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {myData.length > 0
+                              ? myData.find(
+                                  (booking) =>
+                                    booking.bookingId ===
+                                    row.original["Booking Id"]
+                                ).ctnQuantity
+                              : ""}
+                          </span>
+                        </p>
+                        <p style={{ marginBottom: "0px" }}>
+                          Used/New:&nbsp;{" "}
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {myData.length > 0
+                              ? myData.find(
+                                  (booking) =>
+                                    booking.bookingId ===
+                                    row.original["Booking Id"]
+                                ).usedOrNew
+                              : ""}
+                          </span>
+                        </p>
+                        <p style={{ marginBottom: "0px" }}>
+                          Product Contains:&nbsp;{" "}
+                          <span style={{ color: "#ff8084", fontSize: "130%" }}>
+                            {myData.length > 0
+                              ? myData.find(
+                                  (booking) =>
+                                    booking.bookingId ===
+                                    row.original["Booking Id"]
+                                ).productContains
+                              : ""}
+                          </span>
+                        </p>
+                        <div
+                          style={{ marginTop: "20px", paddingBottom: "20px" }}
+                        >
+                          <h3 style={{ color: "#ff8084" }}>
+                            Receiver's Information
+                          </h3>
+                          <p style={{ marginBottom: "0px" }}>
+                            Receiver's Name:&nbsp;
+                            <span
+                              style={{
+                                color: "rgb(18 201 202)",
+                                fontSize: "130%",
+                              }}
+                            >
+                              {myData.length > 0
+                                ? myData.find(
+                                    (booking) =>
+                                      booking.bookingId ===
+                                      row.original["Booking Id"]
+                                  ).receiversName
+                                : ""}
+                            </span>
+                          </p>
+                          <p style={{ marginBottom: "0px" }}>
+                            Receiver's Mobile No:&nbsp;
+                            <span
+                              style={{
+                                color: "rgb(18 201 202)",
+                                fontSize: "130%",
+                              }}
+                            >
+                              {myData.length > 0
+                                ? myData.find(
+                                    (booking) =>
+                                      booking.bookingId ===
+                                      row.original["Booking Id"]
+                                  ).receiversMobileNo
+                                : ""}
+                            </span>
+                          </p>
+                          <p style={{ marginBottom: "0px" }}>
+                            Receiver's Address:&nbsp;
+                            <span
+                              style={{
+                                color: "rgb(18 201 202)",
+                                fontSize: "130%",
+                              }}
+                            >
+                              {myData.length > 0
+                                ? myData.find(
+                                    (booking) =>
+                                      booking.bookingId ===
+                                      row.original["Booking Id"]
+                                  ).receiversAddress
+                                : ""}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
                     )}
 
                     <div
