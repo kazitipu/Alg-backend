@@ -55,8 +55,7 @@ export class User_menu extends Component {
     );
   }
 }
-
-export const mapStateToProps = (state) => {
+const mapStateToProps = (state) => {
   return {
     currentAdmin: state.admins.currentAdmin,
   };

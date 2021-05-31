@@ -18,8 +18,6 @@ class PrintSticker extends React.PureComponent {
       <div>
         <ReactToPrint
           trigger={() => {
-            // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
-            // to the root node of the returned component as it will be overwritten.
             return (
               <button
                 className="btn"

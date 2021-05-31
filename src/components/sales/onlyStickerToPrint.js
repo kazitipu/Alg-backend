@@ -14,22 +14,21 @@ export class OnlyStickerToPrint extends Component {
     return (
       <div className="sticker-container">
         <div className="flex-box">
-          <div className="barcode">
-            <div className="barcode-container">
-              <Barcode
-                value={`Id:${lotNo}-${this.props.cartonNo}`}
-                width={2}
-                height={50}
-                displayValue={false}
-              />
-            </div>
-            <div style={{ marginBottom: "50px", marginLeft: "120px" }}>
-              AlgCargos.com
-            </div>
-          </div>
-          <h1 className="carton-no">{this.props.cartonNo}</h1>
+          <h1 className="carton-no">ALG-{this.props.cartonNo}</h1>
         </div>
-
+        <div className="barcode">
+          <div className="barcode-container">
+            <Barcode
+              value={`Id:${lotNo}-${this.props.cartonNo}`}
+              width={3}
+              height={40}
+              displayValue={false}
+            />
+          </div>
+          <div style={{ marginBottom: "50px", marginLeft: "120px" }}>
+            AlgCargos.com
+          </div>
+        </div>
         <div className="lot-no">Lot No: {lotNo}</div>
       </div>
     );

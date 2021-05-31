@@ -41,17 +41,30 @@ export class Datatable extends Component {
 
   renderEditable = (cellInfo) => {
     const { myData } = this.props;
-
+    const [freightType, country] = this.props.match.params.country.split("-");
+    console.log(freightType);
     if (myData.length > 0) {
       const newData = [];
-      myData.forEach((productType) => {
-        newData.push({
-          "Product Type": productType.id,
-          Parcel: `${productType.parcel}tk/kg`,
-          "Below 10kg": `${productType.ten}tk/kg`,
-          "Above 10kg": `${productType.eleven}tk/kg`,
+      if (freightType === "air") {
+        myData.forEach((productType) => {
+          newData.push({
+            "Product Type": productType.id,
+            Parcel: `${productType.parcel}tk/kg`,
+            "Below 10kg": `${productType.ten}tk/kg`,
+            "Above 10kg": `${productType.eleven}tk/kg`,
+          });
         });
-      });
+      } else {
+        myData.forEach((productType) => {
+          newData.push({
+            "Product Type": productType.id,
+            "100kg": `${productType.parcel}tk/kg`,
+            "Below 1000kg": `${productType.ten}tk/kg`,
+            "Above 1000kg": `${productType.eleven}tk/kg`,
+          });
+        });
+      }
+
       return (
         <div
           style={{ backgroundColor: "#fafafa" }}
@@ -93,14 +106,25 @@ export class Datatable extends Component {
     console.log(myData);
     const newData = [];
     if (myData.length > 0) {
-      myData.forEach((productType) => {
-        newData.push({
-          "Product Type": productType.id,
-          Parcel: `${productType.parcel}tk/kg`,
-          "Below 10kg": `${productType.ten}tk/kg`,
-          "Above 10kg": `${productType.eleven}tk/kg`,
+      if (freightType === "air") {
+        myData.forEach((productType) => {
+          newData.push({
+            "Product Type": productType.id,
+            Parcel: `${productType.parcel}tk/kg`,
+            "Below 10kg": `${productType.ten}tk/kg`,
+            "Above 10kg": `${productType.eleven}tk/kg`,
+          });
         });
-      });
+      } else {
+        myData.forEach((productType) => {
+          newData.push({
+            "Product Type": productType.id,
+            "100kg": `${productType.parcel}tk/kg`,
+            "Below 1000kg": `${productType.ten}tk/kg`,
+            "Above 1000kg": `${productType.eleven}tk/kg`,
+          });
+        });
+      }
     }
     const columns = [];
     for (var key in newData[0]) {

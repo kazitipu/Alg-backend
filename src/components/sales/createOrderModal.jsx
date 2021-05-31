@@ -22,7 +22,7 @@ class CreateOrderModal extends Component {
       productType: "",
       trackingNo: "",
       showSuggestion: true,
-      packaging: "",
+      chineseNote: "",
       packagingCost: 0,
       cAndFBill: "",
       freightCharge: "",
@@ -202,6 +202,7 @@ class CreateOrderModal extends Component {
                           showSuggestion: true,
                           packaging: "",
                           packagingCost: 0,
+                          chineseNote: "",
                         });
                         this.props.startToggleModalCreateOrder(null);
                       }}
@@ -549,6 +550,8 @@ class CreateOrderModal extends Component {
                                     <option value="None">None</option>
                                   </select>
                                 </div>
+                              </div>
+                              <div className="form-row mb-3">
                                 <div className="col">
                                   <label
                                     style={{
@@ -557,30 +560,15 @@ class CreateOrderModal extends Component {
                                       fontSize: "130%",
                                     }}
                                   >
-                                    Packaging Type:
+                                    Note:
                                   </label>
-                                  <select
-                                    title="Please choose a package"
-                                    required
-                                    name="packaging"
-                                    className="custom-select"
-                                    aria-required="true"
-                                    aria-invalid="false"
-                                    onChange={this.handleChange}
-                                    value={this.state.packaging}
-                                    required
-                                  >
-                                    <option value="">
-                                      Select Packaging Type
-                                    </option>
-                                    <option value="Green Bag">Green Bag</option>
-                                    <option value="Green Bag with Polythene">
-                                      Green Bag with Polythene
-                                    </option>
-                                    <option value="Wooden Box">
-                                      Wooden Box
-                                    </option>
-                                  </select>
+                                  <textarea
+                                    type="text"
+                                    name="chineseNote"
+                                    className="form-control"
+                                    placeholder="Add additional Note"
+                                    value={this.state.chineseNote}
+                                  />
                                 </div>
                               </div>
 

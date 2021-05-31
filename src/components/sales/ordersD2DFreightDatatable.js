@@ -253,9 +253,8 @@ export class Datatable extends Component {
           >
             <span
               onClick={async () => {
-                const lotNo = this.props.match.params.shipmentMethodLotNo.split(
-                  "-"
-                )[1];
+                const lotNo =
+                  this.props.match.params.shipmentMethodLotNo.split("-")[1];
                 const cartonNo = row.original.Carton;
                 const parcelId = `${lotNo}-${cartonNo}`;
                 console.log(parcelId);

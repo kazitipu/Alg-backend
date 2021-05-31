@@ -25,10 +25,8 @@ export class OrdersD2DFreight extends Component {
   }
 
   componentDidMount = async () => {
-    const [
-      shipmentMethod,
-      lotNo,
-    ] = this.props.match.params.shipmentMethodLotNo.split("-");
+    const [shipmentMethod, lotNo] =
+      this.props.match.params.shipmentMethodLotNo.split("-");
     await this.props.getAllOrdersOfSingleLotRedux({ shipmentMethod, lotNo });
     this.setState({ allOrders: this.props.orders });
   };

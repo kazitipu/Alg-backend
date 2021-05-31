@@ -12,6 +12,9 @@ class D2DRatesModal extends Component {
       parcel: "",
       ten: "",
       eleven: "",
+      "100kg": "",
+      below_1000kg: "",
+      above_1000kg: "",
     };
   }
 
@@ -19,24 +22,32 @@ class D2DRatesModal extends Component {
     const { singleLot } = nextProps;
     console.log(singleLot);
     console.log("create Lot modal component will receive props is called");
+    const [freightType, country] = nextProps.match.params.country.split("-");
     if (singleLot != null) {
-      this.setState(
-        {
+      if (freightType === "air") {
+        this.setState({
           id: singleLot["Product Type"],
           parcel: singleLot["Parcel"].replace("tk/kg", ""),
           ten: singleLot["Below 10kg"].replace("tk/kg", ""),
           eleven: singleLot["Above 10kg"].replace("tk/kg", ""),
-        },
-        () => {
-          console.log(this.state);
-        }
-      );
+        });
+      } else {
+        this.setState({
+          id: singleLot["Product Type"],
+          "100kg": singleLot["100kg"].replace("tk/kg", ""),
+          below_1000kg: singleLot["Below 1000kg"].replace("tk/kg", ""),
+          above_1000kg: singleLot["Above 1000kg"].replace("tk/kg", ""),
+        });
+      }
     } else {
       this.setState({
         id: "",
         parcel: "",
         ten: "",
         eleven: "",
+        "100kg": "",
+        below_1000kg: "",
+        above_1000kg: "",
       });
     }
   };
@@ -45,10 +56,44 @@ class D2DRatesModal extends Component {
     const [freightType, country] = this.props.match.params.country.split("-");
     event.preventDefault();
     if (this.props.singleLot === null) {
-      await this.props.uploadD2DRatesRedux(freightType, country, this.state);
+      if (freightType === "air") {
+        const airRateObj = {
+          id: this.state.id,
+          parcel: this.state.parcel,
+          ten: this.state.ten,
+          eleven: this.state.eleven,
+        };
+        await this.props.uploadD2DRatesRedux(freightType, country, airRateObj);
+      } else {
+        const seaRateObj = {
+          id: this.state.id,
+          "100kg": this.state["100kg"],
+          below_1000kg: this.state.below_1000kg,
+          above_1000kg: this.state.above_1000kg,
+        };
+        await this.props.uploadD2DRatesRedux(freightType, country, seaRateObj);
+      }
+
       toast.success(`Successfully created rate for ${this.state.id}`);
     } else {
-      await this.props.updateD2DRatesRedux(freightType, country, this.state);
+      if (freightType === "sea") {
+        const airRateObj = {
+          id: this.state.id,
+          parcel: this.state.parcel,
+          ten: this.state.ten,
+          eleven: this.state.eleven,
+        };
+        await this.props.updateD2DRatesRedux(freightType, country, airRateObj);
+      } else {
+        const seaRateObj = {
+          id: this.state.id,
+          "100kg": this.state["100kg"],
+          below_1000kg: this.state.below_1000kg,
+          above_1000kg: this.state.above_1000kg,
+        };
+        await this.props.updateD2DRatesRedux(freightType, country, seaRateObj);
+      }
+
       toast.success(`successfully updated rate for ${this.state.id}`);
     }
 
@@ -57,6 +102,9 @@ class D2DRatesModal extends Component {
       parcel: "",
       ten: "",
       eleven: "",
+      "100kg": "",
+      below_1000kg: "",
+      above_1000kg: "",
     });
     this.props.startToggleModal(null);
   };
@@ -66,6 +114,7 @@ class D2DRatesModal extends Component {
   };
   render() {
     console.log(this.props.singleLot);
+    const [freightType, country] = this.props.match.params.country.split("-");
     return (
       <>
         <div
@@ -84,8 +133,8 @@ class D2DRatesModal extends Component {
             role="document"
           >
             <div
-              className="modal-content visible-modal-content"
-              style={{ backgroundColor: "#ff8084" }}
+              className="modal-content visible-modal-content-3"
+              style={{ backgroundColor: "rgb(68 0 97)" }}
             >
               <div className="modal-body p-0">
                 <section className="pos-rel bg-light-gray">
@@ -159,16 +208,23 @@ class D2DRatesModal extends Component {
                                     marginBottom: "0px",
                                   }}
                                 >
+                                  {freightType === "air" ? "Parcel" : "100kg"}{" "}
                                   Parcel
                                 </label>
                                 <input
                                   type="number"
                                   required
-                                  name="parcel"
+                                  name={
+                                    freightType === "air" ? "parcel" : "100kg"
+                                  }
                                   className="form-control"
-                                  placeholder="Enter rate/parcel"
+                                  placeholder="Enter rate/kg"
                                   onChange={this.handleChange}
-                                  value={this.state.parcel}
+                                  value={
+                                    freightType === "air"
+                                      ? this.state.parcel
+                                      : this.state["100kg"]
+                                  }
                                   required
                                 />
                               </div>
@@ -182,16 +238,26 @@ class D2DRatesModal extends Component {
                                     marginBottom: "0px",
                                   }}
                                 >
-                                  Below 10kg
+                                  {freightType === "air"
+                                    ? "Below 10kg"
+                                    : "Below 1000kg"}
                                 </label>
                                 <input
                                   type="number"
                                   required
-                                  name="ten"
+                                  name={
+                                    freightType === "air"
+                                      ? "ten"
+                                      : "below_1000kg"
+                                  }
                                   className="form-control"
                                   placeholder="Enter rate/kg"
                                   onChange={this.handleChange}
-                                  value={this.state.ten}
+                                  value={
+                                    freightType === "air"
+                                      ? this.state.ten
+                                      : this.state.below_1000kg
+                                  }
                                   required
                                 />
                               </div>
@@ -203,15 +269,25 @@ class D2DRatesModal extends Component {
                                     marginBottom: "0px",
                                   }}
                                 >
-                                  Above 10kg
+                                  {freightType === "air"
+                                    ? "Above 10kg"
+                                    : "Above 1000kg"}
                                 </label>
                                 <input
                                   type="number"
-                                  name="eleven"
+                                  name={
+                                    freightType === "air"
+                                      ? "eleven"
+                                      : "above_1000kg"
+                                  }
                                   className="form-control"
-                                  placeholder="Enter rate"
+                                  placeholder="Enter rate/kg"
                                   onChange={this.handleChange}
-                                  value={this.state.eleven}
+                                  value={
+                                    freightType === "air"
+                                      ? this.state.eleven
+                                      : this.state.above_1000kg
+                                  }
                                   required
                                 />
                               </div>

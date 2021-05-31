@@ -4,6 +4,7 @@ import { uploadLot, updateLot } from "../../../firebase/firebase.utils";
 import { uploadLotRedux, updateLotRedux } from "../../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+
 class CreateLotModal extends Component {
   constructor(props) {
     super(props);
@@ -15,23 +16,26 @@ class CreateLotModal extends Component {
       shippingLine: "",
       shipmentDate: "",
       arrivalDate: "",
+      shipmentNotice: "",
     };
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const { singleLot } = nextProps;
+    const { singleLot, singleLotFromRedux } = nextProps;
     console.log(singleLot);
+    console.log(singleLotFromRedux);
     console.log("create Lot modal component will receive props is called");
-    if (singleLot != null) {
+    if (singleLotFromRedux != null) {
       this.setState(
         {
-          lotNo: singleLot.Lot,
-          selectCountry: singleLot.Country,
-          shipmentMethod: singleLot.Shipment_Method,
-          shipmentStatus: singleLot.Shipment_Status,
-          shippingLine: singleLot.Shipping_Line,
-          shipmentDate: singleLot.Shipment_Date,
-          arrivalDate: singleLot.Arrival_Date,
+          lotNo: singleLotFromRedux.lotNo,
+          selectCountry: singleLotFromRedux.selectCountry,
+          shipmentMethod: singleLotFromRedux.shipmentMethod,
+          shipmentStatus: singleLotFromRedux.shipmentStatus,
+          shippingLine: singleLotFromRedux.shippingLine,
+          shipmentDate: singleLotFromRedux.shipmentDate,
+          arrivalDate: singleLotFromRedux.arrivalDate,
+          shipmentNotice: singleLotFromRedux.shipmentNotice,
         },
         () => {
           console.log(this.state);
@@ -46,6 +50,7 @@ class CreateLotModal extends Component {
         shippingLine: "",
         shipmentDate: "",
         arrivalDate: "",
+        shipmentNotice: "",
       });
     }
   };
@@ -78,6 +83,7 @@ class CreateLotModal extends Component {
       shippingLine: "",
       shipmentDate: "",
       arrivalDate: "",
+      shipmentNotice: "",
     });
     this.props.startToggleModal(null);
   };
@@ -310,6 +316,18 @@ class CreateLotModal extends Component {
                               </div>
                             </div>
 
+                            <div className="form-row mb-4">
+                              <textarea
+                                type="text"
+                                name="shipmentNotice"
+                                className="form-control"
+                                placeholder="Enter shipment Notice"
+                                style={{ fontSize: "1rem" }}
+                                onChange={this.handleChange}
+                                value={this.state.shipmentNotice}
+                              />
+                            </div>
+
                             <div className="form-row">
                               <div
                                 className="col pt-3"
@@ -352,6 +370,13 @@ class CreateLotModal extends Component {
   }
 }
 
-export default connect(null, { uploadLotRedux, updateLotRedux })(
+const mapStateToProps = (state, ownProps) => {
+  return {
+    singleLotFromRedux: ownProps.singleLot
+      ? state.lots.lots.find((lot) => lot.lotNo === ownProps.singleLot.Lot)
+      : null,
+  };
+};
+export default connect(mapStateToProps, { uploadLotRedux, updateLotRedux })(
   CreateLotModal
 );

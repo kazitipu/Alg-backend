@@ -3,18 +3,71 @@ import "./createOrderModal.css";
 import { updateOrderRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-
+import man from "./assets/plus image.jpeg";
+import { uploadImageQcCheck } from "../../firebase/firebase.utils";
 class CreateOrderModal extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      imageUrl: man,
+      file: "",
+    };
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const { parcelObj } = nextProps;
+    if (parcelObj && parcelObj.editApproved) {
+      this.setState({
+        imageUrl: parcelObj.imageUrl ? parcelObj.imageUrl : man,
+      });
+    }
+  };
+
+  _handleImgChange = async (e, i) => {
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    const { imageUrl } = this.state;
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        imageUrl,
+      });
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+      const imgUrl = await uploadImageQcCheck(file);
+      console.log(imgUrl);
+
+      this.setState({
+        imageUrl: imgUrl,
+      });
+      console.log(imageUrl);
+    }
+  };
+
   handleSubmit = async (event) => {
     event.preventDefault();
     const { parcelObj } = this.props;
 
-    const updatedOrder = await this.props.updateOrderRedux(parcelObj);
+    const updatedOrder = await this.props.updateOrderRedux({
+      ...parcelObj,
+      imageUrl: this.state.imageUrl,
+    });
     if (updatedOrder) {
       toast.success(
         `Successfully approved Additionl information for Parcel ${parcelObj.parcelId}`
       );
     }
+
+    this.setState({
+      imageUrl: man,
+      file: "",
+    });
+
+    window.document.getElementById();
   };
 
   render() {
@@ -39,8 +92,8 @@ class CreateOrderModal extends Component {
                 role="document"
               >
                 <div
-                  className="modal-content visible-modal-content"
-                  style={{ backgroundColor: "#ff8084" }}
+                  className="modal-content visible-modal-content-3"
+                  style={{ backgroundColor: "rgb(68 0 97)" }}
                 >
                   <div className="modal-body p-0">
                     <section className="pos-rel bg-light-gray">
@@ -237,6 +290,82 @@ class CreateOrderModal extends Component {
                                     required
                                   />
                                 </div>
+                                <div className="form-row mb-4">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "0px",
+                                      fontSize: "130%",
+                                    }}
+                                  >
+                                    QC check:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    value={
+                                      parcelObj.qcCheck ? parcelObj.qcCheck : ""
+                                    }
+                                    required
+                                    readOnly
+                                  />
+                                </div>
+                                {parcelObj.qcCheck &&
+                                parcelObj.qcCheck == "true" ? (
+                                  <>
+                                    <label
+                                      style={{
+                                        color: "white",
+                                        marginBottom: "0px",
+                                        fontSize: "130%",
+                                      }}
+                                    >
+                                      Products Image:
+                                    </label>
+                                    <div className="form-row mb-4">
+                                      <div
+                                        className="box-input-file"
+                                        style={{
+                                          display: "flex",
+                                          justifyContent: "center",
+                                        }}
+                                      >
+                                        <img
+                                          className="img-100 lazyloaded blur-up"
+                                          src={this.state.imageUrl}
+                                          alt="#"
+                                          style={{
+                                            zIndex: 10,
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() => {
+                                            document
+                                              .getElementById(
+                                                "upload-image-input"
+                                              )
+                                              .click();
+                                          }}
+                                        />
+
+                                        <input
+                                          id="upload-image-input"
+                                          className="upload"
+                                          type="file"
+                                          style={{
+                                            position: "absolute",
+                                            zIndex: 5,
+                                            maxWidth: "50px",
+                                            marginTop: "20px",
+                                          }}
+                                          onChange={(e) =>
+                                            this._handleImgChange(e, 0)
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                  </>
+                                ) : null}
+
                                 <div className="form-row">
                                   <div
                                     className="col pt-3"

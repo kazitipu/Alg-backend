@@ -14,11 +14,8 @@ export class OnlyInvoieToPrint extends Component {
     orderObj: null,
   };
   componentDidMount = async () => {
-    const [
-      shipmentMethod,
-      lotNo,
-      cartonNo,
-    ] = this.props.match.params.orderId.split("-");
+    const [shipmentMethod, lotNo, cartonNo] =
+      this.props.match.params.orderId.split("-");
     const parcelId = `${lotNo}-${cartonNo}`;
     await this.props.getSingleOrderRedux(parcelId);
 
@@ -66,11 +63,8 @@ export class OnlyInvoieToPrint extends Component {
   };
 
   render() {
-    const [
-      shipmentMethod,
-      lotNo,
-      cartonNo,
-    ] = this.props.match.params.orderId.split("-");
+    const [shipmentMethod, lotNo, cartonNo] =
+      this.props.match.params.orderId.split("-");
     const { orderObj } = this.props;
     const { userObj } = this.state;
     let total;
@@ -104,7 +98,7 @@ export class OnlyInvoieToPrint extends Component {
             </div>
 
             <div className="company-info">
-              <div>Alg Cargos & Logistics ltd</div>
+              <div>Alg Limited</div>
               <br />
               <span>
                 37/2 Pritom-Zaman Tower, 10th Floor, suite 6A &nbsp;

@@ -291,6 +291,22 @@ export const updateToMyParcelOfUser = async (orderObj) => {
   }
 };
 
+export const uploadImageQcCheck = async (file) => {
+  const imageRef = storage.ref(`qcCheck/${file.name}`);
+  try {
+    await imageRef.put(file);
+    var imgUrl = [];
+    await imageRef.getDownloadURL().then((url) => {
+      console.log(url);
+      imgUrl.push(url);
+    });
+
+    return imgUrl[0];
+  } catch (error) {
+    return null;
+  }
+};
+
 export const updateUserStatus = async (userObj) => {
   const userRef = firestore.doc(`users/${userObj.uid}`);
   try {
@@ -515,7 +531,8 @@ export const getAllDocumentExpressRates = async () => {
     "expressRatesDocuments"
   );
   try {
-    const expressRatesDocuments = await expressRatesDocumentsCollectionRef.get();
+    const expressRatesDocuments =
+      await expressRatesDocumentsCollectionRef.get();
     const expressRatesDocumentsArray = [];
     expressRatesDocuments.forEach((doc) => {
       expressRatesDocumentsArray.push(doc.data());
@@ -526,9 +543,8 @@ export const getAllDocumentExpressRates = async () => {
   }
 };
 export const getAllExpressRatesParcel = async () => {
-  const expressRatesParcelCollectionRef = firestore.collection(
-    "expressRatesParcel"
-  );
+  const expressRatesParcelCollectionRef =
+    firestore.collection("expressRatesParcel");
   try {
     const expressRatesParcel = await expressRatesParcelCollectionRef.get();
     const expressRatesParcelArray = [];

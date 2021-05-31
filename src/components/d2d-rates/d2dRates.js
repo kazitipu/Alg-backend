@@ -59,6 +59,7 @@ export class D2DRates extends Component {
           toggleModal={this.state.toggleModal}
           startToggleModal={this.startToggleModal}
           singleLot={this.state.singleLot}
+          {...this.props}
         />
         <Breadcrumb
           title={
@@ -119,6 +120,7 @@ export class D2DRates extends Component {
                       pageSize={10}
                       pagination={true}
                       class="-striped -highlight"
+                      {...this.props}
                     />
                   </div>
                 </div>
