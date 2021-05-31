@@ -58,9 +58,9 @@ export class Datatable extends Component {
         myData.forEach((productType) => {
           newData.push({
             "Product Type": productType.id,
-            "100kg": `${productType.parcel}tk/kg`,
-            "Below 1000kg": `${productType.ten}tk/kg`,
-            "Above 1000kg": `${productType.eleven}tk/kg`,
+            "100kg": `${productType["100kg"]}tk/kg`,
+            "Below 1000kg": `${productType.below_1000kg}tk/kg`,
+            "Above 1000kg": `${productType.above_1000kg}tk/kg`,
           });
         });
       }
