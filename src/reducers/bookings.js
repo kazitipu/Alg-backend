@@ -10,7 +10,8 @@ const setBookingsReducer = (state = INITIAL_STATE, action) => {
       const filteredBooking = state.bookings.filter(
         (booking) => booking.bookingId !== action.payload.bookingId
       );
-      return { ...state, bookings: [...filteredBooking, action.payload] };
+
+      return { ...state, bookings: [...filteredBooking] };
     default:
       return { ...state };
   }

@@ -186,7 +186,7 @@ class Root extends Component {
 
                 <Route
                   exact
-                  path={`${process.env.PUBLIC_URL}/invoice/:shipmentMethodLotNo`}
+                  path={`${process.env.PUBLIC_URL}/invoice-d2d-freight/:shipmentMethodLotNo`}
                   component={InvoiceOrderList}
                 />
                 <Route
@@ -368,7 +368,7 @@ class Root extends Component {
                 />
                 <Route
                   exact
-                  path={`${process.env.PUBLIC_URL}/invoice`}
+                  path={`${process.env.PUBLIC_URL}/invoice-d2d-freight`}
                   component={Invoice}
                 />
 

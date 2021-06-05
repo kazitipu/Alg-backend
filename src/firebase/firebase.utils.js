@@ -476,6 +476,70 @@ export const getAllPaymentDays = async () => {
   }
 };
 
+const getMonth = (year) => {
+  const t = new Date();
+  const monthInDigit = t.getMonth();
+  let month;
+  if (monthInDigit == 0) {
+    month = `January,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `February,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `March,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `April,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `May,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `June,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `July,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `August,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `September,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `October,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `November,${year}`;
+  }
+  if (monthInDigit == 0) {
+    month = `December,${year}`;
+  }
+
+  return month;
+};
+export const makeBookingReceived = async (bookingObj) => {
+  console.log(bookingObj);
+  const year = bookingObj.receivedAt.split("/")[2];
+  const month = getMonth(year);
+  const bookingMonthRef = firestore.doc(`bookingMonths/${month}`);
+  const bookingMonth = await bookingMonthRef.get();
+  if (!bookingMonth.exists) {
+    bookingMonthRef.set({
+      date: bookingObj.receivedAt,
+      totalOrder: 1,
+      deliveredOrder: 0,
+      pendingOrder: 1,
+      month: month,
+    });
+  } else {
+    bookingMonthRef.update({
+      totalOrder: bookingMonth.data().totalOrder + 1,
+    });
+  }
+};
+
 export const getAllRechargeRequest = async () => {
   const rechargeRequestCollectionRef = firestore
     .collection("rechargeRequest")
@@ -495,6 +559,7 @@ export const getAllRechargeRequest = async () => {
 };
 
 export const getAllBookings = async (bookingStatus) => {
+  console.log(bookingStatus);
   const bookingsCollectionRef = firestore
     .collection("bookingRequest")
     .where("bookingStatus", "==", bookingStatus);
@@ -897,7 +962,7 @@ export const updateBooking = async (bookingObj) => {
   try {
     await bookingRef.update({
       bookingStatus: bookingObj.bookingStatus,
-      chinaOffice: bookingObj.chinaOffice,
+      ...bookingObj,
     });
     const snapShot = await bookingRef.get();
     return snapShot.data();
@@ -1075,7 +1140,7 @@ export const getAllUsers = async () => {
     const users = await usersCollectionRef.get();
     const usersArray = [];
     users.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
+      // console.log(doc.id, " => ", doc.data());
       usersArray.push({ uid: doc.id, ...doc.data() });
     });
     return usersArray;
@@ -1410,7 +1475,7 @@ export const getAllAdmins = async () => {
     const admins = await adminsCollectionRef.get();
     const adminsArray = [];
     admins.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
+      // console.log(doc.id, " => ", doc.data());
       adminsArray.push({ adminId: doc.id, ...doc.data() });
     });
     return adminsArray;

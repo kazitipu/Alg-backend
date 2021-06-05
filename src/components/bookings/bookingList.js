@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import Datatable from "./bookingListDatatable";
 import ChangeStatusModal from "./changeStatusModal";
+import ChangeStatusModalExpress from "./changeStatusModalExpress";
 import { getAllBookingsRedux } from "../../actions/index";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -17,6 +18,7 @@ export class BookingList extends Component {
       bookingsArrayRequested: [],
       bookingsArraySuccess: [],
       toggleModal: true,
+      toggleModalExpress: true,
       singleLot: null,
       bookingIdArray: [],
       searchFor: "",
@@ -24,10 +26,10 @@ export class BookingList extends Component {
   }
 
   componentDidMount = async () => {
-    if (this.props.match.params.bookingStatus === "Pending") {
+    if (this.props.match.params.bookingStatus == "Pending") {
       await this.props.getAllBookingsRedux("Pending");
     }
-    if (this.props.match.params.bookingStatus === "Success") {
+    if (this.props.match.params.bookingStatus == "Success") {
       await this.props.getAllBookingsRedux("Success");
     }
   };
@@ -38,10 +40,9 @@ export class BookingList extends Component {
       this.props.match.params.bookingStatus
     ) {
       if (nextProps.match.params.bookingStatus === "Pending") {
-        await nextProps.getAllBookingsRedux("Pending");
-      }
-      if (nextProps.match.params.bookingStatus === "Success") {
-        await nextProps.getAllBookingsRedux("Success");
+        await this.props.getAllBookingsRedux("Pending");
+      } else {
+        await this.props.getAllBookingsRedux("Success");
       }
     }
   };
@@ -58,6 +59,18 @@ export class BookingList extends Component {
       });
     }
   };
+  startToggleModalExpress = async (bookingIdArray) => {
+    if (bookingIdArray && bookingIdArray.length > 0) {
+      this.setState({
+        toggleModalExpress: !this.state.toggleModalExpress,
+        bookingIdArray: bookingIdArray,
+      });
+    } else {
+      this.setState({
+        toggleModalExpress: !this.state.toggleModalExpress,
+      });
+    }
+  };
 
   handleSearchBarChange = (event) => {
     const { name, value } = event.target;
@@ -67,12 +80,17 @@ export class BookingList extends Component {
   render() {
     const { open } = this.state;
 
-    console.log(this.props);
+    console.log(this.props.match.params.bookingStatus);
     return (
       <Fragment>
         <ChangeStatusModal
           toggleModal={this.state.toggleModal}
           startToggleModal={this.startToggleModal}
+          bookingIdArray={this.state.bookingIdArray}
+        />
+        <ChangeStatusModalExpress
+          toggleModalExpress={this.state.toggleModalExpress}
+          startToggleModalExpress={this.startToggleModalExpress}
           bookingIdArray={this.state.bookingIdArray}
         />
         <Breadcrumb title="Booking Request" parent="Booking" />
@@ -166,6 +184,7 @@ export class BookingList extends Component {
                   <div id="basicScenario" className="product-physical">
                     <Datatable
                       startToggleModal={this.startToggleModal}
+                      startToggleModalExpress={this.startToggleModalExpress}
                       history={this.props.history}
                       multiSelectOption={false}
                       myData={

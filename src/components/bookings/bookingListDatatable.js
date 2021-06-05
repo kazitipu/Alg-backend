@@ -41,23 +41,6 @@ export class Datatable extends Component {
     });
     toast.success("Successfully Deleted !");
   };
-  changeStatusOfSelectedRow = async () => {
-    const selectedValues = this.state.checkedValues;
-    console.log(selectedValues);
-    selectedValues.forEach((bookingId) =>
-      this.props.updateBookingRedux(bookingId)
-    );
-
-    this.setState({ checkedValues: [] });
-
-    // const updatedData = this.state.myData.filter(function (el) {
-    //   return selectedValues.indexOf(el["Booking Id"]) < 0;
-    // });
-    // this.setState({
-    //   myData: updatedData,
-    // });
-    // toast.success("Successfully Deleted !");
-  };
 
   renderEditable = (cellInfo) => {
     const { myData } = this.props;
@@ -707,33 +690,41 @@ export class Datatable extends Component {
         },
         sortable: false,
       },
-      this.props.match.params.bookingStatus === "Pending"
-        ? {
-            Header: (
-              <button
-                className="btn btn-sm btn-delete mb-0 b-r-4"
-                style={{ background: "rgb(68 0 97)", color: "white" }}
-                onClick={(e) => {
-                  if (this.state.checkedValues.length > 0) {
-                    this.props.startToggleModal(this.state.checkedValues);
-                  } else {
-                    alert("Select a Booking first to change its status");
-                  }
-
-                  //   this.changeStatusOfSelectedRow();
-                }}
-              >
-                Change Status
-              </button>
-            ),
-            id: "delete",
-            accessor: (str) => "delete",
-            sortable: false,
-            style: {
-              textAlign: "center",
-            },
-            Cell: (row) => (
-              <div>
+      {
+        Header: (
+          <button
+            className="btn btn-sm btn-delete mb-0 b-r-4"
+            style={{ background: "rgb(68 0 97)", color: "white" }}
+            onClick={(e) => {
+              if (this.state.checkedValues.length > 0) {
+                if (this.props.match.params.bookingStatus === "Success") {
+                  this.props.startToggleModalExpress(this.state.checkedValues);
+                } else {
+                  this.props.startToggleModal(this.state.checkedValues);
+                }
+                this.setState({ checkedValues: [] });
+              } else {
+                alert("Select a Booking first to change its status");
+              }
+            }}
+          >
+            Change Status
+          </button>
+        ),
+        id: "delete",
+        accessor: (str) => "delete",
+        sortable: false,
+        style: {
+          textAlign: "center",
+        },
+        Cell: (row) => {
+          const bookingObj = myData.find(
+            (booking) => booking.bookingId == row.original["Booking Id"]
+          );
+          return (
+            <div>
+              {bookingObj.shipmentMethod === "Express" ||
+              bookingObj.bookingStatus === "Pending" ? (
                 <span>
                   <input
                     type="checkbox"
@@ -746,14 +737,15 @@ export class Datatable extends Component {
                     }
                   />
                 </span>
-              </div>
-            ),
-            accessor: key,
-            style: {
-              textAlign: "center",
-            },
-          }
-        : ""
+              ) : null}
+            </div>
+          );
+        },
+        accessor: key,
+        style: {
+          textAlign: "center",
+        },
+      }
     );
 
     return (

@@ -24,8 +24,6 @@ export class App extends Component {
   }
 
   componentDidMount = async () => {
-    console.log(this.props.history);
-    await this.props.getAllBookingsRedux("Pending");
     await this.props.getAllRechargeRequestRedux();
     await this.props.getAllRefundRequestRedux("Pending");
     await this.props.getAllAdminsRedux();
