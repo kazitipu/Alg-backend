@@ -58,6 +58,7 @@ class CreateOrderModal extends Component {
         });
       }
     }
+
     console.log(this.state.packagingCost);
     const dateofWarehouseReceive = new Date().toLocaleDateString();
     const uploadedOrder = await this.props.uploadOrderRedux({
@@ -78,7 +79,6 @@ class CreateOrderModal extends Component {
       cartonNo: "",
       showSuggestion: true,
     });
-    // this.props.startToggleModalCreateOrder(null);
   };
 
   handleSubmitForExpense = async (event) => {
@@ -136,7 +136,9 @@ class CreateOrderModal extends Component {
         user.userId.includes(this.state.customer)
       );
       const suggestionByName = this.props.allUsers.filter((user) =>
-        user.displayName.includes(this.state.customer)
+        user.displayName
+          .toLowerCase()
+          .includes(this.state.customer.toLowerCase())
       );
       suggestionArray = [...suggestionByName, ...suggestionById];
       return suggestionArray.slice(0, 10).map((user) => (

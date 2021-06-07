@@ -11,6 +11,7 @@ class SelectLotModal extends Component {
     this.state = {
       lotNo: "",
       showSuggestionSelectLot: false,
+      cursor: -1,
     };
   }
 
@@ -31,15 +32,43 @@ class SelectLotModal extends Component {
     const lotObj = this.props.allLots.find(
       (lot) => lot.lotNo === this.state.lotNo
     );
+    console.log(lotObj);
     this.props.startToggleModalCreateOrder(lotObj);
   };
 
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value, showSuggestionSelectLot: true });
+
+    this.setState({ [name]: value, showSuggestionSelectLot: true }, () => {
+      if (this.state.lotNo === "") {
+        this.setState({ cursor: -1 });
+      }
+    });
+  };
+
+  handleKeyDown = (e) => {
+    const { cursor } = this.state;
+    const result = this.props.allLots
+      .filter((lot) => {
+        const lowerCaseLotNo = lot.lotNo.toLowerCase();
+        const lowerCaseLotNoState = this.state.lotNo.toLowerCase();
+        return lowerCaseLotNo.includes(lowerCaseLotNoState);
+      })
+      .slice(0, 5);
+    // arrow up/down button should select next/previous list element
+    if (e.keyCode === 38 && cursor > -1) {
+      this.setState((prevState) => ({
+        cursor: prevState.cursor - 1,
+      }));
+    } else if (e.keyCode === 40 && cursor < result.length - 1) {
+      this.setState((prevState) => ({
+        cursor: prevState.cursor + 1,
+      }));
+    }
   };
 
   render() {
+    console.log(this.props.allLots);
     return (
       <>
         <div
@@ -104,13 +133,14 @@ class SelectLotModal extends Component {
                             <div className="form-row mb-4">
                               <div className="col">
                                 <input
-                                  title="Please choose a package"
+                                  title="Please choose a Lot"
                                   required
                                   name="lotNo"
                                   className="form-control"
                                   aria-required="true"
                                   aria-invalid="false"
                                   onChange={this.handleChange}
+                                  onKeyDown={this.handleKeyDown}
                                   value={this.state.lotNo}
                                   placeholder="Enter lot No"
                                   required
@@ -121,7 +151,7 @@ class SelectLotModal extends Component {
                                   className="below-searchbar-recommendation"
                                   style={{
                                     display: !this.props.fixedLot
-                                      ? this.state.showSuggestion
+                                      ? this.state.showSuggestionSelectLot
                                         ? "flex"
                                         : "none"
                                       : "none",
@@ -129,13 +159,25 @@ class SelectLotModal extends Component {
                                 >
                                   {this.state.lotNo
                                     ? this.props.allLots
-                                        .filter((lot) =>
-                                          lot.lotNo.includes(this.state.lotNo)
-                                        )
+                                        .filter((lot) => {
+                                          const lowerCaseLotNo =
+                                            lot.lotNo.toLowerCase();
+                                          const lowerCaseLotNoState =
+                                            this.state.lotNo.toLowerCase();
+                                          return lowerCaseLotNo.includes(
+                                            lowerCaseLotNoState
+                                          );
+                                        })
                                         .slice(0, 5)
-                                        .map((lot) => (
+                                        .map((lot, index) => (
                                           <li
-                                            style={{ minWidth: "400px" }}
+                                            style={{
+                                              minWidth: "400px",
+                                              backgroundColor:
+                                                this.state.cursor == index
+                                                  ? "gainsboro"
+                                                  : "white",
+                                            }}
                                             key={lot.lotNo}
                                             onClick={() =>
                                               this.setState({

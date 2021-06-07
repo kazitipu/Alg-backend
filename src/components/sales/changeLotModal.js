@@ -16,6 +16,7 @@ class ChangeLotModal extends Component {
     this.state = {
       lotNo: "",
       showSuggestion: false,
+      cursor: -1,
     };
   }
 
@@ -54,10 +55,37 @@ class ChangeLotModal extends Component {
 
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value, showSuggestion: true });
+    this.setState({ [name]: value, showSuggestion: true }, () => {
+      if (this.state.lotNo === "") {
+        this.setState({ cursor: -1 });
+      }
+    });
+  };
+
+  handleKeyDown = (e) => {
+    const { cursor } = this.state;
+    const result = this.props.allLots
+      .filter((lot) => {
+        const lowerCaseLotNo = lot.lotNo.toLowerCase();
+        const lowerCaseLotNoState = this.state.lotNo.toLowerCase();
+        return lowerCaseLotNo.includes(lowerCaseLotNoState);
+      })
+      .slice(0, 5);
+
+    if (e.keyCode === 38 && cursor > -1) {
+      this.setState((prevState) => ({
+        cursor: prevState.cursor - 1,
+        // lotNo: result.find((lot, index) => cursor == index),
+      }));
+    } else if (e.keyCode === 40 && cursor < result.length - 1) {
+      this.setState((prevState) => ({
+        cursor: prevState.cursor + 1,
+      }));
+    }
   };
 
   render() {
+    console.log(this.state.cursor);
     return (
       <>
         <div
@@ -129,6 +157,7 @@ class ChangeLotModal extends Component {
                                   aria-required="true"
                                   aria-invalid="false"
                                   onChange={this.handleChange}
+                                  onKeyDown={this.handleKeyDown}
                                   value={this.state.lotNo}
                                   placeholder="Enter lot No"
                                   required
@@ -157,9 +186,15 @@ class ChangeLotModal extends Component {
                                           );
                                         })
                                         .slice(0, 5)
-                                        .map((lot) => (
+                                        .map((lot, index) => (
                                           <li
-                                            style={{ minWidth: "400px" }}
+                                            style={{
+                                              minWidth: "400px",
+                                              backgroundColor:
+                                                this.state.cursor == index
+                                                  ? "gainsboro"
+                                                  : "white",
+                                            }}
                                             key={lot.lotNo}
                                             onClick={() =>
                                               this.setState({
