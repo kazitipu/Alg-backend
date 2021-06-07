@@ -12,6 +12,7 @@ import {
   getAllRefundRequestRedux,
   setCurrentAdmin,
   getAllUsersRedux,
+  getAllLotsRedux,
 } from "../actions";
 
 export class App extends Component {
@@ -28,6 +29,7 @@ export class App extends Component {
     await this.props.getAllRefundRequestRedux("Pending");
     await this.props.getAllAdminsRedux();
     await this.props.getAllUsersRedux();
+    await this.props.getAllLotsRedux();
     auth.onAuthStateChanged((adminAuth) => {
       if (adminAuth) {
         var admin = this.props.admins.find(
@@ -83,4 +85,5 @@ export default connect(mapStateToProps, {
   getAllRefundRequestRedux,
   setCurrentAdmin,
   getAllUsersRedux,
+  getAllLotsRedux,
 })(App);

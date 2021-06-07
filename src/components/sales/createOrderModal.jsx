@@ -568,6 +568,7 @@ class CreateOrderModal extends Component {
                                     className="form-control"
                                     placeholder="Add additional Note"
                                     value={this.state.chineseNote}
+                                    onChange={this.handleChange}
                                   />
                                 </div>
                               </div>

@@ -1,42 +1,60 @@
 import React, { Component } from "react";
 import "./createOrderModal.css";
-import { uploadLotRedux, updateLotRedux } from "../../actions/index";
+import {
+  uploadLotRedux,
+  updateLotRedux,
+  deleteSingleOrderRedux,
+} from "../../actions/index";
+import { getSingleOrder, changeLotOrder } from "../../firebase/firebase.utils";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import "./selectLotModal.css";
 
-class SelectLotModal extends Component {
+class ChangeLotModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       lotNo: "",
-      showSuggestionSelectLot: false,
+      showSuggestion: false,
     };
   }
 
-  componentDidMount = () => {
-    if (this.props.fixedLot) {
-      this.setState({ lotNo: this.props.fixedLot });
-    }
-  };
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.fixedLot) {
-      this.setState({ lotNo: nextProps.fixedLot });
-    }
-  };
-
   handleSubmit = async (event) => {
     event.preventDefault();
-    this.props.startToggleModalSelectLot(null);
+
+    console.log(this.state.lotNo);
+    console.log(this.props.parcelIdArray);
+
     const lotObj = this.props.allLots.find(
       (lot) => lot.lotNo === this.state.lotNo
     );
-    this.props.startToggleModalCreateOrder(lotObj);
+    this.props.parcelIdArray.map(async (parcelId) => {
+      const parcelObj = await getSingleOrder(parcelId);
+      const newShipmentMethod = lotObj.shipmentMethod.includes("D2D")
+        ? "D2D"
+        : "Freight";
+      const newLotNo = this.state.lotNo;
+      const newParcelId = `${this.state.lotNo}-${parcelObj.cartonNo}`;
+
+      await this.props.deleteSingleOrderRedux(parcelObj);
+      await changeLotOrder(
+        {
+          ...parcelObj,
+          lotNo: newLotNo,
+          parcelId: newParcelId,
+          shipmentMethod: newShipmentMethod,
+        },
+        parcelId
+      );
+    });
+    console.log(lotObj);
+
+    this.props.startToggleModalChangeLot([]);
   };
 
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value, showSuggestionSelectLot: true });
+    this.setState({ [name]: value, showSuggestion: true });
   };
 
   render() {
@@ -44,7 +62,7 @@ class SelectLotModal extends Component {
       <>
         <div
           className={
-            this.props.toggleModalSelectLot
+            this.props.toggleModalChangeLot
               ? "modal fade show"
               : "modal fade show visible-modal"
           }
@@ -67,7 +85,7 @@ class SelectLotModal extends Component {
                     <a
                       onClick={() => {
                         this.setState({ lotNo: "" });
-                        this.props.startToggleModalSelectLot(null);
+                        this.props.startToggleModalChangeLot([]);
                       }}
                       className="close"
                       data-dismiss="modal"
@@ -129,9 +147,15 @@ class SelectLotModal extends Component {
                                 >
                                   {this.state.lotNo
                                     ? this.props.allLots
-                                        .filter((lot) =>
-                                          lot.lotNo.includes(this.state.lotNo)
-                                        )
+                                        .filter((lot) => {
+                                          const lowerCaseLotNo =
+                                            lot.lotNo.toLowerCase();
+                                          const lowerCaseLotNoState =
+                                            this.state.lotNo.toLowerCase();
+                                          return lowerCaseLotNo.includes(
+                                            lowerCaseLotNoState
+                                          );
+                                        })
                                         .slice(0, 5)
                                         .map((lot) => (
                                           <li
@@ -140,7 +164,7 @@ class SelectLotModal extends Component {
                                             onClick={() =>
                                               this.setState({
                                                 lotNo: lot.lotNo,
-                                                showSuggestionSelectLot: false,
+                                                showSuggestion: false,
                                               })
                                             }
                                           >
@@ -192,6 +216,8 @@ const mapStateToProps = (state) => {
     allLots: state.lots.lots,
   };
 };
-export default connect(mapStateToProps, { uploadLotRedux, updateLotRedux })(
-  SelectLotModal
-);
+export default connect(mapStateToProps, {
+  uploadLotRedux,
+  updateLotRedux,
+  deleteSingleOrderRedux,
+})(ChangeLotModal);

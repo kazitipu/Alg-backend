@@ -4,6 +4,7 @@ import Datatable from "./ordersD2DFreightDatatable";
 import { getAllOrdersOfSingleLotRedux, get } from "../../actions/index";
 import CreateOrderModal from "./createOrderModal";
 import SelectLotModal from "./selectLotModal";
+import ChangeLotModal from "./changeLotModal";
 import AdditionalInfoModal from "./additionalInfoModal";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
@@ -17,10 +18,12 @@ export class OrdersD2DFreight extends Component {
       searchFor: "",
       allOrders: [],
       toggleModalSelectLot: true,
+      toggleModalChangeLot: true,
       toggleModalCreateOrder: true,
       toggleModalAdditionalInfo: true,
       singleLot: null,
       parcelObj: null,
+      parcelIdArray: [],
     };
   }
 
@@ -75,6 +78,12 @@ export class OrdersD2DFreight extends Component {
       console.log(fixedLot)
     );
   };
+  startToggleModalChangeLot = async (parcelIdArray) => {
+    this.setState({
+      toggleModalChangeLot: !this.state.toggleModalChangeLot,
+      parcelIdArray,
+    });
+  };
 
   handleSearchBarChange = (event) => {
     const { name, value } = event.target;
@@ -103,6 +112,11 @@ export class OrdersD2DFreight extends Component {
           startToggleModalCreateOrder={this.startToggleModalCreateOrder}
           singleLot={this.state.singleLot}
           fixedLot={this.state.fixedLot}
+        />
+        <ChangeLotModal
+          toggleModalChangeLot={this.state.toggleModalChangeLot}
+          startToggleModalChangeLot={this.startToggleModalChangeLot}
+          parcelIdArray={this.state.parcelIdArray}
         />
         <Breadcrumb title="Orders" parent="Sales" />
 
@@ -209,6 +223,7 @@ export class OrdersD2DFreight extends Component {
                     startToggleModalAdditionalInfo={
                       this.startToggleModalAdditionalInfo
                     }
+                    startToggleModalChangeLot={this.startToggleModalChangeLot}
                     multiSelectOption={false}
                     myData={
                       !this.state.searchFor

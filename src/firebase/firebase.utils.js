@@ -165,6 +165,46 @@ export const uploadOrder = async (orderObj) => {
     );
   }
 };
+export const changeLotOrder = async (orderObj, previousParcelId) => {
+  const orderRef = firestore.doc(`orders/${orderObj.parcelId}`);
+  const snapShot = await orderRef.get();
+  if (!snapShot.exists) {
+    try {
+      await orderRef.set({
+        ...orderObj,
+      });
+      const uploadedSnapShot = await orderRef.get();
+      console.log(uploadedSnapShot.data());
+      changeLotToMyParcelOfUser(orderObj, previousParcelId);
+      return uploadedSnapShot.data();
+    } catch (error) {
+      alert(error);
+    }
+  } else {
+    alert(
+      "there is already an order with similar parcel Id. please try again later."
+    );
+  }
+};
+export const changeLotToMyParcelOfUser = async (orderObj, previousParcelId) => {
+  const userRef = firestore.doc(`users/${orderObj.customerUid}`);
+  try {
+    const snapShot = await userRef.get();
+
+    const newParcelArray = snapShot.data().parcelArray.map((parcel) => {
+      if (parcel.parcelId === previousParcelId) {
+        return orderObj;
+      } else {
+        return parcel;
+      }
+    });
+    userRef.update({
+      parcelArray: newParcelArray,
+    });
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const rechargeUser = async (rechargeObj) => {
   // first upload the recharge day in rechargeDays
@@ -283,8 +323,20 @@ export const updateToMyParcelOfUser = async (orderObj) => {
   try {
     const snapShot = await userRef.get();
     console.log(snapShot.data());
+    const findParcelObj = snapShot
+      .data()
+      .parcelArray.find((parcel) => parcel.parcelId === orderObj.parcelId);
+    const newParcelArray = snapShot.data().parcelArray.map((parcel) => {
+      if (parcel && parcel.parcelId === orderObj.parcelId) {
+        return orderObj;
+      } else {
+        return parcel;
+      }
+    });
     userRef.update({
-      parcelArray: [...snapShot.data().parcelArray, orderObj],
+      parcelArray: findParcelObj
+        ? newParcelArray
+        : [...snapShot.data().parcelArray, orderObj],
     });
   } catch (error) {
     alert(error);
@@ -1183,21 +1235,6 @@ export const deleteOrder = async (id) => {
   }
 };
 
-// export const deleteSingleOrder = async (orderObj) => {
-//   const singleLotOrdersRef = firestore.doc(`ordersD2D/${orderObj.lotNo}`);
-//   try {
-//     const snapShot = await singleLotOrdersRef.get();
-//     const filteredArray = snapShot
-//       .data()
-//       .orders.filter((order) => order.cartonNo !== orderObj.cartonNo);
-//     singleLotOrdersRef.update({
-//       lotNo: snapShot.data().lotNo,
-//       orders: [...filteredArray],
-//     });
-//   } catch (error) {
-//     alert(error);
-//   }
-// };
 export const deleteSingleOrder = async (orderObj) => {
   const orderRef = firestore.doc(`orders/${orderObj.parcelId}`);
   try {

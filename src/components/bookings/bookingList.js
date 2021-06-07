@@ -59,6 +59,7 @@ export class BookingList extends Component {
       });
     }
   };
+
   startToggleModalExpress = async (bookingIdArray) => {
     if (bookingIdArray && bookingIdArray.length > 0) {
       this.setState({
@@ -79,8 +80,6 @@ export class BookingList extends Component {
 
   render() {
     const { open } = this.state;
-
-    console.log(this.props.match.params.bookingStatus);
     return (
       <Fragment>
         <ChangeStatusModal

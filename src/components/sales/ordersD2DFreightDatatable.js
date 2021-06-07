@@ -239,59 +239,113 @@ export class Datatable extends Component {
         },
       });
     } else {
-      columns.push({
-        Header: <b>Action</b>,
-        id: "delete",
-        accessor: (str) => "delete",
-        Cell: (row) => (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <span
-              onClick={async () => {
-                const lotNo =
-                  this.props.match.params.shipmentMethodLotNo.split("-")[1];
-                const cartonNo = row.original.Carton;
-                const parcelId = `${lotNo}-${cartonNo}`;
-                console.log(parcelId);
-                console.log(myData);
-                const orderObj = myData.find(
-                  (order) => order.parcelId == parcelId
-                );
-                console.log(orderObj);
-                await this.props.deleteSingleOrderRedux(orderObj);
-                let data = myData;
-                data.splice(row.index, 1);
-                this.setState({ myData: data });
-                console.log(row);
-                toast.success("Successfully Deleted !");
+      columns.push(
+        {
+          Header: <b>Action</b>,
+          id: "delete",
+          accessor: (str) => "delete",
+          Cell: (row) => (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
               }}
             >
-              <i
-                className="fa fa-trash"
-                style={{
-                  width: 35,
-                  fontSize: 20,
-                  padding: 11,
-                  color: "#e4566e",
-                  cursor: "pointer",
+              <span
+                onClick={async () => {
+                  const lotNo =
+                    this.props.match.params.shipmentMethodLotNo.split("-")[1];
+                  const cartonNo = row.original.Carton;
+                  const parcelId = `${lotNo}-${cartonNo}`;
+                  console.log(parcelId);
+                  console.log(myData);
+                  const orderObj = myData.find(
+                    (order) => order.parcelId == parcelId
+                  );
+                  console.log(orderObj);
+                  await this.props.deleteSingleOrderRedux(orderObj);
+                  let data = myData;
+                  data.splice(row.index, 1);
+                  this.setState({ myData: data });
+                  console.log(row);
+                  toast.success("Successfully Deleted !");
                 }}
-              ></i>
-            </span>
-            <span>
-              <PrintSticker cartonNo={row.original.Carton} />
-            </span>
-          </div>
-        ),
-        style: {
-          textAlign: "center",
+              >
+                <i
+                  className="fa fa-trash"
+                  style={{
+                    width: 35,
+                    fontSize: 20,
+                    padding: 11,
+                    color: "#e4566e",
+                    cursor: "pointer",
+                  }}
+                ></i>
+              </span>
+              <span>
+                <PrintSticker cartonNo={row.original.Carton} />
+              </span>
+            </div>
+          ),
+          style: {
+            textAlign: "center",
+          },
+          sortable: false,
         },
-        sortable: false,
-      });
+        {
+          Header: (
+            <button
+              className="btn  btn-sm btn-delete mb-0 b-r-4"
+              style={{
+                background:
+                  this.state.checkedValues.length > 0 ? "gray" : "gainsboro",
+                color: this.state.checkedValues.length > 0 ? "white" : "black",
+              }}
+              onClick={(e) => {
+                if (!this.state.checkedValues.length > 0) {
+                  alert("Please choose at least one order first.");
+                } else {
+                  this.props.startToggleModalChangeLot(
+                    this.state.checkedValues
+                  );
+
+                  console.log(this.state.checkedValues);
+                }
+              }}
+            >
+              Move
+            </button>
+          ),
+          id: "delete",
+          accessor: (str) => "delete",
+          sortable: false,
+          style: {
+            textAlign: "center",
+          },
+          Cell: (row) => {
+            const lotNo =
+              this.props.match.params.shipmentMethodLotNo.split("-")[1];
+            const parcelId = `${lotNo}-${row.original.Carton}`;
+            return (
+              <div>
+                <span>
+                  <input
+                    type="checkbox"
+                    name={parcelId}
+                    defaultChecked={this.state.checkedValues.includes(parcelId)}
+                    onChange={(e) => this.selectRow(e, parcelId)}
+                  />
+                </span>
+              </div>
+            );
+          },
+          accessor: key,
+          style: {
+            textAlign: "center",
+          },
+        }
+      );
     }
 
     return (
