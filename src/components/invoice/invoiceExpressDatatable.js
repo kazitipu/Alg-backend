@@ -178,7 +178,7 @@ export class Datatable extends Component {
               className="btn btn-secondary"
               onClick={() => {
                 this.props.history.push(
-                  `${process.env.PUBLIC_URL}/expressOrder/${row.original.Month}`
+                  `${process.env.PUBLIC_URL}/invoice-express/${row.original.Month}`
                 );
               }}
             >

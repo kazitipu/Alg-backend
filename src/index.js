@@ -60,8 +60,11 @@ import Update_Product_Tax from "./components/localization/update-product-tax";
 import Profile from "./components/settings/profile";
 import Reports from "./components/reports/report";
 import Invoice from "./components/invoice/invoice";
+import InvoiceExpress from "./components/invoice/invoiceExpress";
+import InvoiceExpressByMonth from "./components/invoice/invoiceExpressByMonth";
 import InvoiceOrderList from "./components/invoice/invoiceOrderList";
 import InvoiceByOrder from "./components/invoice/invoice-by-order";
+import InvoiceByOrderExpress from "./components/invoice/invoiceByOrderExpress";
 import Print from "./components/invoice/print";
 import Datatable from "./components/common/datatable";
 import Login from "./components/auth/login";
@@ -194,6 +197,13 @@ class Root extends Component {
                   path={`${process.env.PUBLIC_URL}/invoice-by-orderId/:orderId`}
                   component={InvoiceByOrder}
                 />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/invoice-by-bookingId/:bookingId`}
+                  component={InvoiceByOrderExpress}
+                />
+
+                {/* express  */}
 
                 <Route
                   exact
@@ -370,6 +380,16 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/invoice-d2d-freight`}
                   component={Invoice}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/invoice-express`}
+                  component={InvoiceExpress}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/invoice-express/:month`}
+                  component={InvoiceExpressByMonth}
                 />
 
                 <Route

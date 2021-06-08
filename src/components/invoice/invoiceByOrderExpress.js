@@ -1,39 +1,33 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../../components/common/breadcrumb";
-import {
-  getSingleOrderRedux,
-  updateOrderAfterInvoiceRedux,
-} from "../../actions/index";
+import { getSingleBookingRedux, updateBookingRedux } from "../../actions/index";
 import "./css/invoice-by-order.css";
 import Alg from "./alg.png";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
 import Print from "./print";
-export class InvoiceByOrder extends Component {
+export class InvoiceByOrderExpress extends Component {
   state = {
     userObj: null,
     discountInvoice: "",
   };
   componentDidMount = async () => {
-    const [shipmentMethod, lotNo, cartonNo] =
-      this.props.match.params.orderId.split("-");
-    const parcelId = `${lotNo}-${cartonNo}`;
-    await this.props.getSingleOrderRedux(parcelId);
-    if (this.props.orderObj) {
+    await this.props.getSingleBookingRedux(this.props.match.params.bookingId);
+    if (this.props.bookingObj) {
       this.setState({
         userObj: this.props.users.find(
-          (user) => user.uid == this.props.orderObj.customerUid
+          (user) => user.uid == this.props.bookingObj.userId
         ),
       });
     }
   };
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.orderObj) {
+    if (nextProps.bookingObj) {
       this.setState({
         userObj: nextProps.users.find(
-          (user) => user.uid == nextProps.orderObj.customerUid
+          (user) => user.uid == nextProps.bookingObj.userUid
         ),
       });
     }
@@ -46,30 +40,27 @@ export class InvoiceByOrder extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { orderObj } = this.props;
+    const { bookingObj } = this.props;
     const { userObj } = this.state;
-    if (userObj && orderObj) {
-      const updatedOrder = await this.props.updateOrderAfterInvoiceRedux({
-        ...orderObj,
-        invoiceGenerated: true,
+    if (userObj && bookingObj) {
+      const updatedBooking = await this.props.updateBookingRedux({
+        ...bookingObj,
         discountInvoice: this.state.discountInvoice,
       });
-      if (updatedOrder) {
-        const [shipmentMethod, lotNo, cartonNo] =
-          this.props.match.params.orderId.split("-");
+      //   if (updatedBooking) {
 
-        if (shipmentMethod.includes("D2D")) {
-          await this.props.getSingleOrderRedux({
-            shipmentMethod: "D2D",
-            orderId: `${lotNo}-${cartonNo}`,
-          });
-        } else {
-          await this.props.getSingleOrderRedux({
-            shipmentMethod: "Freight",
-            orderId: `${lotNo}-${cartonNo}`,
-          });
-        }
-      }
+      //     if (shipmentMethod.includes("D2D")) {
+      //       await this.props.getSingleOrderRedux({
+      //         shipmentMethod: "D2D",
+      //         orderId: `${lotNo}-${cartonNo}`,
+      //       });
+      //     } else {
+      //       await this.props.getSingleOrderRedux({
+      //         shipmentMethod: "Freight",
+      //         orderId: `${lotNo}-${cartonNo}`,
+      //       });
+      //     }
+      //   }
       this.setState({ discountInvoice: "" });
     }
   };
@@ -136,7 +127,7 @@ export class InvoiceByOrder extends Component {
                   </div>
                 </div>
                 <div className="card-body">
-                  <Print orderObj={true} />
+                  <Print orderObj={false} />
                 </div>
               </div>
             </div>
@@ -149,13 +140,14 @@ export class InvoiceByOrder extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    orderObj: state.ordersAlg.orderObj,
+    bookingObj: state.bookings.bookingObj,
     users: state.users.users,
   };
 };
 export default withRouter(
   connect(mapStateToProps, {
-    getSingleOrderRedux,
-    updateOrderAfterInvoiceRedux,
-  })(InvoiceByOrder)
+    getSingleBookingRedux,
+
+    updateBookingRedux,
+  })(InvoiceByOrderExpress)
 );

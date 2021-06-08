@@ -528,66 +528,23 @@ export const getAllPaymentDays = async () => {
   }
 };
 
-const getMonth = (year) => {
-  const t = new Date();
-  const monthInDigit = t.getMonth();
-  let month;
-  if (monthInDigit == 0) {
-    month = `January,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `February,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `March,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `April,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `May,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `June,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `July,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `August,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `September,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `October,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `November,${year}`;
-  }
-  if (monthInDigit == 0) {
-    month = `December,${year}`;
-  }
-
-  return month;
-};
 export const makeBookingReceived = async (bookingObj) => {
   console.log(bookingObj);
-  const year = bookingObj.receivedAt.split("/")[2];
-  const month = getMonth(year);
-  const bookingMonthRef = firestore.doc(`bookingMonths/${month}`);
+
+  const bookingMonthRef = firestore.doc(`bookingMonths/${bookingObj.month}`);
   const bookingMonth = await bookingMonthRef.get();
+
   if (!bookingMonth.exists) {
     bookingMonthRef.set({
-      date: bookingObj.receivedAt,
       totalOrder: 1,
       deliveredOrder: 0,
       pendingOrder: 1,
-      month: month,
+      month: bookingObj.month,
     });
   } else {
     bookingMonthRef.update({
       totalOrder: bookingMonth.data().totalOrder + 1,
+      pendingOrder: bookingMonth.data().pendingOrder + 1,
     });
   }
 };
@@ -615,6 +572,23 @@ export const getAllBookings = async (bookingStatus) => {
   const bookingsCollectionRef = firestore
     .collection("bookingRequest")
     .where("bookingStatus", "==", bookingStatus);
+
+  try {
+    const bookings = await bookingsCollectionRef.get();
+    const bookingsArray = [];
+    bookings.forEach((doc) => {
+      bookingsArray.push(doc.data());
+    });
+    return bookingsArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+export const getAllReceivedExpressBookings = async (month) => {
+  const bookingsCollectionRef = firestore
+    .collection("bookingRequest")
+    .where("bookingStatus", "==", "Received")
+    .where("month", "==", month);
 
   try {
     const bookings = await bookingsCollectionRef.get();
@@ -690,7 +664,7 @@ export const getAllD2DRates = async (freightType, country) => {
 };
 
 export const getAllExpressOrders = async () => {
-  const expressOrdersCollectionRef = firestore.collection("ordersExpress");
+  const expressOrdersCollectionRef = firestore.collection("bookingMonths");
   try {
     const ordersExpress = await expressOrdersCollectionRef.get();
     const ordersExpressArray = [];
@@ -1250,7 +1224,15 @@ export const getSingleOrder = async (parcelId) => {
     const snapShot = await orderRef.get();
     return snapShot.data();
   } catch (error) {
-    // alert(error);
+    return null;
+  }
+};
+export const getSingleBooking = async (bookingId) => {
+  const bookingRef = firestore.doc(`bookingRequest/${bookingId}`);
+  try {
+    const snapShot = await bookingRef.get();
+    return snapShot.data();
+  } catch (error) {
     return null;
   }
 };

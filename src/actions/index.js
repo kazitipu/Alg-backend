@@ -1,6 +1,8 @@
 import {
   getAllBookings,
+  getAllReceivedExpressBookings,
   updateBooking,
+  getSingleBooking,
   uploadLot,
   updateLot,
   getAllLots,
@@ -98,6 +100,11 @@ export const getAllBookingsRedux = (bookingStatus) => async (dispatch) => {
   const bookingsArray = await getAllBookings(bookingStatus);
   dispatch({ type: "GET_ALL_BOOKINGS", payload: bookingsArray });
 };
+export const getAllReceivedExpressBookingsRedux =
+  (month) => async (dispatch) => {
+    const bookingsArray = await getAllReceivedExpressBookings(month);
+    dispatch({ type: "GET_ALL_EXPRESS_ORDERS", payload: bookingsArray });
+  };
 export const updateBookingRedux = (bookingObj) => async (dispatch) => {
   const updatedBookingObj = await updateBooking(bookingObj);
   dispatch({ type: "UPDATE_BOOKING", payload: updatedBookingObj });
@@ -142,6 +149,10 @@ export const getSingleOrderRedux = (parcelId) => async (dispatch) => {
   const resultOrderObj = await getSingleOrder(parcelId);
   dispatch({ type: "GET_SINGLE_ORDER", payload: resultOrderObj });
 };
+export const getSingleBookingRedux = (bookingId) => async (dispatch) => {
+  const resultbookingObj = await getSingleBooking(bookingId);
+  dispatch({ type: "GET_SINGLE_BOOKING", payload: resultbookingObj });
+};
 
 export const uploadOrderRedux = (orderObj) => async (dispatch) => {
   const uploadedOrderObj = await uploadOrder(orderObj);
@@ -170,15 +181,14 @@ export const getAllExpressOrdersRedux = () => async (dispatch) => {
   dispatch({ type: "GET_ALL_EXPRESS_ORDERS", payload: ordersArrayExpress });
 };
 
-export const updateExpressOrderStatusRedux = (id, month) => async (
-  dispatch
-) => {
-  const updatedExpressOrder = await updateExpressOrder(id, month);
-  dispatch({
-    type: "UPDATE_EXPRESS_ORDER_STATUS",
-    payload: updatedExpressOrder,
-  });
-};
+export const updateExpressOrderStatusRedux =
+  (id, month) => async (dispatch) => {
+    const updatedExpressOrder = await updateExpressOrder(id, month);
+    dispatch({
+      type: "UPDATE_EXPRESS_ORDER_STATUS",
+      payload: updatedExpressOrder,
+    });
+  };
 
 // Express Rates
 
@@ -190,38 +200,35 @@ export const getAllDocumentExpressRatesRedux = () => async (dispatch) => {
   });
 };
 
-export const uploadExpressRatesDocumentsRedux = (countryObj) => async (
-  dispatch
-) => {
-  const uploadedExpressRatesDocumentsObj = await uploadExpressRatesDocuments(
-    countryObj
-  );
-  dispatch({
-    type: "UPLOAD_EXPRESS_RATES_DOCUMENTS",
-    payload: uploadedExpressRatesDocumentsObj,
-  });
-};
+export const uploadExpressRatesDocumentsRedux =
+  (countryObj) => async (dispatch) => {
+    const uploadedExpressRatesDocumentsObj = await uploadExpressRatesDocuments(
+      countryObj
+    );
+    dispatch({
+      type: "UPLOAD_EXPRESS_RATES_DOCUMENTS",
+      payload: uploadedExpressRatesDocumentsObj,
+    });
+  };
 
-export const updateExpressRatesDocumentsRedux = (countryObj) => async (
-  dispatch
-) => {
-  const updatedExpressRatesDocumentsObj = await updateExpressRatesDocuments(
-    countryObj
-  );
-  dispatch({
-    type: "UPDATE_EXPRESS_RATES_DOCUMENTS",
-    payload: updatedExpressRatesDocumentsObj,
-  });
-};
-export const deleteExpressRatesDocumentsRedux = (countryId) => async (
-  dispatch
-) => {
-  await deleteExpressRatesDocuments(countryId);
-  dispatch({
-    type: "DELETE_EXPRESS_RATES_DOCUMENTS",
-    payload: countryId,
-  });
-};
+export const updateExpressRatesDocumentsRedux =
+  (countryObj) => async (dispatch) => {
+    const updatedExpressRatesDocumentsObj = await updateExpressRatesDocuments(
+      countryObj
+    );
+    dispatch({
+      type: "UPDATE_EXPRESS_RATES_DOCUMENTS",
+      payload: updatedExpressRatesDocumentsObj,
+    });
+  };
+export const deleteExpressRatesDocumentsRedux =
+  (countryId) => async (dispatch) => {
+    await deleteExpressRatesDocuments(countryId);
+    dispatch({
+      type: "DELETE_EXPRESS_RATES_DOCUMENTS",
+      payload: countryId,
+    });
+  };
 
 // Parcel Rates
 
@@ -233,92 +240,79 @@ export const getAllExpressRatesParcelRedux = () => async (dispatch) => {
   });
 };
 
-export const uploadExpressRatesParcelRedux = (countryObj) => async (
-  dispatch
-) => {
-  const uploadedExpressRatesParcelObj = await uploadExpressRatesParcel(
-    countryObj
-  );
-  dispatch({
-    type: "UPLOAD_EXPRESS_RATES_PARCEL",
-    payload: uploadedExpressRatesParcelObj,
-  });
-};
+export const uploadExpressRatesParcelRedux =
+  (countryObj) => async (dispatch) => {
+    const uploadedExpressRatesParcelObj = await uploadExpressRatesParcel(
+      countryObj
+    );
+    dispatch({
+      type: "UPLOAD_EXPRESS_RATES_PARCEL",
+      payload: uploadedExpressRatesParcelObj,
+    });
+  };
 
-export const updateExpressRatesParcelRedux = (countryObj) => async (
-  dispatch
-) => {
-  const updatedExpressRatesParcelObj = await updateExpressRatesParcel(
-    countryObj
-  );
-  dispatch({
-    type: "UPDATE_EXPRESS_RATES_PARCEL",
-    payload: updatedExpressRatesParcelObj,
-  });
-};
-export const deleteExpressRatesParcelRedux = (countryId) => async (
-  dispatch
-) => {
-  await deleteExpressRatesParcel(countryId);
-  dispatch({
-    type: "DELETE_EXPRESS_RATES_PARCEL",
-    payload: countryId,
-  });
-};
+export const updateExpressRatesParcelRedux =
+  (countryObj) => async (dispatch) => {
+    const updatedExpressRatesParcelObj = await updateExpressRatesParcel(
+      countryObj
+    );
+    dispatch({
+      type: "UPDATE_EXPRESS_RATES_PARCEL",
+      payload: updatedExpressRatesParcelObj,
+    });
+  };
+export const deleteExpressRatesParcelRedux =
+  (countryId) => async (dispatch) => {
+    await deleteExpressRatesParcel(countryId);
+    dispatch({
+      type: "DELETE_EXPRESS_RATES_PARCEL",
+      payload: countryId,
+    });
+  };
 
 // D2D Rates
-export const getAllD2DRatesRedux = (freightType, country) => async (
-  dispatch
-) => {
-  const allD2DRatesAirArray = await getAllD2DRates(freightType, country);
-  dispatch({
-    type: "GET_ALL_D2D_RATES",
-    payload: allD2DRatesAirArray,
-  });
-};
+export const getAllD2DRatesRedux =
+  (freightType, country) => async (dispatch) => {
+    const allD2DRatesAirArray = await getAllD2DRates(freightType, country);
+    dispatch({
+      type: "GET_ALL_D2D_RATES",
+      payload: allD2DRatesAirArray,
+    });
+  };
 
-export const uploadD2DRatesRedux = (
-  freightType,
-  country,
-  productTypeObj
-) => async (dispatch) => {
-  const uploadedD2DRatesObj = await uploadD2DRates(
-    freightType,
-    country,
-    productTypeObj
-  );
-  dispatch({
-    type: "UPLOAD_D2D_RATES",
-    payload: uploadedD2DRatesObj,
-  });
-};
+export const uploadD2DRatesRedux =
+  (freightType, country, productTypeObj) => async (dispatch) => {
+    const uploadedD2DRatesObj = await uploadD2DRates(
+      freightType,
+      country,
+      productTypeObj
+    );
+    dispatch({
+      type: "UPLOAD_D2D_RATES",
+      payload: uploadedD2DRatesObj,
+    });
+  };
 
-export const updateD2DRatesRedux = (
-  freightType,
-  country,
-  productTypeObj
-) => async (dispatch) => {
-  const updatedD2DRatesObj = await updateD2DRates(
-    freightType,
-    country,
-    productTypeObj
-  );
-  dispatch({
-    type: "UPDATE_D2D_RATES",
-    payload: updatedD2DRatesObj,
-  });
-};
-export const deleteD2DRatesRedux = (
-  freightType,
-  country,
-  productTypeId
-) => async (dispatch) => {
-  await deleteD2DRates(freightType, country, productTypeId);
-  dispatch({
-    type: "DELETE_D2D_RATES",
-    payload: { freightType, country, productTypeId },
-  });
-};
+export const updateD2DRatesRedux =
+  (freightType, country, productTypeObj) => async (dispatch) => {
+    const updatedD2DRatesObj = await updateD2DRates(
+      freightType,
+      country,
+      productTypeObj
+    );
+    dispatch({
+      type: "UPDATE_D2D_RATES",
+      payload: updatedD2DRatesObj,
+    });
+  };
+export const deleteD2DRatesRedux =
+  (freightType, country, productTypeId) => async (dispatch) => {
+    await deleteD2DRates(freightType, country, productTypeId);
+    dispatch({
+      type: "DELETE_D2D_RATES",
+      payload: { freightType, country, productTypeId },
+    });
+  };
 
 // Recharge
 export const getAllRechargeRequestRedux = () => async (dispatch) => {
@@ -326,17 +320,16 @@ export const getAllRechargeRequestRedux = () => async (dispatch) => {
   dispatch({ type: "GET_ALL_RECHARGE_REQUEST", payload: rechargeRequestArray });
 };
 
-export const updateRechargeRequestStatusRedux = (rechargeRequestObj) => async (
-  dispatch
-) => {
-  const updatedRechargeRequestObj = await updateRechargeRequestStatus(
-    rechargeRequestObj
-  );
-  dispatch({
-    type: "UPDATE_RECHARGE_REQUEST_STATUS",
-    payload: updatedRechargeRequestObj,
-  });
-};
+export const updateRechargeRequestStatusRedux =
+  (rechargeRequestObj) => async (dispatch) => {
+    const updatedRechargeRequestObj = await updateRechargeRequestStatus(
+      rechargeRequestObj
+    );
+    dispatch({
+      type: "UPDATE_RECHARGE_REQUEST_STATUS",
+      payload: updatedRechargeRequestObj,
+    });
+  };
 
 export const rechargeUserRedux = (rechargeObj) => async (dispatch) => {
   const rechargedUserObj = await rechargeUser(rechargeObj);

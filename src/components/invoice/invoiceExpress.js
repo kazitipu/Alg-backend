@@ -1,14 +1,13 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../common/breadcrumb";
-import data from "../../assets/data/orders";
-import Datatable from "./ordersExpressMonthDatatable";
+
+import Datatable from "./invoiceExpressDatatable";
 import { getAllExpressOrdersRedux } from "../../actions/index";
-import CreateOrderModal from "./createOrderModal";
-import SelectLotModal from "./selectLotModal";
+
 import { connect } from "react-redux";
 import { Search } from "react-feather";
 import { withRouter } from "react-router-dom";
-export class OrdersExpressMonth extends Component {
+export class InvoiceExpress extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +30,7 @@ export class OrdersExpressMonth extends Component {
     console.log(allExpressOrders);
     return (
       <Fragment>
-        <Breadcrumb title="Orders" parent="Sales" />
+        <Breadcrumb title="Express" parent="Invoice" />
 
         <div className="container-fluid">
           <div className="row">
@@ -56,7 +55,7 @@ export class OrdersExpressMonth extends Component {
                         color: "#ff8084",
                       }}
                     ></i>
-                    Manage Orders
+                    Express Invoice
                   </h5>
                   <div
                     style={{
@@ -95,7 +94,7 @@ export class OrdersExpressMonth extends Component {
                             name="searchFor"
                             value={this.state.searchFor}
                             type="search"
-                            placeholder="Search Express Order"
+                            placeholder="Search Month"
                             onChange={this.handleChange}
                           />
                           <span
@@ -136,12 +135,11 @@ export class OrdersExpressMonth extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.ordersAlg.orderExpress);
   return {
     allExpressOrders: state.ordersAlg.ordersExpress,
   };
 };
 
 export default withRouter(
-  connect(mapStateToProps, { getAllExpressOrdersRedux })(OrdersExpressMonth)
+  connect(mapStateToProps, { getAllExpressOrdersRedux })(InvoiceExpress)
 );

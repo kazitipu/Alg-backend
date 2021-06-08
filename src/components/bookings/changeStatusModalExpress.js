@@ -13,30 +13,82 @@ class ChangeStatusModalExpress extends Component {
     };
   }
 
+  getMonth = async (year) => {
+    const t = new Date();
+    const monthInDigit = t.getMonth();
+
+    let month;
+    if (monthInDigit == 0) {
+      month = `January,${year}`;
+    }
+    if (monthInDigit == 1) {
+      month = `February,${year}`;
+    }
+    if (monthInDigit == 2) {
+      month = `March,${year}`;
+    }
+    if (monthInDigit == 3) {
+      month = `April,${year}`;
+    }
+    if (monthInDigit == 4) {
+      month = `May,${year}`;
+    }
+    if (monthInDigit == 5) {
+      month = `June,${year}`;
+    }
+    if (monthInDigit == 6) {
+      month = `July,${year}`;
+    }
+    if (monthInDigit == 7) {
+      month = `August,${year}`;
+    }
+    if (monthInDigit == 8) {
+      month = `September,${year}`;
+    }
+    if (monthInDigit == 9) {
+      month = `October,${year}`;
+    }
+    if (monthInDigit == 10) {
+      month = `November,${year}`;
+    }
+    if (monthInDigit == 11) {
+      month = `December,${year}`;
+    }
+    console.log(month);
+
+    return month;
+  };
+
   handleSubmit = async (event) => {
     event.preventDefault();
     const date = new Date();
     const receivedAt = date.toLocaleDateString();
+    const year = receivedAt.split("/")[2];
+    const month = await this.getMonth(year);
+    console.log(receivedAt);
     await this.props.bookingIdArray.forEach(async (bookingId) => {
       await this.props.updateBookingRedux({
         bookingId: bookingId,
         ...this.state,
         receivedAt,
+        month,
       });
       console.log(this.state.bookingStatus);
       if (this.state.bookingStatus === "Received") {
-        this.makeBookingReceived({
+        console.log(this.state.bookingStatus);
+        await makeBookingReceived({
           bookingId: bookingId,
           ...this.state,
           receivedAt,
+          month,
         });
       }
+      this.setState({
+        bookingStatus: "",
+        bangladeshOffice: "",
+      });
     });
     toast.success("successfully updated booking status");
-    this.setState({
-      bookingStatus: "",
-      bangladeshOffice: "",
-    });
     this.props.startToggleModalExpress(null);
   };
   handleChange = (e) => {

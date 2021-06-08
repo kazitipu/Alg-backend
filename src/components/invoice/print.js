@@ -1,12 +1,17 @@
 import React from "react";
 import OnlyInvoieToPrint from "./onlyInvoiceToPrint";
+import OnlyInvoieToPrintExpress from "./onlyInvoiceToPrintExpress";
 import ReactToPrint from "react-to-print";
 
 class PrintableInvoice extends React.PureComponent {
   render() {
     return (
       <div>
-        <OnlyInvoieToPrint />
+        {this.props.orderObj ? (
+          <OnlyInvoieToPrint />
+        ) : (
+          <OnlyInvoieToPrintExpress />
+        )}
       </div>
     );
   }
@@ -32,7 +37,10 @@ class Print extends React.PureComponent {
           }}
           content={() => this.componentRef}
         />
-        <PrintableInvoice ref={(el) => (this.componentRef = el)} />
+        <PrintableInvoice
+          ref={(el) => (this.componentRef = el)}
+          orderObj={this.props.orderObj}
+        />
       </div>
     );
   }

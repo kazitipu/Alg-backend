@@ -1,14 +1,14 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../common/breadcrumb";
-import data from "../../assets/data/orders";
-import Datatable from "./ordersExpressMonthDatatable";
-import { getAllExpressOrdersRedux } from "../../actions/index";
-import CreateOrderModal from "./createOrderModal";
-import SelectLotModal from "./selectLotModal";
+
+import Datatable from "./invoiceExpressByMonthDatatable";
+import { getAllReceivedExpressBookingsRedux } from "../../actions/index";
+
 import { connect } from "react-redux";
 import { Search } from "react-feather";
+
 import { withRouter } from "react-router-dom";
-export class OrdersExpressMonth extends Component {
+export class InvoiceExpressByMonth extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +18,9 @@ export class OrdersExpressMonth extends Component {
 
   componentDidMount = async () => {
     console.log(this.props);
-    await this.props.getAllExpressOrdersRedux();
+    await this.props.getAllReceivedExpressBookingsRedux(
+      this.props.match.params.month
+    );
     this.setState({ allExpressOrders: this.props.allExpressOrders });
   };
 
@@ -28,10 +30,10 @@ export class OrdersExpressMonth extends Component {
 
   render() {
     const { allExpressOrders } = this.state;
-    console.log(allExpressOrders);
+    const { month } = this.props.match.params;
     return (
       <Fragment>
-        <Breadcrumb title="Orders" parent="Sales" />
+        <Breadcrumb title="express" parent="invoice" />
 
         <div className="container-fluid">
           <div className="row">
@@ -56,7 +58,7 @@ export class OrdersExpressMonth extends Component {
                         color: "#ff8084",
                       }}
                     ></i>
-                    Manage Orders
+                    Invoice
                   </h5>
                   <div
                     style={{
@@ -135,13 +137,14 @@ export class OrdersExpressMonth extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  console.log(state.ordersAlg.orderExpress);
+const mapStateToProps = (state, ownProps) => {
   return {
     allExpressOrders: state.ordersAlg.ordersExpress,
   };
 };
 
 export default withRouter(
-  connect(mapStateToProps, { getAllExpressOrdersRedux })(OrdersExpressMonth)
+  connect(mapStateToProps, { getAllReceivedExpressBookingsRedux })(
+    InvoiceExpressByMonth
+  )
 );

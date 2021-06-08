@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import Breadcrumb from "../common/breadcrumb";
 import data from "../../assets/data/orders";
 import Datatable from "./ordersExpressDatatable";
-import { getAllExpressOrdersRedux } from "../../actions/index";
+import { getAllReceivedExpressBookingsRedux } from "../../actions/index";
 import CreateOrderModal from "./createOrderModal";
 import SelectLotModal from "./selectLotModal";
 import { connect } from "react-redux";
@@ -19,7 +19,9 @@ export class OrdersExpress extends Component {
 
   componentDidMount = async () => {
     console.log(this.props);
-    await this.props.getAllExpressOrdersRedux();
+    await this.props.getAllReceivedExpressBookingsRedux(
+      this.props.match.params.month
+    );
     this.setState({ allExpressOrders: this.props.allExpressOrders });
   };
 
@@ -140,18 +142,13 @@ export class OrdersExpress extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const allOrders = state.ordersAlg.ordersExpress
-    .filter((order) => order.month == ownProps.match.params.month)
-    .map((order) => order.allOrders);
-
-  var allOrdersArray = [].concat.apply([], allOrders);
-  console.log(allOrdersArray);
-
   return {
-    allExpressOrders: allOrdersArray,
+    allExpressOrders: state.ordersAlg.ordersExpress,
   };
 };
 
 export default withRouter(
-  connect(mapStateToProps, { getAllExpressOrdersRedux })(OrdersExpress)
+  connect(mapStateToProps, { getAllReceivedExpressBookingsRedux })(
+    OrdersExpress
+  )
 );

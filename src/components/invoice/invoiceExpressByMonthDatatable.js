@@ -92,6 +92,12 @@ export class Datatable extends Component {
     }
   };
 
+  handleInvoiceButtonClick = async (bookingId) => {
+    this.props.history.push(
+      `${process.env.PUBLIC_URL}/invoice-by-bookingId/${bookingId}`
+    );
+  };
+
   renderOtherInformation = (array, row) => {
     if (array.length > 0) {
       const bookingObj = array.find(
@@ -686,6 +692,34 @@ export class Datatable extends Component {
               ""
             )}
           </>
+        ),
+        style: {
+          textAlign: "center",
+        },
+        sortable: false,
+      },
+      {
+        Header: <b>Invoice</b>,
+        id: "delete",
+        accessor: (str) => "delete",
+        Cell: (row) => (
+          <div>
+            <div
+              style={{
+                cursor: "pointer",
+                padding: "7px 5px",
+                color: "white",
+                backgroundColor: "darkgreen",
+                border: "1px solid white",
+                borderRadius: "1rem",
+              }}
+              onClick={() => {
+                this.handleInvoiceButtonClick(row.original["Booking Id"]);
+              }}
+            >
+              <i className="icofont-tick-mark">&nbsp;ready to pay</i>
+            </div>
+          </div>
         ),
         style: {
           textAlign: "center",
