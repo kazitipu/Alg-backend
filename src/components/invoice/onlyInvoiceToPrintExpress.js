@@ -249,7 +249,7 @@ export class OnlyInvoieToPrintExpress extends Component {
             <div className="payment-info">
               <div style={{ marginBottom: "10px" }}>Receiver's Information</div>
               <div style={{ marginBottom: "3px" }}>
-                Name: {bookingObj && bookingObj.receiversName}{" "}
+                Name: {bookingObj && bookingObj.receiversName}
               </div>
 
               <div style={{ marginBottom: "3px" }}>

@@ -3,7 +3,7 @@ import Breadcrumb from "../common/breadcrumb";
 import data from "../../assets/data/orders";
 import Datatable from "./ordersExpressDatatable";
 import { getAllReceivedExpressBookingsRedux } from "../../actions/index";
-import CreateOrderModal from "./createOrderModal";
+import ChangeExpressStatusModal from "./changeExpressStatusModal";
 import SelectLotModal from "./selectLotModal";
 import { connect } from "react-redux";
 import { Search } from "react-feather";
@@ -14,6 +14,8 @@ export class OrdersExpress extends Component {
     super(props);
     this.state = {
       allExpressOrders: [],
+      toggleModal: true,
+      singleParcel: null,
     };
   }
 
@@ -22,11 +24,33 @@ export class OrdersExpress extends Component {
     await this.props.getAllReceivedExpressBookingsRedux(
       this.props.match.params.month
     );
-    this.setState({ allExpressOrders: this.props.allExpressOrders });
+    this.setState({
+      allExpressOrders: this.props.allExpressOrders.filter(
+        (order) => order.orderStatus !== "Delivered"
+      ),
+    });
   };
 
-  componentWillReceiveProps = (nextProps) => {
-    this.setState({ allExpressOrders: nextProps.allExpressOrders });
+  componentWillReceiveProps = async (nextProps) => {
+    this.setState({
+      allExpressOrders: nextProps.allExpressOrders.filter(
+        (order) => order.orderStatus !== "Delivered"
+      ),
+    });
+  };
+
+  startToggleModal = async (parcelObj) => {
+    if (parcelObj == null) {
+      this.setState({
+        toggleModal: !this.state.toggleModal,
+        singleParcel: null,
+      });
+    } else {
+      this.setState({
+        toggleModal: !this.state.toggleModal,
+        singleParcel: parcelObj,
+      });
+    }
   };
 
   render() {
@@ -34,6 +58,12 @@ export class OrdersExpress extends Component {
     const { month } = this.props.match.params;
     return (
       <Fragment>
+        <ChangeExpressStatusModal
+          toggleModal={this.state.toggleModal}
+          startToggleModal={this.startToggleModal}
+          singleParcel={this.state.singleParcel}
+          {...this.props}
+        />
         <Breadcrumb title="express" parent="orders" />
 
         <div className="container-fluid">
@@ -130,6 +160,7 @@ export class OrdersExpress extends Component {
                     pageSize={10}
                     pagination={true}
                     class="-striped -highlight"
+                    startToggleModal={this.startToggleModal}
                   />
                 </div>
               </div>

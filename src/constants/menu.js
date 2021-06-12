@@ -149,6 +149,11 @@ export const MENUITEMSFORADMIN = [
         title: "Freight",
         type: "link",
       },
+      {
+        path: "/delivery-express",
+        title: "Express",
+        type: "link",
+      },
     ],
   },
   {
@@ -407,6 +412,11 @@ export const MENUITEMSFORAGENT = [
       {
         path: "/delivery/Freight",
         title: "Freight",
+        type: "link",
+      },
+      {
+        path: "/delivery-express",
+        title: "Express",
         type: "link",
       },
     ],

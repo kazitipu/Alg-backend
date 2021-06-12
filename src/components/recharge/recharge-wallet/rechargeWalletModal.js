@@ -31,7 +31,7 @@ class RechargeWalletModal extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { userObj } = this.props;
+    const { userObj, admin } = this.props;
     console.log(this.props);
     if (userObj) {
       let rechargedAt = new Date().toLocaleDateString();
@@ -68,7 +68,7 @@ class RechargeWalletModal extends Component {
         rechargedAt,
         day,
         rechargeId,
-        rechargeBy: "Md tipu",
+        rechargeBy: admin ? admin.name : "",
       });
       toast.success(
         `Recharge succesful to ${userObj.Name} of amount ${this.state.amount}`
@@ -357,6 +357,7 @@ class RechargeWalletModal extends Component {
 const mapStateToProps = (state) => {
   return {
     allUsers: state.users.users,
+    admin: state.admins.currentAdmin,
   };
 };
 export default connect(mapStateToProps, {

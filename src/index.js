@@ -37,6 +37,8 @@ import PaymentsByDate from "./components/payments/paymentsByDate";
 // delivery
 import DeliveryLots from "./components/delivery/deliveryLots";
 import DeliveryD2DFreight from "./components/delivery/deliveryD2DFreight";
+import DeliveryExpressMonth from "./components/delivery/deliveryExpressMonth";
+import DeliveryExpress from "./components/delivery/deliveryExpress";
 
 // refund
 import RefundRequest from "./components/refund/refundRequest";
@@ -143,9 +145,23 @@ class Root extends Component {
                 />
                 <Route
                   exact
-                  path={`${process.env.PUBLIC_URL}/expressOrder/:month`}
-                  component={OrdersExpress}
+                  path={`${process.env.PUBLIC_URL}/delivery-express`}
+                  component={DeliveryExpressMonth}
                 />
+
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/calculation/express`}
+                  component={(props) => (
+                    <OrdersExpressMonth props={props} calculation={true} />
+                  )}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/delivery-express/:month`}
+                  component={DeliveryExpress}
+                />
+
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/orders/:shipmentMethod`}
@@ -157,13 +173,7 @@ class Root extends Component {
                   path={`${process.env.PUBLIC_URL}/orders/d2d-freight/:shipmentMethodLotNo`}
                   component={OrdersD2DFreight}
                 />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/calculation/express`}
-                  component={(props) => (
-                    <OrdersExpressMonth props={props} calculation={true} />
-                  )}
-                />
+
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/calcualation/expressOrder/:month`}
@@ -173,12 +183,17 @@ class Root extends Component {
                 />
                 <Route
                   exact
+                  path={`${process.env.PUBLIC_URL}/expressOrder/:month`}
+                  component={OrdersExpress}
+                />
+
+                <Route
+                  exact
                   path={`${process.env.PUBLIC_URL}/calculation/:shipmentMethod`}
                   component={(props) => (
                     <OrdersLots props={props} calculation={true} />
                   )}
                 />
-
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/calculation/d2d-freight/:shipmentMethodLotNo`}
@@ -186,7 +201,6 @@ class Root extends Component {
                     <OrdersD2DFreight props={props} calculation={true} />
                   )}
                 />
-
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/invoice-d2d-freight/:shipmentMethodLotNo`}

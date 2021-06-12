@@ -67,12 +67,24 @@ class ChangeStatusModalExpress extends Component {
     const month = await this.getMonth(year);
     console.log(receivedAt);
     await this.props.bookingIdArray.forEach(async (bookingId) => {
-      await this.props.updateBookingRedux({
-        bookingId: bookingId,
-        ...this.state,
-        receivedAt,
-        month,
-      });
+      if (this.state.bookingStatus === "Received") {
+        await this.props.updateBookingRedux({
+          bookingId: bookingId,
+          ...this.state,
+          receivedAt,
+          month,
+          orderStatus: "Local Warehouse",
+        });
+      } else {
+        await this.props.updateBookingRedux({
+          bookingId: bookingId,
+          ...this.state,
+          rejectedAt: receivedAt,
+          month,
+          orderStatus: "Rejected",
+        });
+      }
+
       console.log(this.state.bookingStatus);
       if (this.state.bookingStatus === "Received") {
         console.log(this.state.bookingStatus);

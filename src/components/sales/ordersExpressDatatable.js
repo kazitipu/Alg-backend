@@ -331,6 +331,60 @@ export class Datatable extends Component {
     }
   };
 
+  renderOrderStatus = (myData, bookingId) => {
+    if (myData.length > 0) {
+      const bookingObj = myData.find(
+        (booking) => booking.bookingId === bookingId
+      );
+      console.log(bookingObj);
+      let backgroundColor;
+      let icofont;
+      if (bookingObj.orderStatus === "Bangladesh Customs") {
+        backgroundColor = "#f99322";
+        icofont = "icofont-hand";
+      }
+      if (bookingObj.orderStatus === "Local Warehouse") {
+        backgroundColor = "darkgreen";
+        icofont = "icofont-tick-boxed";
+      }
+      if (bookingObj.orderStatus === "Ready to Fly") {
+        backgroundColor = "#b11ad8";
+        icofont = "icofont-airplane-alt";
+      }
+      if (bookingObj.orderStatus === "Abroad Customs") {
+        backgroundColor = "#ffbc58";
+        icofont = "icofont-police";
+      }
+      if (bookingObj.orderStatus === "Abroad Warehouse") {
+        backgroundColor = "#13c9ca";
+        icofont = "icofont-building-alt";
+      }
+      if (bookingObj.orderStatus === "Delivered") {
+        backgroundColor = "green";
+        icofont = "icofont-checked";
+      }
+      if (bookingObj.orderStatus === "Rejected") {
+        backgroundColor = "#13c9ca";
+        icofont = "icofont-close";
+      }
+      return (
+        <div
+          className=" icon-left no-shadow align-self-center my_parcel_update_button"
+          style={{
+            fontSize: "85%",
+            fontFamily: "sans-serif",
+
+            padding: "7px",
+            color: backgroundColor,
+          }}
+        >
+          <i className={icofont}></i> {bookingObj.orderStatus}
+        </div>
+      );
+    }
+    return null;
+  };
+
   render() {
     const { pageSize, myClass, multiSelectOption, pagination } = this.props;
     console.log(this.props);
@@ -660,32 +714,62 @@ export class Datatable extends Component {
         },
         sortable: false,
       },
+
       {
-        Header: <b>Booking Status</b>,
+        Header: <b>Order Status</b>,
         id: "orderDetails",
         accessor: (str) => "orderDetails",
         Cell: (row) => (
-          <>
-            {myData.length > 0 ? (
-              <button
-                className={`btn ${
-                  myData.find(
-                    (booking) => booking.bookingId == row.original["Booking Id"]
-                  ).bookingStatus == "Pending"
-                    ? "btn-secondary"
-                    : "btn-success"
-                }`}
-              >
-                {
-                  myData.find(
-                    (booking) => booking.bookingId == row.original["Booking Id"]
-                  ).bookingStatus
-                }
-              </button>
-            ) : (
-              ""
-            )}
-          </>
+          <>{this.renderOrderStatus(myData, row.original["Booking Id"])}</>
+        ),
+        style: {
+          textAlign: "center",
+        },
+        sortable: false,
+      },
+      {
+        Header: <b>Change Status</b>,
+        id: "delete",
+        accessor: (str) => "delete",
+        Cell: (row) => (
+          <div>
+            {/* <span
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                let data = myData;
+                data.splice(row.index, 1);
+                this.setState({ myData: data });
+                console.log(row);
+
+                toast.success("Successfully Deleted !");
+              }}
+            >
+              <i
+                className="fa fa-trash"
+                style={{
+                  width: 35,
+                  fontSize: 20,
+                  padding: 11,
+                  color: "#e4566e",
+                }}
+              ></i>
+            </span> */}
+
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() => this.props.startToggleModal(row.original)}
+            >
+              <i
+                className="fa fa-pencil"
+                style={{
+                  width: 35,
+                  fontSize: 20,
+                  padding: 11,
+                  color: "rgb(68 0 97)",
+                }}
+              ></i>
+            </span>
+          </div>
         ),
         style: {
           textAlign: "center",
