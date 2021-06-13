@@ -267,6 +267,11 @@ export const MENUITEMSFORADMIN = [
         title: "Notice",
         type: "link",
       },
+      {
+        path: "/communication/intro-modal",
+        title: "Intro Modal",
+        type: "link",
+      },
     ],
   },
 
@@ -530,6 +535,11 @@ export const MENUITEMSFORAGENT = [
       {
         path: "/communication/notice",
         title: "Notice",
+        type: "link",
+      },
+      {
+        path: "/communication/intro-modal",
+        title: "Intro Modal",
         type: "link",
       },
     ],

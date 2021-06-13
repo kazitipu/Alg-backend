@@ -75,6 +75,7 @@ import SearchedOrder from "./components/searched-order/searched-order";
 // communication
 import CommunicationByLots from "./components/communication/lots/lotList";
 import CommunicationByCustomers from "./components/communication/customers/customerList";
+import IntroModal from "./components/communication/introModal/introModalList";
 import Notice from "./components/notice/notice";
 
 // recharge
@@ -299,6 +300,11 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/communication/notice`}
                   component={Notice}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/communication/intro-modal`}
+                  component={IntroModal}
                 />
 
                 {/* recharge  */}

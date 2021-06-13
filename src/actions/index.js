@@ -38,8 +38,10 @@ import {
   getAllRefundRequest,
   updateRefund,
   createNotice,
+  createIntro,
   updateNotice,
   getAllNotices,
+  getAllIntros,
   uploadImage,
   updateAdmin,
 } from "../firebase/firebase.utils";
@@ -392,10 +394,19 @@ export const createNoticeRedux = (noticeObj) => async (dispatch) => {
   const createdNoticeObj = await createNotice(noticeObj);
   dispatch({ type: "CREATE_NOTICE", payload: createdNoticeObj });
 };
+export const createIntroRedux = (introObj) => async (dispatch) => {
+  const createdIntroObj = await createIntro(introObj);
+  dispatch({ type: "CREATE_INTRO", payload: createdIntroObj });
+};
 
 export const getAllNoticesRedux = () => async (dispatch) => {
   const noticesArray = await getAllNotices();
   dispatch({ type: "GET_ALL_NOTICES", payload: noticesArray });
+};
+
+export const getAllIntrosRedux = () => async (dispatch) => {
+  const introsArray = await getAllIntros();
+  dispatch({ type: "GET_ALL_INTROS", payload: introsArray });
 };
 
 export const updateNoticeRedux = (noticeObj) => async (dispatch) => {

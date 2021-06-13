@@ -79,6 +79,27 @@ export const createNotice = async (noticeObj) => {
     alert("there is already a Notice with similar Id, please try again later");
   }
 };
+export const createIntro = async (introObj) => {
+  const introRef = firestore.doc(`intros/${introObj.id}`);
+  const snapShot = await introRef.get();
+  delete introObj.file;
+  if (!snapShot.exists) {
+    try {
+      await introRef.set({
+        ...introObj,
+      });
+
+      const uploadedSnapShot = await introRef.get();
+      return uploadedSnapShot.data();
+    } catch (error) {
+      alert(error);
+    }
+  } else {
+    alert(
+      "there is already an Intro image with similar Id, please try again later"
+    );
+  }
+};
 export const uploadExpressRatesDocuments = async (countryObj) => {
   const countryRef = firestore.doc(
     `expressRatesDocuments/${countryObj.country}`
@@ -358,6 +379,21 @@ export const uploadImageQcCheck = async (file) => {
     return null;
   }
 };
+export const uploadImageIntro = async (file) => {
+  const imageRef = storage.ref(`intro/${file.name}`);
+  try {
+    await imageRef.put(file);
+    var imgUrl = [];
+    await imageRef.getDownloadURL().then((url) => {
+      console.log(url);
+      imgUrl.push(url);
+    });
+
+    return imgUrl[0];
+  } catch (error) {
+    return null;
+  }
+};
 
 export const updateUserStatus = async (userObj) => {
   const userRef = firestore.doc(`users/${userObj.uid}`);
@@ -489,6 +525,19 @@ export const getAllNotices = async () => {
       noticesArray.push(doc.data());
     });
     return noticesArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+export const getAllIntros = async () => {
+  const introsCollectionRef = firestore.collection("intros");
+  try {
+    const intros = await introsCollectionRef.get();
+    const introsArray = [];
+    intros.forEach((doc) => {
+      introsArray.push(doc.data());
+    });
+    return introsArray;
   } catch (error) {
     alert(error);
   }
@@ -908,6 +957,14 @@ export const deleteNotice = async (id) => {
   const noticeRef = firestore.doc(`notices/${id}`);
   try {
     await noticeRef.delete();
+  } catch (error) {
+    alert(error);
+  }
+};
+export const deleteIntro = async (id) => {
+  const introRef = firestore.doc(`intros/${id}`);
+  try {
+    await introRef.delete();
   } catch (error) {
     alert(error);
   }
