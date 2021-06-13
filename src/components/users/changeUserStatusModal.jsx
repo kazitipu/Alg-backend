@@ -99,9 +99,10 @@ class ChangeUserStatusModal extends Component {
                                 required
                               >
                                 <option value="">Select Status</option>
-                                <option value="diamond">Diamond</option>
-                                <option value="gold">Gold</option>
-                                <option value="silver">Silver</option>
+                                <option value="Vip Partner">Vip Partner</option>
+                                <option value="Corporate">Corporate</option>
+                                <option value="Agent">Agent</option>
+                                <option value="Customer">Customer</option>
                               </select>
                             </div>
 

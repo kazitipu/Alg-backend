@@ -123,7 +123,7 @@ class ChangeStatusModal extends Component {
                                     marginBottom: "5px",
                                   }}
                                 >
-                                  Select China Office
+                                  Select Office Address
                                 </label>
                                 <select
                                   title="Please choose a package"
@@ -137,9 +137,25 @@ class ChangeStatusModal extends Component {
                                   required
                                 >
                                   <option value="">Select Address</option>
-                                  <option value="Address-1">Address-1</option>
-                                  <option value="Address-2">Address-2</option>
-                                  <option value="Address-3">Address-3</option>
+                                  <option
+                                    value="BD (Fariha:+8801885994310) 37/2 Pritom-Zaman Tower, 10th Floor, suite 6A, Culvert Road, Dhaka-1000. Bangladesh
+"
+                                  >
+                                    BD (Fariha:+8801885994310) 37/2 Pritom-Zaman
+                                    Tower, 10th Floor, suite 6A, Culvert Road,
+                                    Dhaka-1000. Bangladesh.
+                                  </option>
+                                  <option value="CHINA-AIR (David: +8618102777364) Warehouse no-77, Si She Erjie, Yinzxi village, Taihe town, Baiyun District, Guangzhou, Guangdong Province, China.">
+                                    CHINA-AIR (David: +8618102777364) Warehouse
+                                    no-77, Si She Erjie, Yinzxi village, Taihe
+                                    town, Baiyun District, Guangzhou, Guangdong
+                                    Province, China.
+                                  </option>
+                                  <option value="THAILAND (NOK :+66 02-6239481-3) 314/1-2 ถ.จักรเพชร แขวงวังบูรพาภิรมย์​ เขตพระนคร กรุงเทพฯ​  10200">
+                                    THAILAND (NOK :+66 02-6239481-3) 314/1-2
+                                    ถ.จักรเพชร แขวงวังบูรพาภิรมย์​ เขตพระนคร
+                                    กรุงเทพฯ​ 10200
+                                  </option>
                                   <option value="Address-4">Address-4</option>
                                   <option value="Address-5">Address-5</option>
                                 </select>

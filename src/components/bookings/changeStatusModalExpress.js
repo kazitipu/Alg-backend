@@ -9,7 +9,6 @@ class ChangeStatusModalExpress extends Component {
     super(props);
     this.state = {
       bookingStatus: "",
-      bangladeshOffice: "",
     };
   }
 
@@ -97,7 +96,6 @@ class ChangeStatusModalExpress extends Component {
       }
       this.setState({
         bookingStatus: "",
-        bangladeshOffice: "",
       });
     });
     toast.success("successfully updated booking status");
@@ -190,36 +188,6 @@ class ChangeStatusModalExpress extends Component {
                                   <option value="">Select Status</option>
                                   <option value="Received">Received</option>
                                   <option value="Reject">Reject</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div className="form-row mb-4">
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "5px",
-                                  }}
-                                >
-                                  Received Bangladesh Office
-                                </label>
-                                <select
-                                  title="Please choose a package"
-                                  required
-                                  name="bangladeshOffice"
-                                  className="custom-select"
-                                  aria-required="true"
-                                  aria-invalid="false"
-                                  onChange={this.handleChange}
-                                  value={this.state.bangladeshOffice}
-                                  required
-                                >
-                                  <option value="">Select Address</option>
-                                  <option value="Address-1">Address-1</option>
-                                  <option value="Address-2">Address-2</option>
-                                  <option value="Address-3">Address-3</option>
-                                  <option value="Address-4">Address-4</option>
-                                  <option value="Address-5">Address-5</option>
                                 </select>
                               </div>
                             </div>

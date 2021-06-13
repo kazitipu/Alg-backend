@@ -200,6 +200,34 @@ export class Datatable extends Component {
                   </div>
                 );
               }
+              if (userObj.status === "Vip Partner") {
+                return (
+                  <div style={{ color: "darkViolet" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+              if (userObj.status === "Corporate") {
+                return (
+                  <div style={{ color: "gold" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+              if (userObj.status === "Agent") {
+                return (
+                  <div style={{ color: "green" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+              if (userObj.status === "Customer") {
+                return (
+                  <div style={{ color: "darkorange" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
             } else {
               return <div></div>;
             }
