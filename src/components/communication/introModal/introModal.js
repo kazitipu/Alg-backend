@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { createIntroRedux } from "../../../actions/index";
 import man from "../../sales/assets/plus image.jpeg";
 import { uploadImageIntro } from "../../../firebase/firebase.utils";
-class TextOrMailModal extends Component {
+class IntroModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -213,4 +213,4 @@ const mapStateToProps = (state) => {
 };
 export default connect(mapStateToProps, {
   createIntroRedux,
-})(TextOrMailModal);
+})(IntroModal);

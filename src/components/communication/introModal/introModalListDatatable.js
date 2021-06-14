@@ -4,7 +4,7 @@ import "react-table/react-table.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { connect } from "react-redux";
-import { deleteIntro } from "../../../firebase/firebase.utils";
+import { deleteIntro, selectIntro } from "../../../firebase/firebase.utils";
 export class Datatable extends Component {
   constructor(props) {
     super(props);
@@ -14,16 +14,55 @@ export class Datatable extends Component {
     };
   }
 
+  componentDidMount = () => {
+    const { myData } = this.props;
+    const selectedIntro =
+      myData.length > 0 ? myData.find((intro) => intro.selected) : null;
+    this.setState(
+      {
+        checkedValues: selectedIntro ? [selectedIntro.id] : [],
+      },
+      () => {
+        console.log(this.state.checkedValues);
+      }
+    );
+  };
+
+  componentWillReceiveProps = (nextProps) => {
+    const { myData } = nextProps;
+    const selectedIntro =
+      myData.length > 0 ? myData.find((intro) => intro.selected) : null;
+    this.setState(
+      {
+        checkedValues: selectedIntro ? [selectedIntro.id] : [],
+      },
+      () => {
+        console.log(this.state.checkedValues);
+      }
+    );
+  };
+
   selectRow = (e, i) => {
     if (!e.target.checked) {
-      this.setState({
-        checkedValues: this.state.checkedValues.filter((item, j) => i !== item),
-      });
+      this.setState(
+        {
+          checkedValues: this.state.checkedValues.filter(
+            (item, j) => i !== item
+          ),
+        },
+        () => {
+          console.log(this.state.checkedValues);
+        }
+      );
     } else {
-      this.state.checkedValues.push(i);
-      this.setState({
-        checkedValues: this.state.checkedValues,
-      });
+      this.setState(
+        {
+          checkedValues: [i],
+        },
+        async () => {
+          await selectIntro(i);
+        }
+      );
     }
   };
 
@@ -45,12 +84,6 @@ export class Datatable extends Component {
       myData.forEach((intro) => {
         newData.push({
           Id: intro.id,
-          Image: (
-            <img
-              style={{ width: "150px", height: "100px" }}
-              src={intro ? intro.imageUrl : ""}
-            ></img>
-          ),
         });
       });
       return (
@@ -93,12 +126,6 @@ export class Datatable extends Component {
       myData.forEach((intro) => {
         newData.push({
           Id: intro.id,
-          Image: (
-            <img
-              style={{ width: "150px", height: "100px" }}
-              src={intro ? intro.imageUrl : ""}
-            ></img>
-          ),
         });
       });
     }
@@ -130,39 +157,102 @@ export class Datatable extends Component {
         },
       });
     }
-    columns.push({
-      Header: <b>Action</b>,
-      id: "delete",
-      accessor: (str) => "delete",
-      Cell: (row) => (
-        <div>
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={async () => {
-              let data = myData;
-              data.splice(row.index, 1);
-              this.setState({ myData: data });
-              console.log(row);
-              await deleteIntro(row.original.Id);
-            }}
-          >
-            <i
-              className="fa fa-trash"
-              style={{
-                width: 35,
-                fontSize: 20,
-                padding: 11,
-                color: "#e4566e",
-              }}
-            ></i>
-          </span>
-        </div>
-      ),
-      style: {
-        textAlign: "center",
+    columns.push(
+      {
+        Header: <b>Image</b>,
+        id: "delete",
+        accessor: (str) => "delete",
+        Cell: (row) => {
+          const introObj =
+            myData.length > 0
+              ? myData.find((intro) => intro.id === row.original["Id"])
+              : null;
+          return (
+            <a target="_blank" href={introObj ? introObj.imageUrl : ""}>
+              <img
+                style={{
+                  width: "150px",
+                  height: "100px",
+                  borderRadius: 0,
+                }}
+                src={introObj ? introObj.imageUrl : ""}
+              ></img>
+            </a>
+          );
+        },
+        style: {
+          textAlign: "center",
+        },
+        sortable: false,
       },
-      sortable: false,
-    });
+      {
+        Header: <b>Active</b>,
+        id: "delete",
+        accessor: (str) => "delete",
+        sortable: false,
+        style: {
+          textAlign: "center",
+        },
+        Cell: (row) => {
+          const introObj =
+            myData.length > 0
+              ? myData.find((intro) => intro.id === row.original["Id"])
+              : null;
+          console.log(this.state.checkedValues.includes(introObj.id));
+          return (
+            <div>
+              <span>
+                <input
+                  type="checkbox"
+                  name={introObj.id}
+                  defaultChecked={this.state.checkedValues.includes(
+                    introObj.id
+                  )}
+                  onChange={(e) => this.selectRow(e, introObj.id)}
+                />
+              </span>
+            </div>
+          );
+        },
+        accessor: key,
+        style: {
+          textAlign: "center",
+        },
+      },
+      {
+        Header: <b>Action</b>,
+        id: "delete",
+        accessor: (str) => "delete",
+        Cell: (row) => (
+          <div>
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={async () => {
+                let data = myData;
+                data.splice(row.index, 1);
+                this.setState({ myData: data });
+                console.log(row);
+                await deleteIntro(row.original.Id);
+              }}
+            >
+              <i
+                className="fa fa-trash"
+                style={{
+                  width: 35,
+                  fontSize: 20,
+                  padding: 11,
+                  color: "#e4566e",
+                }}
+              ></i>
+            </span>
+          </div>
+        ),
+        style: {
+          textAlign: "center",
+        },
+        sortable: false,
+      }
+    );
 
     return (
       <Fragment>

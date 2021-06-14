@@ -82,6 +82,7 @@ export const createNotice = async (noticeObj) => {
 export const createIntro = async (introObj) => {
   const introRef = firestore.doc(`intros/${introObj.id}`);
   const snapShot = await introRef.get();
+
   delete introObj.file;
   if (!snapShot.exists) {
     try {
@@ -965,6 +966,30 @@ export const deleteIntro = async (id) => {
   const introRef = firestore.doc(`intros/${id}`);
   try {
     await introRef.delete();
+  } catch (error) {
+    alert(error);
+  }
+};
+export const selectIntro = async (id) => {
+  const introRef = firestore.doc(`intros/${id}`);
+  const introCollectionRef = firestore
+    .collection("intros")
+    .where("selected", "==", true);
+  const introCollection = await introCollectionRef.get();
+  introCollection.forEach(async (intro) => {
+    const previousIntroRef = firestore.doc(`intros/${intro.data().id}`);
+    try {
+      await previousIntroRef.update({
+        selected: false,
+      });
+    } catch (error) {
+      alert(error);
+    }
+  });
+  try {
+    await introRef.update({
+      selected: true,
+    });
   } catch (error) {
     alert(error);
   }

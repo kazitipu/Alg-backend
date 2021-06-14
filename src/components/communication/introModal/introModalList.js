@@ -38,7 +38,7 @@ export class IntroModal extends Component {
           startToggleModal={this.startToggleModal}
           noticeObj={this.state.noticeObj}
         />
-        <Breadcrumb title="User List" parent="Users" />
+        <Breadcrumb title="Intro Modal" parent="Communication" />
         <div className="container-fluid">
           <div className="card">
             <div
@@ -60,7 +60,7 @@ export class IntroModal extends Component {
                     color: "#ff8084",
                   }}
                 ></i>
-                Notices
+                Intro Modal
               </h5>
               <div
                 style={{
