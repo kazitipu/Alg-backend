@@ -3,9 +3,40 @@ import Breadcrumb from "../common/breadcrumb";
 import Tabset_user from "./tabset-user";
 import { connect } from "react-redux";
 import man from "../../assets/images/dashboard/user2.jpg";
+import {
+  getAllBookingsOfSingleUserRedux,
+  getAllParcelsOfSingleUserRedux,
+  getAllRechargeRequestsOfSingleUserRedux,
+} from "../../actions";
 export class DetailUser extends Component {
+  componentDidMount = () => {
+    const {
+      user,
+      getAllBookingsOfSingleUserRedux,
+      getAllParcelsOfSingleUserRedux,
+      getAllRechargeRequestsOfSingleUserRedux,
+    } = this.props;
+    if (user) {
+      getAllBookingsOfSingleUserRedux(user.uid);
+      getAllParcelsOfSingleUserRedux(user.uid);
+      getAllRechargeRequestsOfSingleUserRedux(user.uid);
+    }
+  };
+  componentWillReceiveProps = (nextProps) => {
+    const {
+      user,
+      getAllBookingsOfSingleUserRedux,
+      getAllParcelsOfSingleUserRedux,
+      getAllRechargeRequestsOfSingleUserRedux,
+    } = nextProps;
+    if (user) {
+      getAllBookingsOfSingleUserRedux(user.uid);
+      getAllParcelsOfSingleUserRedux(user.uid);
+      getAllRechargeRequestsOfSingleUserRedux(user.uid);
+    }
+  };
   render() {
-    const { user } = this.props;
+    const { user, rechargesArray, parcelsArray, bookingsArray } = this.props;
     console.log(user);
     return (
       <Fragment>
@@ -53,7 +84,12 @@ export class DetailUser extends Component {
                   </div>
                 </div>
                 <div className="card-body">
-                  <Tabset_user user={user} />
+                  <Tabset_user
+                    user={user}
+                    rechargesArray={rechargesArray}
+                    bookingsArray={bookingsArray}
+                    parcelsArray={parcelsArray}
+                  />
                 </div>
               </div>
             </div>
@@ -70,7 +106,14 @@ const mapStateToProps = (state, ownProps) => {
     user: state.users.users.find(
       (user) => user.uid === ownProps.match.params.userId
     ),
+    parcelsArray: state.users.parcelsArray,
+    bookingsArray: state.users.bookingsArray,
+    rechargesArray: state.users.rechargesArray,
   };
 };
 
-export default connect(mapStateToProps)(DetailUser);
+export default connect(mapStateToProps, {
+  getAllBookingsOfSingleUserRedux,
+  getAllParcelsOfSingleUserRedux,
+  getAllRechargeRequestsOfSingleUserRedux,
+})(DetailUser);

@@ -230,6 +230,7 @@ export const changeLotToMyParcelOfUser = async (orderObj, previousParcelId) => {
 
 export const rechargeUser = async (rechargeObj) => {
   // first upload the recharge day in rechargeDays
+  console.log(rechargeObj);
   try {
     const rechargeDayRef = firestore.doc(
       `rechargeDays/${rechargeObj.rechargedAt}`
@@ -255,66 +256,118 @@ export const rechargeUser = async (rechargeObj) => {
       }
     }
 
-    // upload full recharge object inside that day of recharge History
-    const dayRechargesRef = firestore.doc(
-      `rechargeHistory/${rechargeObj.rechargedAt}`
+    // update rechargeRequest object to recharged or rejected
+    const updatedRechargeRequestObj = await updateRechargeRequestStatus(
+      rechargeObj
     );
-    const snapShotDayRecharge = await dayRechargesRef.get();
-    if (!snapShotDayRecharge.exists) {
+
+    // upload full recharge object inside that day of recharge History
+    const rechargeRef = firestore.doc(
+      `rechargeHistory/${rechargeObj.rechargeId}`
+    );
+    const recharge = await rechargeRef.get();
+    if (!recharge.exists) {
       try {
-        await dayRechargesRef.set({
-          rechargedAt: rechargeObj.rechargedAt,
-          day: rechargeObj.day,
-          recharges: [rechargeObj],
+        await rechargeRef.set({
+          ...rechargeObj,
         });
       } catch (error) {
         alert(error);
       }
     } else {
-      try {
-        if (
-          snapShotDayRecharge
-            .data()
-            .recharges.find(
-              (recharge) => recharge.rechargeId == rechargeObj.rechargeId
-            )
-        ) {
-          alert("simiilar rechargeId already exist");
-        } else {
-          await dayRechargesRef.update({
-            rechargedAt: rechargeObj.rechargedAt,
-            day: rechargeObj.day,
-            recharges: [rechargeObj, ...snapShotDayRecharge.data().recharges],
-          });
-        }
-      } catch (error) {
-        alert(error);
-      }
+      alert("an error occurred. please try again later");
     }
 
     // update user object with recharge balance
     const userRef = firestore.doc(`users/${rechargeObj.uid}`);
-    const userSanpShot = await userRef.get();
-    console.log(userSanpShot.data());
+
     try {
       const userSnapShot = await userRef.get();
       console.log(userSnapShot.data());
       await userRef.update({
         myWallet:
           parseInt(userSnapShot.data().myWallet) + parseInt(rechargeObj.amount),
-        rechargeArray: userSanpShot.data().rechargeArray
-          ? [rechargeObj, ...userSanpShot.data().rechargeArray]
-          : [rechargeObj],
-        totalRecharge: userSanpShot.data().totalRecharge
-          ? parseInt(userSanpShot.data().totalRecharge) +
+
+        totalRecharge: userSnapShot.data().totalRecharge
+          ? parseInt(userSnapShot.data().totalRecharge) +
             parseInt(rechargeObj.amount)
           : parseInt(rechargeObj.amount),
-        transactionArray: userSanpShot.data().transactionArray
-          ? [rechargeObj, ...userSanpShot.data().transactionArray]
-          : [rechargeObj],
       });
       const rechargedUserSnapShot = await userRef.get();
       return rechargedUserSnapShot.data();
+    } catch (error) {
+      alert(error);
+    }
+  } catch (error) {
+    alert(error);
+  }
+};
+export const rechargeUserFromRechargeRequest = async (rechargeObj) => {
+  // first upload the recharge day in rechargeDays
+  console.log(rechargeObj);
+  try {
+    const rechargeDayRef = firestore.doc(
+      `rechargeDays/${rechargeObj.rechargedAt}`
+    );
+    const snapShot = await rechargeDayRef.get();
+    if (!snapShot.exists) {
+      try {
+        await rechargeDayRef.set({
+          date: rechargeObj.rechargedAt,
+          day: rechargeObj.day,
+          total: rechargeObj.amount,
+        });
+      } catch (error) {
+        alert(error);
+      }
+    } else {
+      try {
+        await rechargeDayRef.update({
+          total: parseInt(snapShot.data().total) + parseInt(rechargeObj.amount),
+        });
+      } catch (error) {
+        alert(error);
+      }
+    }
+
+    // update rechargeRequest object to recharged or rejected
+    const updatedRechargeRequestObj = await updateRechargeRequestStatus(
+      rechargeObj
+    );
+
+    // upload full recharge object inside that day of recharge History
+    const rechargeRef = firestore.doc(
+      `rechargeHistory/${rechargeObj.rechargeId}`
+    );
+    const recharge = await rechargeRef.get();
+    if (!recharge.exists) {
+      try {
+        await rechargeRef.set({
+          ...rechargeObj,
+        });
+      } catch (error) {
+        alert(error);
+      }
+    } else {
+      alert("an error occurred. please try again later");
+    }
+
+    // update user object with recharge balance
+    const userRef = firestore.doc(`users/${rechargeObj.uid}`);
+
+    try {
+      const userSnapShot = await userRef.get();
+      console.log(userSnapShot.data());
+      await userRef.update({
+        myWallet:
+          parseInt(userSnapShot.data().myWallet) + parseInt(rechargeObj.amount),
+
+        totalRecharge: userSnapShot.data().totalRecharge
+          ? parseInt(userSnapShot.data().totalRecharge) +
+            parseInt(rechargeObj.amount)
+          : parseInt(rechargeObj.amount),
+      });
+      return updatedRechargeRequestObj;
     } catch (error) {
       alert(error);
     }
@@ -742,35 +795,23 @@ export const updateExpressOrder = async (orderId) => {
 };
 
 export const updateRechargeRequestStatus = async (rechargeRequestObj) => {
+  console.log(rechargeRequestObj);
   const rechargeRequestRef = firestore.doc(
-    `rechargeRequest/${rechargeRequestObj["Recharge Id"]}`
+    `rechargeRequest/${rechargeRequestObj.rechargeId}`
   );
-  try {
-    await rechargeRequestRef.update({
-      status: rechargeRequestObj.status,
-    });
-    const updatedRechargeRequestObj = await rechargeRequestRef.get();
-    const userRef = firestore.doc(`users/${rechargeRequestObj.userId}`);
-    const snapShot = await userRef.get();
-    const filteredRechargeRequestArray = snapShot
-      .data()
-      .rechargeRequestArray.filter(
-        (rechargeObj) =>
-          rechargeObj.rechargeId !== rechargeRequestObj["Recharge Id"]
-      );
-    let rechargeReqObj = snapShot
-      .data()
-      .rechargeRequestArray.find(
-        (rechargeObj) =>
-          rechargeObj.rechargeId === rechargeRequestObj["Recharge Id"]
-      );
-    rechargeReqObj.status = rechargeRequestObj.status;
-    await userRef.update({
-      rechargeRequestArray: [rechargeReqObj, ...filteredRechargeRequestArray],
-    });
-    return updatedRechargeRequestObj.data();
-  } catch (error) {
-    alert(error);
+  const snapshot = await rechargeRequestRef.get();
+  if (snapshot.exists) {
+    try {
+      await rechargeRequestRef.update({
+        status: rechargeRequestObj.status,
+      });
+      const updatedRechargeRequestObj = await rechargeRequestRef.get();
+      return updatedRechargeRequestObj.data();
+    } catch (error) {
+      alert(error);
+    }
+  } else {
+    return null;
   }
 };
 
@@ -990,6 +1031,53 @@ export const selectIntro = async (id) => {
     await introRef.update({
       selected: true,
     });
+  } catch (error) {
+    alert(error);
+  }
+};
+
+export const getAllBookingsOfSingleUser = async (userId) => {
+  const bookingsCollectionRef = firestore
+    .collection("bookingRequest")
+    .where("userId", "==", userId);
+  try {
+    const bookings = await bookingsCollectionRef.get();
+    const bookingsArray = [];
+    bookings.forEach((doc) => {
+      bookingsArray.push(doc.data());
+    });
+    return bookingsArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+
+export const getAllParcelsOfSingleUser = async (userId) => {
+  const ordersCollectionRef = firestore
+    .collection("orders")
+    .where("customerUid", "==", userId);
+  try {
+    const orders = await ordersCollectionRef.get();
+    const ordersArray = [];
+    orders.forEach((doc) => {
+      ordersArray.push(doc.data());
+    });
+    return ordersArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+export const getAllRechargeRequestsOfSingleUser = async (userId) => {
+  const rechargeRequestsCollectionRef = firestore
+    .collection("rechargeRequest")
+    .where("userId", "==", userId);
+  try {
+    const rechargeRequests = await rechargeRequestsCollectionRef.get();
+    const rechargeRequestssArray = [];
+    rechargeRequests.forEach((doc) => {
+      rechargeRequestssArray.push(doc.data());
+    });
+    return rechargeRequestssArray;
   } catch (error) {
     alert(error);
   }

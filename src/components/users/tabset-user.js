@@ -66,8 +66,22 @@ export class Tabset_user extends Component {
       return recharge.mobileBanking;
     }
   };
+  getColor = (booking) => {
+    if (booking.bookingStatus === "Success") {
+      return "green";
+    }
+    if (booking.bookingStatus === "Pending") {
+      return "orange";
+    }
+    if (booking.bookingStatus === "Reject") {
+      return "red";
+    }
+    if (booking.bookingStatus === "Received") {
+      return "purple";
+    }
+  };
   render() {
-    const { user } = this.props;
+    const { user, bookingsArray, rechargesArray, parcelsArray } = this.props;
     if (user) {
       console.log(this.toDateTime(user.createdAt.seconds));
       console.log(typeof this.toDateTime(user.createdAt.seconds));
@@ -190,22 +204,19 @@ export class Tabset_user extends Component {
                 </tr>
               </thead>
               <tbody>
-                {user && user.bookingArray.length > 0
-                  ? user.bookingArray.map((booking, index) => (
+                {bookingsArray.length > 0
+                  ? bookingsArray.map((booking, index) => (
                       <tr>
                         <th scope="row">{index + 1}</th>
                         <td>{booking.bookingId}</td>
-                        <td>{booking.bookingObj.shipmentMethod}</td>
-                        <td>{booking.bookingObj.date}</td>
+                        <td>{booking.shipmentMethod}</td>
+                        <td>{booking.date}</td>
                         <td
                           style={{
-                            color:
-                              booking.bookingObj.bookingStatus == "Success"
-                                ? "green"
-                                : "orange",
+                            color: this.getColor(booking),
                           }}
                         >
-                          {booking.bookingObj.bookingStatus}
+                          {booking.bookingStatus}
                         </td>
                       </tr>
                     ))
@@ -226,8 +237,8 @@ export class Tabset_user extends Component {
                 </tr>
               </thead>
               <tbody>
-                {user && user.parcelArray.length > 0
-                  ? user.parcelArray.map((parcel, index) => (
+                {parcelsArray.length > 0
+                  ? parcelsArray.map((parcel, index) => (
                       <tr>
                         <th scope="row">{index + 1}</th>
                         <td>{parcel.parcelId}</td>
@@ -255,8 +266,8 @@ export class Tabset_user extends Component {
                 </tr>
               </thead>
               <tbody>
-                {user && user.rechargeArray.length > 0
-                  ? user.rechargeArray.map((recharge, index) => (
+                {rechargesArray.length > 0
+                  ? rechargesArray.map((recharge, index) => (
                       <tr>
                         <th scope="row">{index + 1}</th>
                         <td>{recharge.rechargedAt}</td>

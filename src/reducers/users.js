@@ -1,4 +1,9 @@
-const INITIAL_STATE = { users: [] };
+const INITIAL_STATE = {
+  users: [],
+  parcelsArray: [],
+  bookingsArray: [],
+  rechargesArray: [],
+};
 
 const setUsersReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -20,6 +25,22 @@ const setUsersReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         users: [action.payload, ...filterUsers],
+      };
+
+    case "GET_ALL_BOOKINGS_OF_SINGLE_USER":
+      return {
+        ...state,
+        bookingsArray: action.payload,
+      };
+    case "GET_ALL_PARCELS_OF_SINGLE_USER":
+      return {
+        ...state,
+        parcelsArray: action.payload,
+      };
+    case "GET_ALL_RECHARGE_REQUEST_OF_SINGLE_USER":
+      return {
+        ...state,
+        rechargesArray: action.payload,
       };
 
     default:

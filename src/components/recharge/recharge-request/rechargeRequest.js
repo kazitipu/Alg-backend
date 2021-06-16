@@ -3,9 +3,10 @@ import Breadcrumb from "../../common/breadcrumb";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import Datatable from "./rechargeRequestDatatable";
+import RechargeWalletModal from "../recharge-wallet/rechargeWalletModal";
 import { getAllRechargeRequestRedux } from "../../../actions/index";
 import { Link } from "react-router-dom";
-import TextOrMailModal from "../textOrmailModal";
+
 import { connect } from "react-redux";
 import { Search } from "react-feather";
 
@@ -15,9 +16,8 @@ export class RechargeRequest extends Component {
     this.state = {
       searchFor: "",
       open: false,
-
       toggleModal: true,
-      singleLot: null,
+      rechargeRequestObj: null,
     };
   }
 
@@ -25,14 +25,16 @@ export class RechargeRequest extends Component {
     this.props.getAllRechargeRequestRedux();
   };
 
-  startToggleModal = async (lotObj) => {
-    if (lotObj == null) {
-      this.setState({ toggleModal: !this.state.toggleModal, singleLot: null });
-    } else {
-      console.log(lotObj);
+  startToggleModal = async (rechargeRequestObj) => {
+    if (rechargeRequestObj == null) {
       this.setState({
         toggleModal: !this.state.toggleModal,
-        singleLot: lotObj,
+        rechargeRequestObj: null,
+      });
+    } else {
+      this.setState({
+        toggleModal: !this.state.toggleModal,
+        rechargeRequestObj: rechargeRequestObj,
       });
     }
   };
@@ -64,10 +66,10 @@ export class RechargeRequest extends Component {
     console.log(this.props);
     return (
       <Fragment>
-        <TextOrMailModal
+        <RechargeWalletModal
           toggleModal={this.state.toggleModal}
           startToggleModal={this.startToggleModal}
-          singleLot={this.state.singleLot}
+          rechargeRequestObj={this.state.rechargeRequestObj}
         />
         <Breadcrumb title="Recharge Request" parent="Recharge" />
         {/* <!-- Container-fluid starts--> */}

@@ -248,73 +248,76 @@ export class Datatable extends Component {
           Header: <b>Action</b>,
           id: "delete",
           accessor: (str) => "delete",
-          Cell: (row) => (
-            <div>
-              <span style={{ cursor: "pointer", padding: "5px" }}>
-                <button
-                  // className="btn"
-                  style={{
-                    backgroundColor: "green",
-                    color: "white",
-                    fontSize: "70%",
-                    maxWidth: "80px",
-                    padding: "10px",
-                    border: "none",
-                  }}
-                  type="button"
-                  onClick={() => {
-                    if (myData.length > 0) {
-                      const rechargeRequest = myData.find(
-                        (rechargeRequest) =>
-                          rechargeRequest.rechargeId ===
-                          row.original["Recharge Id"]
-                      );
-                      this.props.updateRechargeRequestStatusRedux({
-                        ...row.original,
-                        status: "recharged",
-                        userId: rechargeRequest.userId,
-                      });
-                    }
-                  }}
-                >
-                  {" "}
-                  <i className="icofont-checked"></i>&nbsp; Recharge
-                </button>
-              </span>
+          Cell: (row) => {
+            const rechargeRequest =
+              myData.length > 0
+                ? myData.find(
+                    (rechargeRequest) =>
+                      rechargeRequest.rechargeId === row.original["Recharge Id"]
+                  )
+                : null;
+            return (
+              <div>
+                {rechargeRequest && rechargeRequest.status === "pending" ? (
+                  <>
+                    <span style={{ cursor: "pointer", padding: "5px" }}>
+                      <button
+                        // className="btn"
+                        style={{
+                          backgroundColor: "green",
+                          color: "white",
+                          fontSize: "70%",
+                          maxWidth: "80px",
+                          padding: "10px",
+                          border: "none",
+                        }}
+                        type="button"
+                        onClick={() => {
+                          if (myData.length > 0) {
+                            this.props.startToggleModal(rechargeRequest);
+                          }
+                        }}
+                      >
+                        {" "}
+                        <i className="icofont-checked"></i>&nbsp; Recharge
+                      </button>
+                    </span>
 
-              <span style={{ cursor: "pointer" }}>
-                <button
-                  // className="btn"
-                  style={{
-                    backgroundColor: "red",
-                    color: "white",
-                    fontSize: "70%",
-                    maxWidth: "80px",
-                    padding: "10px",
-                    border: "none",
-                  }}
-                  type="button"
-                  onClick={() => {
-                    if (myData.length > 0) {
-                      const rechargeRequest = myData.find(
-                        (rechargeRequest) =>
-                          rechargeRequest.rechargeId ===
-                          row.original["Recharge Id"]
-                      );
-                      this.props.updateRechargeRequestStatusRedux({
-                        ...row.original,
-                        status: "rejected",
-                        userId: rechargeRequest.userId,
-                      });
-                    }
-                  }}
-                >
-                  {" "}
-                  <i className="icofont-close-squared"></i>&nbsp; Reject
-                </button>
-              </span>
-            </div>
-          ),
+                    <span style={{ cursor: "pointer" }}>
+                      <button
+                        // className="btn"
+                        style={{
+                          backgroundColor: "red",
+                          color: "white",
+                          fontSize: "70%",
+                          maxWidth: "80px",
+                          padding: "10px",
+                          border: "none",
+                        }}
+                        type="button"
+                        onClick={() => {
+                          if (myData.length > 0) {
+                            const rechargeRequest = myData.find(
+                              (rechargeRequest) =>
+                                rechargeRequest.rechargeId ===
+                                row.original["Recharge Id"]
+                            );
+                            this.props.updateRechargeRequestStatusRedux({
+                              ...rechargeRequest,
+                              status: "rejected",
+                            });
+                          }
+                        }}
+                      >
+                        {" "}
+                        <i className="icofont-close-squared"></i>&nbsp; Reject
+                      </button>
+                    </span>
+                  </>
+                ) : null}
+              </div>
+            );
+          },
           style: {
             textAlign: "center",
           },

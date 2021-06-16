@@ -179,27 +179,6 @@ export class Datatable extends Component {
               const userObj = myData.find(
                 (user) => user.uid === row.original.uid
               );
-              if (userObj.status === "silver") {
-                return (
-                  <div style={{ color: "silver" }}>
-                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
-                  </div>
-                );
-              }
-              if (userObj.status === "gold") {
-                return (
-                  <div style={{ color: "gold" }}>
-                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
-                  </div>
-                );
-              }
-              if (userObj.status === "diamond") {
-                return (
-                  <div style={{ color: "darkviolet" }}>
-                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
-                  </div>
-                );
-              }
               if (userObj.status === "Vip Partner") {
                 return (
                   <div style={{ color: "darkViolet" }}>

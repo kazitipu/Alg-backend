@@ -30,6 +30,7 @@ import {
   getAllRechargeRequest,
   updateRechargeRequestStatus,
   rechargeUser,
+  rechargeUserFromRechargeRequest,
   updateUserStatus,
   getAllRechargeDays,
   getAllRechargesOfSingleDate,
@@ -44,6 +45,9 @@ import {
   getAllIntros,
   uploadImage,
   updateAdmin,
+  getAllBookingsOfSingleUser,
+  getAllParcelsOfSingleUser,
+  getAllRechargeRequestsOfSingleUser,
 } from "../firebase/firebase.utils";
 
 export const getAllUsersRedux = () => async (dispatch) => {
@@ -53,6 +57,26 @@ export const getAllUsersRedux = () => async (dispatch) => {
     payload: allUsers,
   });
 };
+
+export const getAllBookingsOfSingleUserRedux = (userId) => async (dispatch) => {
+  const bookingsArray = await getAllBookingsOfSingleUser(userId);
+  dispatch({ type: "GET_ALL_BOOKINGS_OF_SINGLE_USER", payload: bookingsArray });
+};
+
+export const getAllParcelsOfSingleUserRedux = (userId) => async (dispatch) => {
+  const parcelsArray = await getAllParcelsOfSingleUser(userId);
+  dispatch({ type: "GET_ALL_PARCELS_OF_SINGLE_USER", payload: parcelsArray });
+};
+export const getAllRechargeRequestsOfSingleUserRedux =
+  (userId) => async (dispatch) => {
+    const rechargeRequestArray = await getAllRechargeRequestsOfSingleUser(
+      userId
+    );
+    dispatch({
+      type: "GET_ALL_RECHARGE_REQUEST_OF_SINGLE_USER",
+      payload: rechargeRequestArray,
+    });
+  };
 
 export const getAllAdminsRedux = () => async (dispatch) => {
   const allAdmins = await getAllAdmins();
@@ -340,6 +364,16 @@ export const rechargeUserRedux = (rechargeObj) => async (dispatch) => {
     payload: rechargedUserObj,
   });
 };
+export const rechargeUserFromRechargeRequestRedux =
+  (rechargeObj) => async (dispatch) => {
+    const updatedRechargeRequestObj = await rechargeUserFromRechargeRequest(
+      rechargeObj
+    );
+    dispatch({
+      type: "UPDATE_RECHARGE_REQUEST_STATUS",
+      payload: updatedRechargeRequestObj,
+    });
+  };
 
 export const updateUserStatusRedux = (userObj) => async (dispatch) => {
   const updatedUserObj = await updateUserStatus(userObj);

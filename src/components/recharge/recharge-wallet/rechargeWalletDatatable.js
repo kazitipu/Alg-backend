@@ -75,16 +75,6 @@ export class Datatable extends Component {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  getStatus = (productQuantity) => {
-    if (productQuantity < 10) {
-      return <i className="fa fa-circle font-danger f-12" />;
-    } else if (productQuantity > 50) {
-      return <i className="fa fa-circle font-success f-12" />;
-    } else {
-      return <i className="fa fa-circle font-warning f-12" />;
-    }
-  };
-
   render() {
     const { pageSize, myClass, multiSelectOption, pagination } = this.props;
     console.log(this.props);
@@ -180,29 +170,36 @@ export class Datatable extends Component {
               const userObj = myData.find(
                 (user) => user.uid === row.original.uid
               );
-              if (userObj.status === "silver") {
+              if (userObj.status === "Vip Partner") {
                 return (
-                  <div style={{ color: "silver" }}>
+                  <div style={{ color: "darkViolet" }}>
                     <i className="icofont-disc"></i>&nbsp;{userObj.status}
                   </div>
                 );
               }
-              if (userObj.status === "gold") {
+              if (userObj.status === "Corporate") {
                 return (
                   <div style={{ color: "gold" }}>
                     <i className="icofont-disc"></i>&nbsp;{userObj.status}
                   </div>
                 );
               }
-              if (userObj.status === "diamond") {
+              if (userObj.status === "Agent") {
                 return (
-                  <div style={{ color: "darkviolet" }}>
+                  <div style={{ color: "green" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
+              if (userObj.status === "Customer") {
+                return (
+                  <div style={{ color: "darkorange" }}>
                     <i className="icofont-disc"></i>&nbsp;{userObj.status}
                   </div>
                 );
               }
             } else {
-              return <div></div>;
+              return null;
             }
           },
 
