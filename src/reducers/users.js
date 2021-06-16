@@ -3,6 +3,8 @@ const INITIAL_STATE = {
   parcelsArray: [],
   bookingsArray: [],
   rechargesArray: [],
+  paymentsArray: [],
+  rechargeRequestArray: [],
 };
 
 const setUsersReducer = (state = INITIAL_STATE, action) => {
@@ -40,7 +42,17 @@ const setUsersReducer = (state = INITIAL_STATE, action) => {
     case "GET_ALL_RECHARGE_REQUEST_OF_SINGLE_USER":
       return {
         ...state,
+        rechargeRequestArray: action.payload,
+      };
+    case "GET_ALL_RECHARGE_OF_SINGLE_USER":
+      return {
+        ...state,
         rechargesArray: action.payload,
+      };
+    case "GET_ALL_PAYMENT_OF_SINGLE_USER":
+      return {
+        ...state,
+        paymentsArray: action.payload,
       };
 
     default:

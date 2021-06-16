@@ -48,6 +48,8 @@ import {
   getAllBookingsOfSingleUser,
   getAllParcelsOfSingleUser,
   getAllRechargeRequestsOfSingleUser,
+  getAllRechargeOfSingleUser,
+  getAllPaymentOfSingleUser,
 } from "../firebase/firebase.utils";
 
 export const getAllUsersRedux = () => async (dispatch) => {
@@ -77,6 +79,20 @@ export const getAllRechargeRequestsOfSingleUserRedux =
       payload: rechargeRequestArray,
     });
   };
+export const getAllRechargeOfSingleUserRedux = (userId) => async (dispatch) => {
+  const rechargeArray = await getAllRechargeOfSingleUser(userId);
+  dispatch({
+    type: "GET_ALL_RECHARGE_OF_SINGLE_USER",
+    payload: rechargeArray,
+  });
+};
+export const getAllPaymentOfSingleUserRedux = (userId) => async (dispatch) => {
+  const paymentArray = await getAllPaymentOfSingleUser(userId);
+  dispatch({
+    type: "GET_ALL_PAYMENT_OF_SINGLE_USER",
+    payload: paymentArray,
+  });
+};
 
 export const getAllAdminsRedux = () => async (dispatch) => {
   const allAdmins = await getAllAdmins();

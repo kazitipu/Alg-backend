@@ -6,7 +6,8 @@ import man from "../../assets/images/dashboard/user2.jpg";
 import {
   getAllBookingsOfSingleUserRedux,
   getAllParcelsOfSingleUserRedux,
-  getAllRechargeRequestsOfSingleUserRedux,
+  getAllRechargeOfSingleUserRedux,
+  getAllPaymentOfSingleUserRedux,
 } from "../../actions";
 export class DetailUser extends Component {
   componentDidMount = () => {
@@ -14,12 +15,14 @@ export class DetailUser extends Component {
       user,
       getAllBookingsOfSingleUserRedux,
       getAllParcelsOfSingleUserRedux,
-      getAllRechargeRequestsOfSingleUserRedux,
+      getAllRechargeOfSingleUserRedux,
+      getAllPaymentOfSingleUserRedux,
     } = this.props;
     if (user) {
       getAllBookingsOfSingleUserRedux(user.uid);
       getAllParcelsOfSingleUserRedux(user.uid);
-      getAllRechargeRequestsOfSingleUserRedux(user.uid);
+      getAllRechargeOfSingleUserRedux(user.uid);
+      getAllPaymentOfSingleUserRedux(user.uid);
     }
   };
   componentWillReceiveProps = (nextProps) => {
@@ -27,16 +30,19 @@ export class DetailUser extends Component {
       user,
       getAllBookingsOfSingleUserRedux,
       getAllParcelsOfSingleUserRedux,
-      getAllRechargeRequestsOfSingleUserRedux,
+      getAllRechargeOfSingleUserRedux,
+      getAllPaymentOfSingleUserRedux,
     } = nextProps;
-    if (user) {
+    if (this.props.user !== nextProps.user) {
       getAllBookingsOfSingleUserRedux(user.uid);
       getAllParcelsOfSingleUserRedux(user.uid);
-      getAllRechargeRequestsOfSingleUserRedux(user.uid);
+      getAllRechargeOfSingleUserRedux(user.uid);
+      getAllPaymentOfSingleUserRedux(user.uid);
     }
   };
   render() {
-    const { user, rechargesArray, parcelsArray, bookingsArray } = this.props;
+    const { user, rechargesArray, parcelsArray, bookingsArray, paymentsArray } =
+      this.props;
     console.log(user);
     return (
       <Fragment>
@@ -89,6 +95,7 @@ export class DetailUser extends Component {
                     rechargesArray={rechargesArray}
                     bookingsArray={bookingsArray}
                     parcelsArray={parcelsArray}
+                    paymentsArray={paymentsArray}
                   />
                 </div>
               </div>
@@ -109,11 +116,13 @@ const mapStateToProps = (state, ownProps) => {
     parcelsArray: state.users.parcelsArray,
     bookingsArray: state.users.bookingsArray,
     rechargesArray: state.users.rechargesArray,
+    paymentsArray: state.users.paymentsArray,
   };
 };
 
 export default connect(mapStateToProps, {
   getAllBookingsOfSingleUserRedux,
   getAllParcelsOfSingleUserRedux,
-  getAllRechargeRequestsOfSingleUserRedux,
+  getAllRechargeOfSingleUserRedux,
+  getAllPaymentOfSingleUserRedux,
 })(DetailUser);

@@ -1082,6 +1082,39 @@ export const getAllRechargeRequestsOfSingleUser = async (userId) => {
     alert(error);
   }
 };
+
+export const getAllRechargeOfSingleUser = async (userId) => {
+  const rechargeCollectionRef = firestore
+    .collection("rechargeHistory")
+    .where("uid", "==", userId);
+  try {
+    const recharges = await rechargeCollectionRef.get();
+    const rechargesArray = [];
+    recharges.forEach((doc) => {
+      rechargesArray.push(doc.data());
+    });
+    return rechargesArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+
+export const getAllPaymentOfSingleUser = async (userId) => {
+  const paymentCollectionRef = firestore
+    .collection("paymentHistory")
+    .where("uid", "==", userId);
+  try {
+    const payments = await paymentCollectionRef.get();
+    const paymentsArray = [];
+    payments.forEach((doc) => {
+      paymentsArray.push(doc.data());
+    });
+    return paymentsArray;
+  } catch (error) {
+    alert(error);
+  }
+};
+
 export const deleteExpressRatesDocuments = async (id) => {
   const countryRef = firestore.doc(`expressRatesDocuments/${id}`);
   const snapShot = await countryRef.get();

@@ -14,7 +14,7 @@ export class Tabset_user extends Component {
   renderOrderStatus = (lotNo) => {
     if (this.props.allLots.length > 0) {
       const lotObj = this.props.allLots.find((lot) => lot.lotNo === lotNo);
-      console.log(lotObj);
+
       let backgroundColor;
       let icofont;
       if (lotObj.shipmentStatus === "Bangladesh Customs") {
@@ -81,11 +81,25 @@ export class Tabset_user extends Component {
     }
   };
   render() {
-    const { user, bookingsArray, rechargesArray, parcelsArray } = this.props;
-    if (user) {
-      console.log(this.toDateTime(user.createdAt.seconds));
-      console.log(typeof this.toDateTime(user.createdAt.seconds));
-    }
+    const { user, bookingsArray, rechargesArray, parcelsArray, paymentsArray } =
+      this.props;
+    const newRechargesArray = rechargesArray.map((recharge) => {
+      return { ...recharge, date: recharge.rechargedAt };
+    });
+    console.log(newRechargesArray);
+    const newPaymentsArray = paymentsArray.map((payment) => {
+      return { ...payment, date: payment.paidAt };
+    });
+    console.log(newPaymentsArray);
+
+    const transactions = [...newRechargesArray, ...newPaymentsArray];
+    const transactionArray = transactions.map((transaction) => {
+      const dateToSort = new Date(transaction.date);
+      return { ...transaction, dateToSort };
+    });
+    transactionArray.sort(
+      (a, b) => b.dateToSort.getTime() - a.dateToSort.getTime()
+    );
 
     return (
       <Fragment>
@@ -192,7 +206,7 @@ export class Tabset_user extends Component {
             </form>
           </TabPanel>
           <TabPanel>
-            <table class="table table-bordered">
+            <table className="table table-bordered">
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -206,7 +220,7 @@ export class Tabset_user extends Component {
               <tbody>
                 {bookingsArray.length > 0
                   ? bookingsArray.map((booking, index) => (
-                      <tr>
+                      <tr key={index}>
                         <th scope="row">{index + 1}</th>
                         <td>{booking.bookingId}</td>
                         <td>{booking.shipmentMethod}</td>
@@ -225,7 +239,7 @@ export class Tabset_user extends Component {
             </table>
           </TabPanel>
           <TabPanel>
-            <table class="table table-bordered">
+            <table className="table table-bordered">
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -239,7 +253,7 @@ export class Tabset_user extends Component {
               <tbody>
                 {parcelsArray.length > 0
                   ? parcelsArray.map((parcel, index) => (
-                      <tr>
+                      <tr key={index}>
                         <th scope="row">{index + 1}</th>
                         <td>{parcel.parcelId}</td>
                         <td>{parcel.lotNo}</td>
@@ -268,7 +282,7 @@ export class Tabset_user extends Component {
               <tbody>
                 {rechargesArray.length > 0
                   ? rechargesArray.map((recharge, index) => (
-                      <tr>
+                      <tr key={index}>
                         <th scope="row">{index + 1}</th>
                         <td>{recharge.rechargedAt}</td>
                         <td>{recharge.rechargeId}</td>
@@ -296,9 +310,12 @@ export class Tabset_user extends Component {
                 </tr>
               </thead>
               <tbody>
-                {user && user.paymentArray.length > 0
-                  ? user.paymentArray.map((payment, index) => (
-                      <tr style={{ background: "#ff8084", color: "white" }}>
+                {paymentsArray.length > 0
+                  ? paymentsArray.map((payment, index) => (
+                      <tr
+                        style={{ background: "#ff8084", color: "white" }}
+                        key={index}
+                      >
                         <th scope="row">{index + 1}</th>
                         <td>{payment.paidAt}</td>
                         <td>{payment.paymentId}</td>
@@ -316,7 +333,7 @@ export class Tabset_user extends Component {
             </table>
           </TabPanel>
           <TabPanel>
-            <table class="table table-bordered">
+            <table className="table table-bordered">
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -329,10 +346,13 @@ export class Tabset_user extends Component {
                 </tr>
               </thead>
               <tbody>
-                {user && user.transactionArray.length > 0
-                  ? user.transactionArray.map((transaction, index) =>
+                {transactionArray.length > 0
+                  ? transactionArray.map((transaction, index) =>
                       transaction.paymentMethod !== "ALG wallet" ? (
-                        <tr style={{ background: "green", color: "white" }}>
+                        <tr
+                          style={{ background: "#28a745", color: "white" }}
+                          key={index}
+                        >
                           <th scope="row">{index + 1}</th>
                           <td>{transaction.rechargedAt}</td>
                           <td>{transaction.rechargeId}</td>
@@ -343,7 +363,10 @@ export class Tabset_user extends Component {
                           <td></td>
                         </tr>
                       ) : (
-                        <tr style={{ background: "red", color: "white" }}>
+                        <tr
+                          style={{ background: "#dc3545", color: "white" }}
+                          key={index}
+                        >
                           <th scope="row">{index + 1}</th>
                           <td>{transaction.paidAt}</td>
                           <td>{transaction.paymentId}</td>
