@@ -120,7 +120,9 @@ export class Datatable extends Component {
             <p style={{ marginBottom: "0px" }}>
               Total Cost:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
-                {bookingObj.result}
+                {bookingObj.totalCost
+                  ? bookingObj.totalCost
+                  : bookingObj.result}
                 Tk
               </span>
             </p>
@@ -159,7 +161,8 @@ export class Datatable extends Component {
             <p style={{ marginBottom: "0px" }}>
               Total Cost:&nbsp;
               <span style={{ color: "rgb(18 201 202)", fontSize: "130%" }}>
-                {bookingObj.total} TK
+                {bookingObj.totalCost ? bookingObj.totalCost : bookingObj.total}
+                TK
               </span>
             </p>
             <img
@@ -584,7 +587,7 @@ export class Datatable extends Component {
                             Receiver's Information
                           </h3>
                           <p style={{ marginBottom: "0px" }}>
-                            Receiver's Name:&nbsp;
+                            Name:&nbsp;
                             <span
                               style={{
                                 color: "rgb(18 201 202)",
@@ -601,7 +604,7 @@ export class Datatable extends Component {
                             </span>
                           </p>
                           <p style={{ marginBottom: "0px" }}>
-                            Receiver's Mobile No:&nbsp;
+                            Mobile No:&nbsp;
                             <span
                               style={{
                                 color: "rgb(18 201 202)",
@@ -618,7 +621,24 @@ export class Datatable extends Component {
                             </span>
                           </p>
                           <p style={{ marginBottom: "0px" }}>
-                            Receiver's Address:&nbsp;
+                            Postcode:&nbsp;
+                            <span
+                              style={{
+                                color: "rgb(18 201 202)",
+                                fontSize: "130%",
+                              }}
+                            >
+                              {myData.length > 0
+                                ? myData.find(
+                                    (booking) =>
+                                      booking.bookingId ===
+                                      row.original["Booking Id"]
+                                  ).receiversPostcode
+                                : ""}
+                            </span>
+                          </p>
+                          <p style={{ marginBottom: "0px" }}>
+                            Address:&nbsp;
                             <span
                               style={{
                                 color: "rgb(18 201 202)",
