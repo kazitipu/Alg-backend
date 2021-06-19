@@ -463,6 +463,20 @@ export const updateUserStatus = async (userObj) => {
     alert(error);
   }
 };
+export const updateAdminStatus = async (adminObj) => {
+  const adminRef = firestore.doc(`admins/${adminObj.adminId}`);
+  try {
+    const snapShot = await adminRef.get();
+    console.log(snapShot.data());
+    await adminRef.update({
+      status: adminObj.status,
+    });
+    const updatedSnapShot = await adminRef.get();
+    return updatedSnapShot.data();
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const uploadProductTax = async (productObj) => {
   const productRef = firestore.doc(`taxes/${productObj.id}`);

@@ -21,6 +21,7 @@ export class LoginTabset extends Component {
       registerPassword: "",
       registerConfirmPassword: "",
       registerStatus: "",
+      registerMobileNo: "",
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -71,6 +72,7 @@ export class LoginTabset extends Component {
       registerConfirmPassword,
       registerStatus,
       registerDisplayName,
+      registerMobileNo,
     } = this.state;
     if (registerPassword !== registerConfirmPassword) {
       alert("passwords don't match");
@@ -86,6 +88,8 @@ export class LoginTabset extends Component {
       await createAdminProfileDocument(user, {
         name: registerDisplayName,
         status: registerStatus,
+        mobileNo: registerMobileNo,
+        adminId: user.uid,
       });
 
       this.setState({
@@ -93,6 +97,7 @@ export class LoginTabset extends Component {
         registerEmail: "",
         registerPassword: "",
         registerConfirmPassword: "",
+        registerMobileNo: "",
       });
       console.log(this.props.currentAdmin);
       this.props.history.push("/dashboard");
@@ -183,7 +188,7 @@ export class LoginTabset extends Component {
               >
                 <div className="form-group">
                   <input
-                    required=""
+                    required
                     name="registerDisplayName"
                     value={this.state.registerDisplayName}
                     onChange={this.handleChange}
@@ -194,7 +199,18 @@ export class LoginTabset extends Component {
                 </div>
                 <div className="form-group">
                   <input
-                    required=""
+                    required
+                    name="registerMobileNo"
+                    value={this.state.registerMobileNo}
+                    onChange={this.handleChange}
+                    type="number"
+                    className="form-control"
+                    placeholder="name"
+                  />
+                </div>
+                <div className="form-group">
+                  <input
+                    required
                     name="registerEmail"
                     value={this.state.registerEmail}
                     onChange={this.handleChange}
@@ -206,7 +222,7 @@ export class LoginTabset extends Component {
                 </div>
                 <div className="form-group">
                   <input
-                    required=""
+                    required
                     name="registerPassword"
                     value={this.state.registerPassword}
                     onChange={this.handleChange}
@@ -217,7 +233,7 @@ export class LoginTabset extends Component {
                 </div>
                 <div className="form-group">
                   <input
-                    required=""
+                    required
                     name="registerConfirmPassword"
                     value={this.state.registerConfirmPassword}
                     onChange={this.handleChange}
@@ -241,8 +257,9 @@ export class LoginTabset extends Component {
                   >
                     <option value="">Select admin status</option>
                     <option value="Admin">Admin</option>
-                    <option value="Manager">Manager</option>
+                    <option value="Accounts">Accounts</option>
                     <option value="Employee">Employee</option>
+                    <option value="Officer">Officer</option>
                   </select>
                 </div>
                 <div className="form-terms">

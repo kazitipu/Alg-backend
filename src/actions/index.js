@@ -32,6 +32,7 @@ import {
   rechargeUser,
   rechargeUserFromRechargeRequest,
   updateUserStatus,
+  updateAdminStatus,
   getAllRechargeDays,
   getAllRechargesOfSingleDate,
   getAllPaymentDays,
@@ -396,6 +397,13 @@ export const updateUserStatusRedux = (userObj) => async (dispatch) => {
   dispatch({
     type: "UPDATE_USER_STATUS",
     payload: updatedUserObj,
+  });
+};
+export const updateAdminStatusRedux = (adminObj) => async (dispatch) => {
+  const updatedAdminObj = await updateAdminStatus(adminObj);
+  dispatch({
+    type: "UPDATE_ADMIN_STATUS",
+    payload: updatedAdminObj,
   });
 };
 

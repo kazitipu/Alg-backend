@@ -246,6 +246,7 @@ export const MENUITEMSFORADMIN = [
       // { path: '/users/create-user', title: 'Create User', type: 'link' },
     ],
   },
+
   {
     title: "Communication",
     icon: Users,
@@ -281,6 +282,17 @@ export const MENUITEMSFORADMIN = [
     type: "sub",
     active: false,
     children: [{ path: "/settings/profile", title: "Profile", type: "link" }],
+  },
+
+  {
+    title: "Admins",
+    icon: UserPlus,
+    type: "sub",
+    active: false,
+    children: [
+      { path: "/admins/list-admin", title: "All Admins", type: "link" },
+      // { path: '/users/create-user', title: 'Create User', type: 'link' },
+    ],
   },
 
   {
@@ -551,6 +563,17 @@ export const MENUITEMSFORAGENT = [
     type: "sub",
     active: false,
     children: [{ path: "/settings/profile", title: "Profile", type: "link" }],
+  },
+
+  {
+    title: "Admins",
+    icon: UserPlus,
+    type: "sub",
+    active: false,
+    children: [
+      { path: "/admins/list-admin", title: "All Admins", type: "link" },
+      // { path: '/users/create-user', title: 'Create User', type: 'link' },
+    ],
   },
 
   {

@@ -52,6 +52,7 @@ import Media from "./components/media/media";
 import List_menu from "./components/menus/list-menu";
 import Create_menu from "./components/menus/create-menu";
 import List_user from "./components/users/list-user";
+import List_admin from "./components/admins/list-admin";
 import DetailUser from "./components/users/detail-user";
 import ListSuppliers from "./components/suppliers/list-suppliers";
 
@@ -357,6 +358,11 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/users/list-user`}
                   component={List_user}
+                />
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/admins/list-admin`}
+                  component={List_admin}
                 />
                 <Route
                   exact
