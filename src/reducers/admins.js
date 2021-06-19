@@ -1,6 +1,4 @@
-import { doughnutData } from "../constants/chartData";
-
-const INITIAL_STATE = { admins: [] };
+const INITIAL_STATE = { admins: [], currentAdmin: null };
 
 const setAdminsReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {

@@ -109,13 +109,9 @@ class Root extends Component {
                 exact
                 path={`${process.env.PUBLIC_URL}/`}
                 component={() => (
-                  <Login
-                    setCurrentAdmin={this.setCurrentAdmin}
-                    currentAdmin={currentAdmin}
-                  />
+                  <Login setCurrentAdmin={this.setCurrentAdmin} />
                 )}
               />
-              {/* <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} component={Login} /> */}
 
               <App>
                 <Route

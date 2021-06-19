@@ -32,10 +32,15 @@ export class App extends Component {
     await this.props.getAllLotsRedux();
     auth.onAuthStateChanged((adminAuth) => {
       if (adminAuth) {
-        var admin = this.props.admins.find(
-          (admin) => admin.adminId == adminAuth.uid
-        );
-        this.props.setCurrentAdmin(admin);
+        console.log(adminAuth);
+        if (this.props.currentAdmin) {
+          return;
+        } else {
+          var admin = this.props.admins.find(
+            (admin) => admin.adminId == adminAuth.uid
+          );
+          this.props.setCurrentAdmin(admin);
+        }
       }
     });
   };
@@ -73,6 +78,7 @@ export class App extends Component {
 const mapStateToProps = (state) => {
   return {
     admins: state.admins.admins,
+    currentAdmin: state.admins.currentAdmin,
     allBookingRequest: [],
     allRefundRequest: [],
     allRechargeRequest: [],

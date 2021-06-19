@@ -117,10 +117,12 @@ export class LoginTabset extends Component {
                 <User />
                 Login
               </Tab>
-              <Tab className="nav-link" onClick={(e) => this.clickActive(e)}>
-                <Unlock />
-                Register
-              </Tab>
+              {this.props.currentAdmin && (
+                <Tab className="nav-link" onClick={(e) => this.clickActive(e)}>
+                  <Unlock />
+                  Register
+                </Tab>
+              )}
             </TabList>
 
             <TabPanel>
@@ -181,114 +183,116 @@ export class LoginTabset extends Component {
                 </div>
               </form>
             </TabPanel>
-            <TabPanel>
-              <form
-                className="form-horizontal auth-form"
-                onSubmit={this.handleRegisterSubmit}
-              >
-                <div className="form-group">
-                  <input
-                    required
-                    name="registerDisplayName"
-                    value={this.state.registerDisplayName}
-                    onChange={this.handleChange}
-                    type="text"
-                    className="form-control"
-                    placeholder="name"
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    required
-                    name="registerMobileNo"
-                    value={this.state.registerMobileNo}
-                    onChange={this.handleChange}
-                    type="number"
-                    className="form-control"
-                    placeholder="name"
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    required
-                    name="registerEmail"
-                    value={this.state.registerEmail}
-                    onChange={this.handleChange}
-                    type="email"
-                    className="form-control"
-                    placeholder="Email"
-                    id="exampleInputEmail12"
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    required
-                    name="registerPassword"
-                    value={this.state.registerPassword}
-                    onChange={this.handleChange}
-                    type="password"
-                    className="form-control"
-                    placeholder="Password"
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    required
-                    name="registerConfirmPassword"
-                    value={this.state.registerConfirmPassword}
-                    onChange={this.handleChange}
-                    type="password"
-                    className="form-control"
-                    placeholder="Confirm Password"
-                  />
-                </div>
-                <div className="form-group">
-                  <select
-                    className="custom-select"
-                    name="registerStatus"
-                    value={this.state.registerStatus}
-                    onChange={this.handleChange}
-                    required
-                    style={{
-                      borderRadius: "10rem",
-                      paddingLeft: "25px",
-                      color: "gray",
-                    }}
-                  >
-                    <option value="">Select admin status</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Accounts">Accounts</option>
-                    <option value="Employee">Employee</option>
-                    <option value="Officer">Officer</option>
-                  </select>
-                </div>
-                <div className="form-terms">
-                  <div className="custom-control custom-checkbox mr-sm-2">
+            {this.props.currentAdmin && (
+              <TabPanel>
+                <form
+                  className="form-horizontal auth-form"
+                  onSubmit={this.handleRegisterSubmit}
+                >
+                  <div className="form-group">
                     <input
-                      type="checkbox"
-                      className="custom-control-input"
-                      id="customControlAutosizing"
+                      required
+                      name="registerDisplayName"
+                      value={this.state.registerDisplayName}
+                      onChange={this.handleChange}
+                      type="text"
+                      className="form-control"
+                      placeholder="Name"
                     />
-                    <label className="d-block">
-                      <input
-                        className="checkbox_animated"
-                        id="chk-ani2"
-                        type="checkbox"
-                      />
-                      I agree all statements in
-                      <span>
-                        <a href="">Terms &amp; Conditions</a>
-                      </span>
-                    </label>
                   </div>
-                </div>
-                <div className="form-button">
-                  <button className="btn btn-primary" type="submit">
-                    Register
-                  </button>
-                </div>
-              </form>
-            </TabPanel>
+                  <div className="form-group">
+                    <input
+                      required
+                      name="registerMobileNo"
+                      value={this.state.registerMobileNo}
+                      onChange={this.handleChange}
+                      type="number"
+                      className="form-control"
+                      placeholder="Mobile No"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      required
+                      name="registerEmail"
+                      value={this.state.registerEmail}
+                      onChange={this.handleChange}
+                      type="email"
+                      className="form-control"
+                      placeholder="Email"
+                      id="exampleInputEmail12"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      required
+                      name="registerPassword"
+                      value={this.state.registerPassword}
+                      onChange={this.handleChange}
+                      type="password"
+                      className="form-control"
+                      placeholder="Password"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      required
+                      name="registerConfirmPassword"
+                      value={this.state.registerConfirmPassword}
+                      onChange={this.handleChange}
+                      type="password"
+                      className="form-control"
+                      placeholder="Confirm Password"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <select
+                      className="custom-select"
+                      name="registerStatus"
+                      value={this.state.registerStatus}
+                      onChange={this.handleChange}
+                      required
+                      style={{
+                        borderRadius: "10rem",
+                        paddingLeft: "25px",
+                        color: "gray",
+                      }}
+                    >
+                      <option value="">Select admin status</option>
+                      <option value="Admin">Admin</option>
+                      <option value="Accounts">Accounts</option>
+                      <option value="Employee">Employee</option>
+                      <option value="Officer">Officer</option>
+                    </select>
+                  </div>
+                  <div className="form-terms">
+                    <div className="custom-control custom-checkbox mr-sm-2">
+                      <input
+                        type="checkbox"
+                        className="custom-control-input"
+                        id="customControlAutosizing"
+                      />
+                      <label className="d-block">
+                        <input
+                          className="checkbox_animated"
+                          id="chk-ani2"
+                          type="checkbox"
+                        />
+                        I agree all statements in
+                        <span>
+                          <a href="">Terms &amp; Conditions</a>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div className="form-button">
+                    <button className="btn btn-primary" type="submit">
+                      Register
+                    </button>
+                  </div>
+                </form>
+              </TabPanel>
+            )}
           </Tabs>
         </Fragment>
       </div>

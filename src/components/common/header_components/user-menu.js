@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { auth } from "../../../firebase/firebase.utils";
 import { connect } from "react-redux";
+import { setCurrentAdmin } from "../../../actions/index";
 //images import
 import man from "../../../assets/images/dashboard/user2.jpg";
 export class User_menu extends Component {
@@ -42,8 +43,9 @@ export class User_menu extends Component {
 
             <li
               style={{ cursor: "pointer" }}
-              onClick={() => {
-                auth.signOut();
+              onClick={async () => {
+                auth.signOut().then(() => console.log("user is signed out"));
+                this.props.setCurrentAdmin(null);
                 this.props.history.push("/");
               }}
             >
@@ -60,4 +62,6 @@ const mapStateToProps = (state) => {
     currentAdmin: state.admins.currentAdmin,
   };
 };
-export default withRouter(connect(mapStateToProps, null)(User_menu));
+export default withRouter(
+  connect(mapStateToProps, { setCurrentAdmin })(User_menu)
+);

@@ -7,6 +7,7 @@ import stats from "../../assets/images/dashboard/14.png";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./login.css";
+import { connect } from "react-redux";
 
 export class Login extends Component {
   render() {
@@ -85,4 +86,9 @@ export class Login extends Component {
   }
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    currentAdmin: state.admins.currentAdmin,
+  };
+};
+export default connect(mapStateToProps)(Login);
