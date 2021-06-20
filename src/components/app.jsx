@@ -13,6 +13,7 @@ import {
   setCurrentAdmin,
   getAllUsersRedux,
   getAllLotsRedux,
+  getAllPaymentDayRedux,
 } from "../actions";
 
 export class App extends Component {
@@ -30,6 +31,8 @@ export class App extends Component {
     await this.props.getAllAdminsRedux();
     await this.props.getAllUsersRedux();
     await this.props.getAllLotsRedux();
+    await this.props.getAllBookingsRedux("Pending");
+    await this.props.getAllPaymentDayRedux();
     auth.onAuthStateChanged((adminAuth) => {
       if (adminAuth) {
         console.log(adminAuth);
@@ -92,4 +95,5 @@ export default connect(mapStateToProps, {
   setCurrentAdmin,
   getAllUsersRedux,
   getAllLotsRedux,
+  getAllPaymentDayRedux,
 })(App);

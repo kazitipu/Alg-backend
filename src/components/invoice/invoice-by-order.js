@@ -14,6 +14,7 @@ export class InvoiceByOrder extends Component {
   state = {
     userObj: null,
     discountInvoice: "",
+    otherCharges: "",
   };
   componentDidMount = async () => {
     const [shipmentMethod, lotNo, cartonNo] =
@@ -53,6 +54,7 @@ export class InvoiceByOrder extends Component {
         ...orderObj,
         invoiceGenerated: true,
         discountInvoice: this.state.discountInvoice,
+        otherCharges: this.state.otherCharges,
       });
       if (updatedOrder) {
         const [shipmentMethod, lotNo, cartonNo] =
@@ -70,7 +72,7 @@ export class InvoiceByOrder extends Component {
           });
         }
       }
-      this.setState({ discountInvoice: "" });
+      this.setState({ discountInvoice: "", otherCharges: "" });
     }
   };
 
@@ -91,31 +93,32 @@ export class InvoiceByOrder extends Component {
                   }}
                 >
                   <h5>Invoice</h5>
-                  <div>
+                  <div
+                    style={{
+                      boxShadow: "rgb(78 50 50) 1px 5px 24px 0px",
+                      borderRadius: "10px",
+                    }}
+                  >
                     <form
                       className="form"
                       onSubmit={this.handleSubmit}
-                      style={{ padding: "15px", background: "#8a0368" }}
+                      style={{
+                        padding: "15px",
+                        background: "#8a0368",
+                        borderRadius: "10px",
+                      }}
                     >
-                      <label
-                        style={{
-                          color: "white",
-                          marginBottom: "5px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        Discount Amount
-                      </label>
-                      <div
-                        // className="form-group"
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "flex-end",
-                          marginRight: "10px",
-                        }}
-                      >
-                        <div className="form-row">
+                      <div className="form-row">
+                        <div className="col">
+                          <label
+                            style={{
+                              color: "white",
+                              marginBottom: "5px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Discount Amount
+                          </label>
                           <input
                             style={{
                               padding: "10px",
@@ -130,7 +133,40 @@ export class InvoiceByOrder extends Component {
                             onChange={this.handleChange}
                           />
                         </div>
-                        <button className="btn btn-secondary">Discount!</button>
+                        <div className="col">
+                          <label
+                            style={{
+                              color: "white",
+                              marginBottom: "5px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Other charges
+                          </label>
+
+                          <input
+                            style={{
+                              padding: "10px",
+                              marginTop: "2px",
+                              outline: "none",
+                            }}
+                            className="form-control"
+                            name="otherCharges"
+                            value={this.state.otherCharges}
+                            type="number"
+                            placeholder="Enter Amount"
+                            onChange={this.handleChange}
+                          />
+                        </div>
+                      </div>
+                      <div
+                        className="form-row mt-3"
+                        style={{
+                          justifyContent: "flex-end",
+                          marginRight: "4px",
+                        }}
+                      >
+                        <button className="btn btn-secondary">UPDATE!</button>
                       </div>
                     </form>
                   </div>

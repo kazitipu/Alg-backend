@@ -1,7 +1,12 @@
 import React, { Component, Fragment } from "react";
 import User_panel from "./user-panel";
 import { Link } from "react-router-dom";
-import { MENUITEMSFORADMIN, MENUITEMSFORAGENT } from "../../../constants/menu";
+import {
+  MENUITEMSFORADMIN,
+  MENUITEMSFORACCOUNTS,
+  MENUITEMSFOREMPLOYEE,
+  MENUITEMSFOROFFICER,
+} from "../../../constants/menu";
 import { connect } from "react-redux";
 
 // image import
@@ -25,92 +30,118 @@ export class sidebar extends Component {
     var currentUrl = window.location.pathname;
     console.log("i am called");
     if (this.props.currentAdmin) {
-      this.setState({
-        mainmenu: MENUITEMSFORADMIN,
-      });
-    } else {
-      this.setState({
-        mainmenu: MENUITEMSFORADMIN,
-      });
-    }
-
-    this.state.mainmenu.filter((items) => {
-      if (!items.children) {
-        if (items.path === currentUrl) this.setNavActive(items);
-        return false;
+      if (this.props.currentAdmin.status === "Admin") {
+        this.setState({
+          mainmenu: MENUITEMSFORADMIN,
+        });
       }
-      items.children.filter((subItems) => {
-        if (subItems.path === currentUrl) this.setNavActive(subItems);
-        if (!subItems.children) return false;
-        subItems.children.filter((subSubItems) => {
-          if (subSubItems.path === currentUrl) this.setNavActive(subSubItems);
+      if (this.props.currentAdmin.status === "Accounts") {
+        this.setState({
+          mainmenu: MENUITEMSFORACCOUNTS,
+        });
+      }
+      if (this.props.currentAdmin.status === "Employee") {
+        this.setState({
+          mainmenu: MENUITEMSFOREMPLOYEE,
+        });
+      }
+      if (this.props.currentAdmin.status === "Officer") {
+        this.setState({
+          mainmenu: MENUITEMSFOROFFICER,
+        });
+      }
+    }
+    setTimeout(() => {
+      this.state.mainmenu.filter((items) => {
+        if (!items.children) {
+          if (items.path === currentUrl) this.setNavActive(items);
+          return false;
+        }
+        items.children.filter((subItems) => {
+          if (subItems.path === currentUrl) this.setNavActive(subItems);
+          if (!subItems.children) return false;
+          subItems.children.filter((subSubItems) => {
+            if (subSubItems.path === currentUrl) this.setNavActive(subSubItems);
+          });
         });
       });
-    });
+    }, 1000);
   }
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.currentAdmin) {
-      if (nextProps.currentAdmin.status == "admin") {
+      if (nextProps.currentAdmin.status == "Admin") {
         this.setState({ mainmenu: MENUITEMSFORADMIN });
       }
+      if (nextProps.currentAdmin.status == "Accounts") {
+        this.setState({ mainmenu: MENUITEMSFORACCOUNTS });
+      }
+      if (nextProps.currentAdmin.status == "Employee") {
+        this.setState({ mainmenu: MENUITEMSFOREMPLOYEE });
+      }
+      if (nextProps.currentAdmin.status == "Officer") {
+        this.setState({ mainmenu: MENUITEMSFOROFFICER });
+      }
     }
+    // setTimeout(() => {
+    //   this.state.mainmenu.filter((items) => {
+    //     if (!items.children) {
+    //       if (items.path === currentUrl) this.setNavActive(items);
+    //       return false;
+    //     }
+    //     items.children.filter((subItems) => {
+    //       if (subItems.path === currentUrl) this.setNavActive(subItems);
+    //       if (!subItems.children) return false;
+    //       subItems.children.filter((subSubItems) => {
+    //         if (subSubItems.path === currentUrl) this.setNavActive(subSubItems);
+    //       });
+    //     });
+    //   });
+    // }, 1000);
   };
 
   setNavActive(item) {
-    if (this.props.currentAdmin && this.props.currentAdmin.status == "admin") {
-      MENUITEMSFORADMIN.filter((menuItem) => {
-        if (menuItem != item) menuItem.active = false;
-        if (menuItem.children && menuItem.children.includes(item))
-          menuItem.active = true;
-        if (menuItem.children) {
-          menuItem.children.filter((submenuItems) => {
-            if (submenuItems != item) {
-              submenuItems.active = false;
+    this.state.mainmenu.filter((menuItem) => {
+      if (menuItem != item) menuItem.active = false;
+      if (menuItem.children && menuItem.children.includes(item))
+        menuItem.active = true;
+      if (menuItem.children) {
+        menuItem.children.filter((submenuItems) => {
+          if (submenuItems != item) {
+            submenuItems.active = false;
+          }
+          if (submenuItems.children) {
+            submenuItems.children.map((childItem) => {
+              childItem.active = false;
+            });
+            if (submenuItems.children.includes(item)) {
+              submenuItems.active = true;
+              menuItem.active = true;
             }
-            if (submenuItems.children) {
-              submenuItems.children.map((childItem) => {
-                childItem.active = false;
-              });
-              if (submenuItems.children.includes(item)) {
-                submenuItems.active = true;
-                menuItem.active = true;
-              }
-            }
-          });
-        }
-      });
-      item.active = !item.active;
+          }
+        });
+      }
+    });
+    item.active = !item.active;
 
+    if (this.props.currentAdmin.status === "Admin") {
       this.setState({
         mainmenu: MENUITEMSFORADMIN,
       });
-    } else {
-      MENUITEMSFORAGENT.filter((menuItem) => {
-        if (menuItem != item) menuItem.active = false;
-        if (menuItem.children && menuItem.children.includes(item))
-          menuItem.active = true;
-        if (menuItem.children) {
-          menuItem.children.filter((submenuItems) => {
-            if (submenuItems != item) {
-              submenuItems.active = false;
-            }
-            if (submenuItems.children) {
-              submenuItems.children.map((childItem) => {
-                childItem.active = false;
-              });
-              if (submenuItems.children.includes(item)) {
-                submenuItems.active = true;
-                menuItem.active = true;
-              }
-            }
-          });
-        }
-      });
-      item.active = !item.active;
-
+    }
+    if (this.props.currentAdmin.status === "Accounts") {
       this.setState({
-        mainmenu: MENUITEMSFORAGENT,
+        mainmenu: MENUITEMSFORACCOUNTS,
+      });
+    }
+    if (this.props.currentAdmin.status === "Employee") {
+      this.setState({
+        mainmenu: MENUITEMSFOREMPLOYEE,
+      });
+    }
+    if (this.props.currentAdmin.status === "Officer") {
+      this.setState({
+        mainmenu: MENUITEMSFOROFFICER,
       });
     }
   }

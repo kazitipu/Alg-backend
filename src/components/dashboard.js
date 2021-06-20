@@ -51,6 +51,7 @@ export class Dashboard extends Component {
       allBookingRequest,
       allRechargeRequest,
       allRefundRequest,
+      allPaymentDays,
     } = this.props;
 
     const lineData = {
@@ -309,7 +310,7 @@ export class Dashboard extends Component {
               </div>
             </>
 
-            <div className="col-xl-6 xl-100">
+            {/* <div className="col-xl-6 xl-100">
               <div className="card">
                 <div className="card-header">
                   <h5>Market Value</h5>
@@ -325,7 +326,7 @@ export class Dashboard extends Component {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="col-xl-6 xl-100">
               <div className="card">
                 <div className="card-header">
@@ -344,20 +345,95 @@ export class Dashboard extends Component {
                       </thead>
 
                       <tbody>
-                        <tr>
-                          <td className="font-danger"></td>
-                          <td className="font-danger"></td>
-                          <td className="font-danger"></td>
-                          <td className="font-danger"></td>
-                        </tr>
+                        {allBookingRequest.length > 0 &&
+                          allBookingRequest
+                            .slice(0, 5)
+                            .map((booking, index) => {
+                              return (
+                                <tr key={index}>
+                                  <td className="font-danger">
+                                    {booking.bookingId}
+                                  </td>
+                                  <td className="font-danger">
+                                    {booking.shipmentMethod === "D2D"
+                                      ? booking.productType
+                                      : booking.productName}
+                                  </td>
+                                  <td className="font-danger">
+                                    {booking.shipmentMethod === "Express"
+                                      ? booking.parcelBox
+                                      : booking.weight}
+                                    kg
+                                  </td>
+                                  <td className="font-danger">
+                                    {booking.shipmentMethod === "Express"
+                                      ? booking.parcelTo
+                                      : booking.shipFrom}
+                                  </td>
+                                </tr>
+                              );
+                            })}
                       </tbody>
                     </table>
 
                     <Link
-                      to={`${process.env.PUBLIC_URL}/sales/order_pending`}
+                      to={`${process.env.PUBLIC_URL}/booking-request/Pending`}
                       className="btn btn-primary"
                     >
                       View All Booking Request
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-6 xl-100">
+              <div className="card">
+                <div className="card-header">
+                  <h5>Recharge Request</h5>
+                </div>
+                <div className="card-body">
+                  <div className="user-status table-responsive latest-order-table">
+                    <table className="table table-bordernone">
+                      <thead>
+                        <tr>
+                          <th scope="col">Recharge ID</th>
+
+                          <th scope="col">Amount</th>
+                          <th scope="col">Payment via</th>
+                          <th scope="col">User Id</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {allRechargeRequest.length > 0 &&
+                          allRechargeRequest
+                            .slice(0, 5)
+                            .map((recharge, index) => {
+                              return (
+                                <tr key={index}>
+                                  <td className="font-danger">
+                                    {recharge.rechargeId}
+                                  </td>
+                                  <td className="font-danger">
+                                    {recharge.amount}Tk
+                                  </td>
+                                  <td className="font-danger">
+                                    {recharge.method}
+                                  </td>
+                                  <td className="font-danger">
+                                    {recharge.userId}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                      </tbody>
+                    </table>
+
+                    <Link
+                      to={`${process.env.PUBLIC_URL}/recharge/recharge-request`}
+                      className="btn btn-primary"
+                    >
+                      View All Recharge Request
                     </Link>
                   </div>
                 </div>
@@ -694,39 +770,37 @@ export class Dashboard extends Component {
                     <table className="table table-bordernone mb-0">
                       <thead>
                         <tr>
-                          <th scope="col">Order Id</th>
-                          <th scope="col">Order Total</th>
-                          <th scope="col">Supplier</th>
+                          <th scope="col">Parcel Id</th>
+                          <th scope="col">Weight </th>
+                          <th scope="col">Per Kg</th>
+                          <th scope="col">Invoice Total</th>
                         </tr>
                       </thead>
-                      {this.props.currentAdmin &&
-                      this.props.currentAdmin.status == "admin" ? (
-                        <tbody>
-                          <tr>
-                            <td></td>
-                            <td className="font-danger">Tk</td>
 
-                            <td className="font-secondary"></td>
-
-                            <td className="font-primary"></td>
-                          </tr>
-                        </tbody>
-                      ) : (
-                        <tbody>
-                          <tr>
-                            <td></td>
-                            <td className="font-danger">Tk</td>
-
-                            <td className="font-secondary"></td>
-                          </tr>
-                        </tbody>
-                      )}
+                      <tbody>
+                        {allRefundRequest.length > 0 &&
+                          allRefundRequest.slice(0, 5).map((refund) => (
+                            <tr>
+                              <td className="font-danger">{refund.parcelId}</td>
+                              <td className="font-secondary">
+                                {refund.grossWeight}kg
+                              </td>
+                              <td className="font-primary">
+                                {refund.ratePerKg}tk/kg
+                              </td>
+                              <td className="font-primary">
+                                {refund.invoiceTotal}Tk
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
                     </table>
                     <Link
-                      to={`${process.env.PUBLIC_URL}/sales/ordered`}
+                      to={`${process.env.PUBLIC_URL}/refund/refund-request`}
                       className="btn btn-primary"
+                      style={{ marginTop: "20px" }}
                     >
-                      view All Ordered items
+                      view All refund request
                     </Link>
                   </div>
                 </div>
@@ -735,77 +809,44 @@ export class Dashboard extends Component {
             <div className="col-xl-6 xl-100">
               <div className="card height-equal">
                 <div className="card-header">
-                  <h5>Empolyee Status</h5>
+                  <h5>Recent Payments </h5>
                 </div>
                 <div className="card-body">
                   <div className="user-status table-responsive products-table">
                     <table className="table table-bordernone mb-0">
                       <thead>
                         <tr>
-                          <th scope="col">Name</th>
-                          <th scope="col">Designation</th>
-                          <th scope="col">Skill Level</th>
-                          <th scope="col">Experience</th>
+                          <th scope="col">Date</th>
+                          <th scope="col">Day</th>
+                          <th scope="col">Total</th>
                         </tr>
                       </thead>
+
                       <tbody>
-                        {allAdmins
-                          ? allAdmins.slice(0, 5).map((admin, i) => (
-                              <tr key={admin.adminId}>
-                                <td className="bd-t-none u-s-tb">
-                                  <div className="align-middle image-sm-size">
-                                    <img
-                                      className="img-radius align-top m-r-15 rounded-circle blur-up lazyloaded"
-                                      src={admin.image ? admin.image : user2}
-                                      alt={admin.name}
-                                      data-original-title=""
-                                      title=""
-                                    />
-                                    <div className="d-inline-block">
-                                      <h6>
-                                        {admin.name}
-                                        <span className="text-muted digits"></span>
-                                      </h6>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td>{admin.status}</td>
-                                <td>
-                                  <div className="progress-showcase">
-                                    <div
-                                      className="progress"
-                                      style={{ height: 8 }}
-                                    >
-                                      {i % 2 === 0 ? (
-                                        <div
-                                          className="progress-bar bg-primary"
-                                          role="progressbar"
-                                          aria-valuenow="50"
-                                          aria-valuemin="0"
-                                          aria-valuemax="100"
-                                        ></div>
-                                      ) : (
-                                        <div
-                                          className="progress-bar bg-secondary"
-                                          role="progressbar"
-                                          aria-valuenow="50"
-                                          aria-valuemin="0"
-                                          aria-valuemax="100"
-                                        ></div>
-                                      )}
-                                    </div>
-                                  </div>
-                                </td>
-                                <td className="digits">2 Year</td>
-                              </tr>
-                            ))
-                          : null}
+                        {allPaymentDays.length > 0 &&
+                          allPaymentDays.slice(0, 5).map((payment) => (
+                            <tr>
+                              <td className="font-danger">{payment.date}</td>
+                              <td className="font-secondary">{payment.day}</td>
+                              <td className="font-primary">
+                                {payment.total}Tk
+                              </td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
+                    <Link
+                      to={`${process.env.PUBLIC_URL}/payments`}
+                      className="btn btn-primary"
+                      style={{ marginTop: "20px" }}
+                    >
+                      view All Payments
+                    </Link>
                   </div>
                 </div>
               </div>
             </div>
+
             <div className="col-sm-12">
               <div className="card">
                 <div className="card-header">
@@ -969,6 +1010,7 @@ const mapStateToProps = (state) => {
     allRechargeRequest: state.recharge.rechargeRequestArray,
     allRefundRequest: state.refunds.refunds,
     allBookingRequest: state.bookings.bookings,
+    allPaymentDays: state.payments.paymentDaysArray,
   };
 };
 export default connect(mapStateToProps, null)(Dashboard);

@@ -701,6 +701,7 @@ export const getAllBookings = async (bookingStatus) => {
     alert(error);
   }
 };
+
 export const getAllReceivedExpressBookings = async (month) => {
   const bookingsCollectionRef = firestore
     .collection("bookingRequest")
@@ -861,14 +862,16 @@ export const getAllRechargesOfSingleDate = async (date) => {
 };
 
 export const getAllPaymentsOfSingleDate = async (date) => {
-  const paymentsDocumentRef = firestore.doc(`paymentHistory/${date}`);
+  const paymentsCollectionRef = firestore
+    .collection(`paymentHistory`)
+    .where("paidAt", "==", date);
   try {
-    const snapShot = await paymentsDocumentRef.get();
-    if (snapShot.exists) {
-      return snapShot.data().payments;
-    } else {
-      return [];
-    }
+    let paymentsArray = [];
+    const payments = await paymentsCollectionRef.get();
+    payments.forEach((payment) => {
+      paymentsArray.push(payment.data());
+    });
+    return paymentsArray;
   } catch (error) {
     alert(error);
     return [];
