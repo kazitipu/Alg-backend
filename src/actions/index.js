@@ -162,6 +162,7 @@ export const getAllLotsRedux = () => async (dispatch) => {
 export const uploadLotRedux = (lotObj) => async (dispatch) => {
   const uploadedlotObj = await uploadLot(lotObj);
   dispatch({ type: "UPLOAD_LOT", payload: uploadedlotObj });
+  return uploadedlotObj;
 };
 
 export const updateLotRedux = (lotObj) => async (dispatch) => {

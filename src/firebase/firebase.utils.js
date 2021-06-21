@@ -59,6 +59,7 @@ export const uploadLot = async (lotObj) => {
     alert(
       "there is already a lot with this given Lot no, please change the Lot no and try again"
     );
+    return null;
   }
 };
 export const createNotice = async (noticeObj) => {

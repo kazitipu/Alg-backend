@@ -34,6 +34,11 @@ class SelectLotModal extends Component {
     );
     console.log(lotObj);
     this.props.startToggleModalCreateOrder(lotObj);
+    this.setState({
+      lotNo: "",
+      showSuggestionSelectLot: false,
+      cursor: -1,
+    });
   };
 
   handleChange = (e) => {
@@ -64,6 +69,10 @@ class SelectLotModal extends Component {
       this.setState((prevState) => ({
         cursor: prevState.cursor + 1,
       }));
+    } else if (e.keyCode === 13 && cursor > -1) {
+      this.setState({
+        lotNo: result[cursor].lotNo,
+      });
     }
   };
 

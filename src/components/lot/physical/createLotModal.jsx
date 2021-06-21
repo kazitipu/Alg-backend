@@ -68,8 +68,13 @@ class CreateLotModal extends Component {
     console.log(this.state);
     console.log(this.props.singleLot);
     if (this.props.singleLot === null) {
-      await this.props.uploadLotRedux({ ...this.state, shipmentStatusScore });
-      toast.success("Successfully created new lot");
+      const uploadedLotObj = await this.props.uploadLotRedux({
+        ...this.state,
+        shipmentStatusScore,
+      });
+      if (uploadedLotObj) {
+        toast.success("Successfully created new lot");
+      }
     } else {
       await this.props.updateLotRedux({ ...this.state, shipmentStatusScore });
       toast.success("successfully updated lot");
