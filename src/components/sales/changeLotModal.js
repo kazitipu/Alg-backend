@@ -37,8 +37,7 @@ class ChangeLotModal extends Component {
       const newLotNo = this.state.lotNo;
       const newParcelId = `${this.state.lotNo}-${parcelObj.cartonNo}`;
 
-      await this.props.deleteSingleOrderRedux(parcelObj);
-      await changeLotOrder(
+      const changedLotOrderObj = await changeLotOrder(
         {
           ...parcelObj,
           lotNo: newLotNo,
@@ -47,6 +46,9 @@ class ChangeLotModal extends Component {
         },
         parcelId
       );
+      if (changedLotOrderObj) {
+        await this.props.deleteSingleOrderRedux(parcelObj);
+      }
     });
     console.log(lotObj);
 
@@ -81,6 +83,10 @@ class ChangeLotModal extends Component {
       this.setState((prevState) => ({
         cursor: prevState.cursor + 1,
       }));
+    } else if (e.keyCode === 13 && cursor > -1) {
+      this.setState({
+        lotNo: result[cursor].lotNo,
+      });
     }
   };
 

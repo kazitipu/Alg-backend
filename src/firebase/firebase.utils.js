@@ -177,7 +177,6 @@ export const uploadOrder = async (orderObj) => {
       });
       const uploadedSnapShot = await orderRef.get();
       console.log(uploadedSnapShot.data());
-      updateToMyParcelOfUser(orderObj);
       return uploadedSnapShot.data();
     } catch (error) {
       alert(error);
@@ -198,7 +197,6 @@ export const changeLotOrder = async (orderObj, previousParcelId) => {
       });
       const uploadedSnapShot = await orderRef.get();
       console.log(uploadedSnapShot.data());
-      changeLotToMyParcelOfUser(orderObj, previousParcelId);
       return uploadedSnapShot.data();
     } catch (error) {
       alert(error);
@@ -207,25 +205,7 @@ export const changeLotOrder = async (orderObj, previousParcelId) => {
     alert(
       "there is already an order with similar parcel Id. please try again later."
     );
-  }
-};
-export const changeLotToMyParcelOfUser = async (orderObj, previousParcelId) => {
-  const userRef = firestore.doc(`users/${orderObj.customerUid}`);
-  try {
-    const snapShot = await userRef.get();
-
-    const newParcelArray = snapShot.data().parcelArray.map((parcel) => {
-      if (parcel.parcelId === previousParcelId) {
-        return orderObj;
-      } else {
-        return parcel;
-      }
-    });
-    userRef.update({
-      parcelArray: newParcelArray,
-    });
-  } catch (error) {
-    alert(error);
+    return null;
   }
 };
 
@@ -353,7 +333,7 @@ export const rechargeUserFromRechargeRequest = async (rechargeObj) => {
       alert("an error occurred. please try again later");
     }
 
-    // update user object with recharge balance
+    // update user object with recharged balance
     const userRef = firestore.doc(`users/${rechargeObj.uid}`);
 
     try {
@@ -387,33 +367,8 @@ export const updateOrder = async (orderObj) => {
       ...orderObj,
     });
     const updatedSnapShot = await orderRef.get();
-    updateToMyParcelOfUser(orderObj);
-    return updatedSnapShot.data();
-  } catch (error) {
-    alert(error);
-  }
-};
 
-export const updateToMyParcelOfUser = async (orderObj) => {
-  const userRef = firestore.doc(`users/${orderObj.customerUid}`);
-  try {
-    const snapShot = await userRef.get();
-    console.log(snapShot.data());
-    const findParcelObj = snapShot
-      .data()
-      .parcelArray.find((parcel) => parcel.parcelId === orderObj.parcelId);
-    const newParcelArray = snapShot.data().parcelArray.map((parcel) => {
-      if (parcel && parcel.parcelId === orderObj.parcelId) {
-        return orderObj;
-      } else {
-        return parcel;
-      }
-    });
-    userRef.update({
-      parcelArray: findParcelObj
-        ? newParcelArray
-        : [...snapShot.data().parcelArray, orderObj],
-    });
+    return updatedSnapShot.data();
   } catch (error) {
     alert(error);
   }
@@ -494,24 +449,6 @@ export const uploadProductTax = async (productObj) => {
   } else {
     alert(
       "there is already a product with this given prodcut Id, please change the product Id and upload again"
-    );
-  }
-};
-export const uploadAliProduct = async (productObj) => {
-  const productRef = firestore.doc(`aliproducts/${productObj.productId}`);
-  const snapShot = await productRef.get();
-  const newProductObj = { ...productObj };
-  if (!snapShot.exists) {
-    try {
-      productRef.set({
-        ...newProductObj,
-      });
-    } catch (error) {
-      alert(error);
-    }
-  } else {
-    alert(
-      "this product is already added to your website. try adding different product"
     );
   }
 };
@@ -922,57 +859,6 @@ export const getAllProductsTax = async () => {
   }
 };
 
-export const getAllAliProducts = async () => {
-  const aliProductsCollectionRef = firestore.collection("aliproducts");
-  try {
-    const products = await aliProductsCollectionRef.get();
-    const aliProductsArray = [];
-    products.forEach((doc) => {
-      var originalPrice = [];
-      if (doc.data().originalPrice.min == doc.data().originalPrice.max) {
-        originalPrice.push(Math.round(doc.data().originalPrice.min * 90));
-      } else {
-        originalPrice.push(
-          `${Math.round(doc.data().originalPrice.min * 90)}- ${Math.round(
-            doc.data().originalPrice.max * 90
-          )}`
-        );
-      }
-      var salePrice = [];
-      if (doc.data().salePrice.min == doc.data().salePrice.max) {
-        salePrice.push(Math.round(doc.data().salePrice.min * 90));
-      } else {
-        salePrice.push(
-          `${Math.round(doc.data().salePrice.min * 90)}- ${Math.round(
-            doc.data().salePrice.max * 90
-          )}`
-        );
-      }
-      const newObj = {
-        id: doc.data().productId,
-        name: doc.data().title,
-        price: originalPrice[0],
-        salePrice: salePrice[0],
-        pictures: [...doc.data().images],
-        availability: doc.data().availability,
-        rating: doc.data().ratings.averageStar,
-        categoryId: doc.data().categoryId,
-        description: doc.data().description,
-        specs: doc.data().specs,
-        feedback: doc.data().feedback,
-        orders: doc.data().orders,
-        totalAvailableQuantity: doc.data().totalAvailableQuantity,
-        variants: doc.data().variants,
-      };
-      aliProductsArray.push(newObj);
-      originalPrice = [];
-      salePrice = [];
-    });
-    return aliProductsArray;
-  } catch (error) {
-    alert(error);
-  }
-};
 export const updateProduct = async (productObj, discount) => {
   const productRef = firestore.doc(`products/${productObj.id}`);
   const product = await productRef.get();
@@ -1238,15 +1124,10 @@ export const updateRefund = async (refundObj) => {
     // input it in rechargeHistory and rechargeDays of admin
     const userRef = firestore.doc(`users/${refundObj.customerUid}`);
     const userSnapShot = await userRef.get();
-    const usersParcelArrayfiltered = userSnapShot
-      .data()
-      .parcelArray.filter((parcel) => parcel.parcelId !== refundObj.parcelId);
     await userRef.update({
       myWallet:
         parseInt(userSnapShot.data().myWallet) +
         parseInt(refundObj.refundAmount),
-
-      parcelArray: [refundObj, ...usersParcelArrayfiltered],
     });
 
     // update refund object status in refund request
@@ -1316,71 +1197,7 @@ export const getSingleLot = async (id) => {
   }
 };
 
-export const getSingleProduct = async (id) => {
-  const productRef = firestore.doc(`products/${id}`);
-  try {
-    const product = await productRef.get();
-    if (!product.exists) {
-      const aliProductRef = firestore.doc(`aliproducts/${id}`);
-      try {
-        const aliProduct = await aliProductRef.get();
-        var originalPrice = [];
-        if (
-          aliProduct.data().originalPrice.min ==
-          aliProduct.data().originalPrice.max
-        ) {
-          originalPrice.push(
-            Math.round(aliProduct.data().originalPrice.min * 90)
-          );
-        } else {
-          originalPrice.push(
-            `${Math.round(
-              aliProduct.data().originalPrice.min * 90
-            )}- ${Math.round(aliProduct.data().originalPrice.max * 90)}`
-          );
-        }
-        var salePrice = [];
-        if (
-          aliProduct.data().salePrice.min == aliProduct.data().salePrice.max
-        ) {
-          salePrice.push(Math.round(aliProduct.data().salePrice.min * 90));
-        } else {
-          salePrice.push(
-            `${Math.round(aliProduct.data().salePrice.min * 90)}- ${Math.round(
-              aliProduct.data().salePrice.max * 90
-            )}`
-          );
-        }
-        const aliProductObj = {
-          id: aliProduct.data().productId,
-          name: aliProduct.data().title,
-          price: originalPrice[0],
-          salePrice: salePrice[0],
-          pictures: [...aliProduct.data().images],
-          availability: aliProduct.data().availability,
-          rating: aliProduct.data().ratings.averageStar,
-          categoryId: aliProduct.data().categoryId,
-          description: aliProduct.data().description,
-          specs: aliProduct.data().specs,
-          feedback: aliProduct.data().feedback,
-          orders: aliProduct.data().orders,
-          totalAvailableQuantity: aliProduct.data().totalAvailableQuantity,
-          variants: aliProduct.data().variants,
-        };
-        return aliProductObj;
-      } catch (error) {
-        alert(error);
-      }
-    } else {
-      return product.data();
-    }
-  } catch (error) {
-    alert(error);
-  }
-};
-
 // get all users
-
 export const getAllUsers = async () => {
   const usersCollectionRef = firestore.collection("users");
   try {
@@ -1458,101 +1275,6 @@ export const getSingleBooking = async (bookingId) => {
   }
 };
 
-export const updateMultipleOrder = async (orderIdArray, status) => {
-  orderIdArray.forEach(async (orderId) => {
-    const orderRef = firestore.doc(`orders/${orderId}`);
-    const order = await orderRef.get();
-    const userId = await order.data().userId;
-    const userRef = firestore.doc(`users/${userId}`);
-    const user = await userRef.get();
-    var exactOrder = user
-      .data()
-      .ordersArray.find((order) => order.orderId == orderId);
-    exactOrder.status = status;
-    var otherOrders = user
-      .data()
-      .ordersArray.filter((order) => order.orderId !== orderId);
-    console.log(status);
-    if (status == "delivered") {
-      console.log(status);
-      const adminsCollectionRef = firestore.collection("admins");
-      const admins = await adminsCollectionRef.get();
-      admins.forEach(async (doc) => {
-        console.log(doc.data().pending_orders.includes(orderId));
-        if (doc.data().pending_orders.includes(orderId)) {
-          console.log(status);
-          var adminRef = firestore.doc(`admins/${doc.id}`);
-          var updatedPendingOrders = doc
-            .data()
-            .pending_orders.filter((order) => order !== orderId);
-          var newly_used_balance = order.data().sum;
-          var total_used_balance = doc.data().used_balance
-            ? doc.data().used_balance + newly_used_balance
-            : newly_used_balance;
-          await adminRef.update({
-            ...doc.data(),
-            pending_orders: [...updatedPendingOrders],
-            successfully_delivered_orders: doc.data()
-              .successfully_delivered_orders
-              ? [...doc.data().successfully_delivered_orders, orderId]
-              : [orderId],
-            used_balance: total_used_balance,
-            remaining_balance:
-              doc.data().balance - parseInt(total_used_balance),
-          });
-        }
-      });
-    }
-    try {
-      await userRef.update({ ordersArray: [exactOrder, ...otherOrders] });
-      return await orderRef.update({ ...order.data(), status: status });
-    } catch (error) {
-      alert(error);
-    }
-  });
-};
-
-export const updateMultipleOrderwithOrderTo = async (
-  orderIdArray,
-  status,
-  orderTo
-) => {
-  orderIdArray.forEach(async (orderId) => {
-    const orderRef = firestore.doc(`orders/${orderId}`);
-    const order = await orderRef.get();
-    const userId = await order.data().userId;
-    const userRef = firestore.doc(`users/${userId}`);
-    const user = await userRef.get();
-    var exactOrder = user
-      .data()
-      .ordersArray.find((order) => order.orderId == orderId);
-    exactOrder.status = status;
-    if (!exactOrder.orderTo) {
-      exactOrder.orderTo = orderTo;
-    }
-    var otherOrders = user
-      .data()
-      .ordersArray.filter((order) => order.orderId !== orderId);
-    try {
-      if (!order.data().orderTo) {
-        await orderRef.update({ ...order.data(), status, orderTo });
-      } else {
-        await orderRef.update({
-          ...order.data(),
-          orderTo: order.data().orderTo,
-          status,
-        });
-        alert(
-          `this ${orderId} order is already ordered to another supplier. check ordered products`
-        );
-      }
-      await userRef.update({ ordersArray: [exactOrder, ...otherOrders] });
-    } catch (error) {
-      alert(error);
-    }
-  });
-};
-
 // paymet management
 export const getAllPayments = async () => {
   const paymentsCollectionRef = firestore.collection("payments");
@@ -1577,137 +1299,6 @@ export const deletePayment = async (orderId) => {
   }
 };
 
-export const updatePaymentStatus = async (paymentObj) => {
-  const paymentRef = firestore.doc(`payments/${paymentObj.orderId}`);
-  const payment = await paymentRef.get();
-  var actualPayment = payment
-    .data()
-    .payments.find((payment) => payment.paymentId == paymentObj.paymentId);
-  const orderId = actualPayment.orderId;
-  const orderRef = firestore.doc(`orders/${orderId}`);
-  const order = await orderRef.get();
-  const userId = await order.data().userId;
-  const userRef = firestore.doc(`users/${userId}`);
-  const user = await userRef.get();
-  var exactPayment = user
-    .data()
-    .paymentsArray.find((payment) => payment.paymentId == paymentObj.paymentId);
-  exactPayment.paymentStatus = paymentObj.paymentStatus;
-  var otherPayments = user
-    .data()
-    .paymentsArray.filter(
-      (payment) => payment.paymentId !== paymentObj.paymentId
-    );
-
-  await userRef.update({ paymentsArray: [exactPayment, ...otherPayments] });
-  const updatedPaymentObj = payment
-    .data()
-    .payments.find((payment) => payment.paymentId == paymentObj.paymentId);
-  updatedPaymentObj.paymentStatus = paymentObj.paymentStatus;
-  const newPaymentsArray = payment
-    .data()
-    .payments.filter((payment) => payment.paymentId !== paymentObj.paymentId);
-  try {
-    await paymentRef.update({
-      ...payment.data(),
-      payments: [...newPaymentsArray, updatedPaymentObj],
-    });
-  } catch (error) {
-    alert(error);
-  }
-};
-
-export const updateOrderAmount = async (paymentObj) => {
-  const orderRef = firestore.doc(`orders/${paymentObj.orderId}`);
-  const order = await orderRef.get();
-  const userId = await order.data().userId;
-  const userRef = firestore.doc(`users/${userId}`);
-  const user = await userRef.get();
-  var exactOrder = user
-    .data()
-    .ordersArray.find((order) => order.orderId == paymentObj.orderId);
-  exactOrder.status === "order_pending"
-    ? (exactOrder.status = "payment_approved")
-    : (exactOrder.status = exactOrder.status);
-  exactOrder.paymentStatus.paid =
-    parseInt(exactOrder.paymentStatus.paid) + parseInt(paymentObj.amount);
-  exactOrder.paymentStatus.due =
-    parseInt(exactOrder.paymentStatus.total) -
-    parseInt(exactOrder.paymentStatus.paid);
-  var otherOrders = user
-    .data()
-    .ordersArray.filter((order) => order.orderId !== paymentObj.orderId);
-  await userRef.update({ ordersArray: [exactOrder, ...otherOrders] });
-  try {
-    const order = await orderRef.get();
-    console.log(order.data());
-    await orderRef.update({
-      ...order.data(),
-      status:
-        order.data().status === "order_pending"
-          ? "payment_approved"
-          : order.data().status,
-      paymentStatus: {
-        ...order.data().paymentStatus,
-        due:
-          parseInt(order.data().paymentStatus.total) -
-          (parseInt(order.data().paymentStatus.paid) +
-            parseInt(paymentObj.amount)),
-        paid:
-          parseInt(order.data().paymentStatus.paid) +
-          parseInt(paymentObj.amount),
-      },
-    });
-  } catch (error) {
-    alert(error);
-  }
-};
-
-// distribute order to managers
-export const orderProductsFromChina = async (orderIdArray, orderTo) => {
-  const adminsCollectionRef = firestore.collection("admins");
-  orderIdArray.forEach(async (orderId) => {
-    const orderRef = firestore.doc(`orders/${orderId}`);
-    try {
-      const order = await orderRef.get();
-      if (!order.data().orderTo) {
-        try {
-          const admins = await adminsCollectionRef.get();
-          admins.forEach((doc) => {
-            var adminRef = firestore.doc(`admins/${doc.id}`);
-            if (doc.data().name == orderTo) {
-              adminRef.update({
-                ...doc.data(),
-                pending_orders: [...doc.data().pending_orders, orderId],
-              });
-              return;
-            }
-          });
-        } catch (error) {
-          alert(error);
-        }
-      } else {
-        console.log(
-          `${orderId} is already ordered to another supplier.check ordered item`
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  });
-};
-
-export const productToOrder = async (productsArray) => {
-  productsArray.forEach((product) => {
-    const productToOrderRef = firestore.doc(`productToOrder/${product.id}`);
-    try {
-      productToOrderRef.set(product);
-    } catch (error) {
-      alert(error);
-    }
-  });
-};
-
 // admins
 export const getAllAdmins = async () => {
   const adminsCollectionRef = firestore.collection("admins");
@@ -1724,25 +1315,6 @@ export const getAllAdmins = async () => {
   }
 };
 
-export const rechargeAdmin = async (adminIdArray, balance) => {
-  adminIdArray.forEach(async (adminId) => {
-    const adminRef = firestore.doc(`admins/${adminId}`);
-    try {
-      const admin = await adminRef.get();
-      var total_balance = parseInt(admin.data().balance) + parseInt(balance);
-      await adminRef.update({
-        ...admin.data(),
-        balance: admin.data().balance
-          ? parseInt(admin.data().balance) + parseInt(balance)
-          : parseInt(balance),
-        remaining_balance: total_balance - parseInt(admin.data().used_balance),
-      });
-    } catch (error) {
-      alert(error);
-    }
-  });
-};
-
 export const updateProfileImage = async (imgUrl, id) => {
   const adminRef = firestore.doc(`admins/${id}`);
   try {
@@ -1750,33 +1322,5 @@ export const updateProfileImage = async (imgUrl, id) => {
     await adminRef.update({ ...admin.data(), image: imgUrl });
   } catch (error) {
     alert(error);
-  }
-};
-export const setRmbPrice = async (taka) => {
-  const currencyRef = firestore.doc(`Currency/taka`);
-  let rmbRate;
-  if (taka) {
-    try {
-      const currency = await currencyRef.get();
-      if (currency.data()) {
-        await currencyRef.update({ ...currency.data(), taka });
-        rmbRate = taka;
-        return rmbRate;
-      } else {
-        await currencyRef.set({ taka: taka });
-        rmbRate = taka;
-        return rmbRate;
-      }
-    } catch (error) {
-      alert(error);
-    }
-  } else {
-    try {
-      const currency = await currencyRef.get();
-      rmbRate = currency.data().taka;
-      return rmbRate;
-    } catch (error) {
-      alert(error);
-    }
   }
 };

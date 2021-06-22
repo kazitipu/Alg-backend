@@ -54,12 +54,7 @@ import Create_menu from "./components/menus/create-menu";
 import List_user from "./components/users/list-user";
 import List_admin from "./components/admins/list-admin";
 import DetailUser from "./components/users/detail-user";
-import ListSuppliers from "./components/suppliers/list-suppliers";
 
-import Currency from "./components/localization/currency";
-import Taxes from "./components/localization/taxes";
-import Add_Product_Tax from "./components/localization/add_product_tax";
-import Update_Product_Tax from "./components/localization/update-product-tax";
 import Profile from "./components/settings/profile";
 import Reports from "./components/reports/report";
 import Invoice from "./components/invoice/invoice";
@@ -364,33 +359,6 @@ class Root extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/users/list-user/:userId`}
                   component={DetailUser}
-                />
-
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/suppliers/list_suppliers`}
-                  component={ListSuppliers}
-                />
-
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/localization/currency-rates`}
-                  component={Currency}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/localization/shipping-charges`}
-                  component={Taxes}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/localization/shipping-charge/add-product`}
-                  component={Add_Product_Tax}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/localization/shipping-charges/add-product/:id`}
-                  component={Update_Product_Tax}
                 />
 
                 <Route

@@ -48,7 +48,7 @@ export class Datatable extends Component {
         const userObj = this.props.allUsers.find(
           (userObj) => userObj.uid === order.customerUid
         );
-        //  this is not affecting my output see line 104
+
         newData.push({
           CustomerId: order.customer,
           Name: userObj ? userObj.displayName : null,
@@ -260,9 +260,10 @@ export class Datatable extends Component {
                   const parcelId = `${lotNo}-${cartonNo}`;
                   console.log(parcelId);
                   console.log(myData);
-                  const orderObj = myData.find(
-                    (order) => order.parcelId == parcelId
-                  );
+                  const orderObj =
+                    myData.length > 0
+                      ? myData.find((order) => order.parcelId == parcelId)
+                      : null;
                   console.log(orderObj);
                   await this.props.deleteSingleOrderRedux(orderObj);
                   let data = myData;
@@ -311,6 +312,9 @@ export class Datatable extends Component {
                   );
 
                   console.log(this.state.checkedValues);
+                  this.setState({
+                    checkedValues: [],
+                  });
                 }
               }}
             >

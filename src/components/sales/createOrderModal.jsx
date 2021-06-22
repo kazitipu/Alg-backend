@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./createOrderModal.css";
+import "./selectLotModal.css";
 import { uploadOrderRedux, updateLotRedux } from "../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
@@ -23,10 +24,10 @@ class CreateOrderModal extends Component {
       trackingNo: "",
       showSuggestion: true,
       chineseNote: "",
-      packagingCost: 0,
       cAndFBill: "",
       freightCharge: "",
       otherCharge: "",
+      cursor: -1,
     };
   }
 
@@ -38,28 +39,26 @@ class CreateOrderModal extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(this.props.singleLot.lotNo);
-
-    const { cbm_height, cbm_width, cbm_length, packaging } = this.state;
-    if (packaging) {
-      if (packaging === "Green Bag") {
-        this.setState({
-          packagingCost: 50,
-        });
-      }
-      if (packaging === "Green Bag with Polythene") {
-        this.setState({
-          packagingCost: 100,
-        });
-      }
-      if (packaging === "Wooden Box") {
-        this.setState({
-          packagingCost: 2480,
-        });
-      }
+    const {
+      cbm_height,
+      cbm_width,
+      cbm_length,
+      customer,
+      customerUid,
+      shippingMark,
+      cartonNo,
+      productName,
+      quantity,
+      grossWeight,
+      productType,
+      trackingNo,
+      chineseNote,
+    } = this.state;
+    if (customerUid === "") {
+      alert("please select a customer first");
+      return;
     }
 
-    console.log(this.state.packagingCost);
     const dateofWarehouseReceive = new Date().toLocaleDateString();
     const uploadedOrder = await this.props.uploadOrderRedux({
       shipmentMethod: this.props.singleLot.shipmentMethod.includes("D2D")
@@ -67,7 +66,19 @@ class CreateOrderModal extends Component {
         : "Freight",
       lotNo: this.props.singleLot.lotNo,
       parcelId: `${this.props.singleLot.lotNo}-${this.state.cartonNo}`,
-      ...this.state,
+      customer,
+      customerUid,
+      shippingMark,
+      cartonNo,
+      productName,
+      quantity,
+      grossWeight,
+      cbm_height,
+      cbm_width,
+      cbm_length,
+      productType,
+      trackingNo,
+      chineseNote,
       totalCbm: (cbm_height * cbm_width * cbm_length) / 1000000,
       dateofWarehouseReceive: dateofWarehouseReceive,
       invoiceStatus: "Not Created",
@@ -78,6 +89,7 @@ class CreateOrderModal extends Component {
     this.setState({
       cartonNo: "",
       showSuggestion: true,
+      cursor: -1,
     });
   };
 
@@ -122,11 +134,16 @@ class CreateOrderModal extends Component {
       cAndFBill: "",
       freightCharge: "",
       otherCharge: "",
+      cursor: -1,
     });
   };
   handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+  };
+  handleChangeCustomer = (e) => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value, showSuggestion: true });
   };
 
   renderShowSuggestion = () => {
@@ -141,9 +158,13 @@ class CreateOrderModal extends Component {
           .includes(this.state.customer.toLowerCase())
       );
       suggestionArray = [...suggestionByName, ...suggestionById];
-      return suggestionArray.slice(0, 10).map((user) => (
+      return suggestionArray.slice(0, 10).map((user, index) => (
         <li
           key={user.userId}
+          style={{
+            minWidth: "195px",
+            backgroundColor: this.state.cursor == index ? "gainsboro" : "white",
+          }}
           onClick={() =>
             this.setState({
               customer: user.userId,
@@ -157,6 +178,39 @@ class CreateOrderModal extends Component {
       ));
     } else {
       return null;
+    }
+  };
+
+  handleKeyDown = (e) => {
+    const { cursor } = this.state;
+    if (this.state.customer) {
+      let result;
+      const suggestionById = this.props.allUsers.filter((user) =>
+        user.userId.includes(this.state.customer)
+      );
+      const suggestionByName = this.props.allUsers.filter((user) =>
+        user.displayName
+          .toLowerCase()
+          .includes(this.state.customer.toLowerCase())
+      );
+      result = [...suggestionByName, ...suggestionById].slice(0, 10);
+
+      // arrow up/down button should select next/previous list element
+      if (e.keyCode === 38 && cursor > -1) {
+        this.setState((prevState) => ({
+          cursor: prevState.cursor - 1,
+        }));
+      } else if (e.keyCode === 40 && cursor < result.length - 1) {
+        this.setState((prevState) => ({
+          cursor: prevState.cursor + 1,
+        }));
+      } else if (e.keyCode === 13 && cursor > -1) {
+        this.setState({
+          customer: result[cursor].userId,
+          customerUid: result[cursor].uid,
+          showSuggestion: false,
+        });
+      }
     }
   };
   render() {
@@ -202,9 +256,8 @@ class CreateOrderModal extends Component {
                           productType: "",
                           trackingNo: "",
                           showSuggestion: true,
-                          packaging: "",
-                          packagingCost: 0,
                           chineseNote: "",
+                          cursor: -1,
                         });
                         this.props.startToggleModalCreateOrder(null);
                       }}
@@ -288,10 +341,11 @@ class CreateOrderModal extends Component {
                                     placeholder="Enter customer Id"
                                     aria-required="true"
                                     aria-invalid="false"
-                                    onChange={this.handleChange}
+                                    onChange={this.handleChangeCustomer}
                                     value={this.state.customer}
                                     required
                                     autoComplete="off"
+                                    onKeyDown={this.handleKeyDown}
                                   />
 
                                   <ul

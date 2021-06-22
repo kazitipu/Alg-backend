@@ -66,8 +66,6 @@ class CreateOrderModal extends Component {
       imageUrl: man,
       file: "",
     });
-
-    window.document.getElementById();
   };
 
   render() {
@@ -157,50 +155,6 @@ class CreateOrderModal extends Component {
                                     required
                                     readOnly
                                   />
-                                </div>
-                                <div className="form-row mb-4">
-                                  <div className="col">
-                                    <label
-                                      style={{
-                                        color: "white",
-                                        marginBottom: "0px",
-                                        fontSize: "130%",
-                                      }}
-                                    >
-                                      Packaging Needed:
-                                    </label>
-                                    <input
-                                      className="form-control"
-                                      aria-required="true"
-                                      aria-invalid="false"
-                                      value={
-                                        parcelObj.packaging
-                                          ? parcelObj.packaging
-                                          : ""
-                                      }
-                                      readOnly
-                                    />
-                                  </div>
-                                  <div className="col">
-                                    <label
-                                      style={{
-                                        color: "white",
-                                        marginBottom: "0px",
-                                        fontSize: "130%",
-                                      }}
-                                    >
-                                      Packaging Cost:
-                                    </label>
-                                    <input
-                                      className="form-control"
-                                      value={
-                                        parcelObj.packagingCost
-                                          ? parcelObj.packagingCost
-                                          : ""
-                                      }
-                                      readOnly
-                                    />
-                                  </div>
                                 </div>
                                 <div className="form-row mb-4">
                                   <div className="col">

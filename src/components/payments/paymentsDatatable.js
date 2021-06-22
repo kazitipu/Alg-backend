@@ -8,7 +8,6 @@ import Popover from "react-bootstrap/Popover";
 
 import {
   deletePayment,
-  updatePaymentStatus,
   updateOrderAmount,
 } from "../../firebase/firebase.utils";
 
@@ -86,29 +85,6 @@ export class Datatable extends Component {
     var t = new Date(1970, 0, 1); // Epoch
     t.setSeconds(secs);
     return t;
-  };
-  handleChange = (event, orderId, paymentId, amount) => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value }, async () => {
-      console.log(this.state.status);
-      await updatePaymentStatus({
-        paymentStatus: this.state.status,
-        orderId: orderId,
-        paymentId: paymentId,
-      });
-      this.props.handlePaymentStatusChange({
-        paymentStatus: this.state.status,
-        orderId: orderId,
-        paymentId: paymentId,
-      });
-      await updateOrderAmount({ orderId: orderId, amount: amount });
-
-      this.setState({
-        checkedValues: [],
-        myData: this.props.myData,
-        status: "unVerified",
-      });
-    });
   };
 
   render() {

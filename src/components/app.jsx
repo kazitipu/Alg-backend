@@ -22,6 +22,7 @@ export class App extends Component {
     this.state = {
       ltr: true,
       divName: "RTL",
+      loading: true,
     };
   }
 
@@ -46,6 +47,9 @@ export class App extends Component {
         }
       }
     });
+    this.setState({
+      loading: false,
+    });
   };
   ChangeRtl(divName) {
     if (divName === "RTL") {
@@ -64,7 +68,39 @@ export class App extends Component {
           <div className="page-body-wrapper">
             <Sidebar />
             <Right_sidebar />
-            <div className="page-body">{this.props.children}</div>
+            <div className="page-body">
+              {this.state.loading && (
+                <div
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    zIndex: "999",
+                    backgroundColor: "white",
+                    position: "absolute",
+                  }}
+                >
+                  <div
+                    className="text-center align-items-center"
+                    style={{ marginTop: "300px" }}
+                  >
+                    <div
+                      className="spinner-grow "
+                      role="status"
+                      style={{
+                        width: "4rem",
+                        height: "4rem",
+                        zIndex: "1000",
+                        color: "#ff8084",
+                      }}
+                    >
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {this.props.children}
+            </div>
             <Footer />
           </div>
         </div>
