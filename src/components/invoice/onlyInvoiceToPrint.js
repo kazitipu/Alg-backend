@@ -65,7 +65,7 @@ export class OnlyInvoieToPrint extends Component {
   render() {
     const [shipmentMethod, lotNo, cartonNo] =
       this.props.match.params.orderId.split("-");
-    const { orderObj } = this.props;
+    const { orderObj, admin } = this.props;
     const { userObj } = this.state;
     let total;
     if (orderObj) {
@@ -191,11 +191,7 @@ export class OnlyInvoieToPrint extends Component {
               <tbody>
                 <tr>
                   <th>Subtotal</th>
-                  <td>
-                    {orderObj &&
-                      Math.round(orderObj.grossWeight * orderObj.ratePerKg)}
-                    Tk
-                  </td>
+                  <td>{orderObj && orderObj.total}Tk</td>
                 </tr>
 
                 <tr data-iterate="tax">
@@ -204,39 +200,41 @@ export class OnlyInvoieToPrint extends Component {
                 </tr>
                 <tr data-iterate="tax">
                   <th>Insurance</th>
-                  <td>
-                    {orderObj && orderObj.productsValue
-                      ? Math.round((orderObj.productsValue * 3) / 100)
-                      : 0}
-                    Tk
-                  </td>
+                  <td>{orderObj && orderObj.insurance}Tk</td>
                 </tr>
                 <tr data-iterate="tax">
                   <th>Local Delivery</th>
                   <td>
-                    {orderObj && Math.round(orderObj.localDeliveryCost)}
+                    {orderObj && orderObj.deliveryCost
+                      ? orderObj.deliveryCost
+                      : 0}
                     Tk
                   </td>
                 </tr>
-                <tr className="amount-total">
-                  <th>TOTAL</th>
-                  <td>{total}tk</td>
-                </tr>
-
-                <tr data-hide-on-quote="true">
-                  <th>paid</th>
-                  <td>0tk</td>
-                </tr>
-                {orderObj && orderObj.discountInvoice ? (
+                {orderObj && orderObj.otherCharges ? (
                   <tr data-hide-on-quote="true">
-                    <th>Discount</th>
-                    <td>{orderObj.discountInvoice}tk</td>
+                    <th>Other Charges</th>
+                    <td>{orderObj.otherCharges}tk</td>
                   </tr>
                 ) : null}
+                <tr className="amount-total">
+                  <th>TOTAL</th>
+                  <td>{orderObj && orderObj.subTotal}tk</td>
+                </tr>
 
                 <tr data-hide-on-quote="true">
-                  <th>AMOUNT DUE</th>
-                  <td>{total}tk</td>
+                  <th>Discount</th>
+                  <td>
+                    {orderObj && orderObj.discountInvoice
+                      ? orderObj.discountInvoice
+                      : 0}
+                    tk
+                  </td>
+                </tr>
+
+                <tr data-hide-on-quote="true">
+                  <th>TOTAL </th>
+                  <td>{orderObj && orderObj.subTotal}tk</td>
                 </tr>
               </tbody>
             </table>
@@ -251,7 +249,7 @@ export class OnlyInvoieToPrint extends Component {
               <span style={{ color: "#464242" }}>Created By</span>
             </div>
             <div>
-              <span>MD.Tipu</span>
+              <span>{admin && admin.name}</span>
             </div>
             <br />
             <div>
@@ -270,6 +268,11 @@ export class OnlyInvoieToPrint extends Component {
               , thank you very much.We really appreciate your buisness. <br />
               Pay through ALG wallet to get amazing discount.
             </div>
+            {orderObj && orderObj.chineseNote ? (
+              <div style={{ marginTop: "2rem", color: "gray" }}>
+                {orderObj && orderObj.chineseNote}
+              </div>
+            ) : null}
 
             <br />
 
@@ -307,6 +310,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     orderObj: state.ordersAlg.orderObj,
     users: state.users.users,
+    admin: state.admins.currentAdmin,
   };
 };
 export default withRouter(

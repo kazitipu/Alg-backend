@@ -56,12 +56,9 @@ export class Datatable extends Component {
           Quantity: order.quantity,
           CBM: order.totalCbm,
           grossWeight: `${order.grossWeight}kg`,
-          "Delivery Address": order.deliveryAddress
-            ? order.delilveryAddress
-            : "Alg office",
-          // "Delivery Cost": <input style={{ borderColor: "inherit",maxWidth: '-webkit-fill-available' }} />,
+          "Delivery Address": order.deliveryAddress,
           "Delivery Cost": `${
-            order.localDeliveryCost ? order.localDeliveryCost : "0"
+            order.deliveryCost ? order.deliveryCost : "0"
           } Tk`,
         });
       });
@@ -260,12 +257,9 @@ export class Datatable extends Component {
           Quantity: order.quantity,
           CBM: order.totalCbm,
           grossWeight: `${order.grossWeight}kg`,
-          "Delivery Address": order.deliveryAddress
-            ? order.delilveryAddress
-            : "Alg office",
-          // "Delivery Cost": <input style={{ borderColor: "inherit",maxWidth: '-webkit-fill-available' }} />,
+          "Delivery Address": order.deliveryAddress,
           "Delivery Cost": `${
-            order.localDeliveryCost ? order.localDeliveryCost : "0"
+            order.deliveryCost ? order.deliveryCost : "0"
           } Tk`,
         });
       });
@@ -335,38 +329,43 @@ export class Datatable extends Component {
     if (multiSelectOption == true) {
       columns.push(
         {
-          Header: <b>Action</b>,
+          Header: <b>Cost </b>,
           id: "delete",
           accessor: (str) => "delete",
-          Cell: (row) => (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
-            >
-              <span
-                onClick={() => {
-                  const parcelObj = myData.find(
-                    (parcel) => parcel.parcelId === row.original["Parcel Id"]
-                  );
-                  this.props.startToggleModalAdditionalInfo(parcelObj);
+          Cell: (row) => {
+            const parcelObj = myData.find(
+              (parcel) => parcel.parcelId === row.original["Parcel Id"]
+            );
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
                 }}
               >
-                <i
-                  className="fa fa-pencil"
-                  style={{
-                    width: 35,
-                    fontSize: 20,
-                    padding: 11,
-                    color: "#e4566e",
-                    cursor: "pointer",
-                  }}
-                ></i>
-              </span>
-            </div>
-          ),
+                {parcelObj.invoiceStatus === "Not Created" &&
+                  parcelObj.deliveryAddress !== "ALG Office" && (
+                    <span
+                      onClick={() => {
+                        this.props.startToggleModalAdditionalInfo(parcelObj);
+                      }}
+                    >
+                      <i
+                        className="fa fa-pencil"
+                        style={{
+                          width: 35,
+                          fontSize: 20,
+                          padding: 11,
+                          color: "#e4566e",
+                          cursor: "pointer",
+                        }}
+                      ></i>
+                    </span>
+                  )}
+              </div>
+            );
+          },
           style: {
             textAlign: "center",
           },

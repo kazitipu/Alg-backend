@@ -17,10 +17,8 @@ export class OrdersD2D extends Component {
   }
 
   componentDidMount = async () => {
-    const [
-      shipmentMethod,
-      lotNo,
-    ] = this.props.match.params.shipmentMethodLotNo.split("-");
+    const [shipmentMethod, lotNo] =
+      this.props.match.params.shipmentMethodLotNo.split("-");
     let shippingMethod;
     if (shipmentMethod.includes("D2D")) {
       shippingMethod = "D2D";
@@ -44,9 +42,11 @@ export class OrdersD2D extends Component {
 
   render() {
     const { allOrders } = this.state;
+    const [shipmentMethod, lotNo] =
+      this.props.match.params.shipmentMethodLotNo.split("-");
     return (
       <Fragment>
-        <Breadcrumb title="Orders" parent="Sales" />
+        <Breadcrumb title={lotNo} parent="Invoices" />
 
         <div className="container-fluid">
           <div className="row">
@@ -60,7 +60,7 @@ export class OrdersD2D extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-                  <h5>Invoice Orders</h5>
+                  <h5 style={{ color: "#ff8084" }}>Lot No: {lotNo}</h5>
                   <div
                     style={{
                       display: "flex",

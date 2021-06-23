@@ -89,8 +89,9 @@ export class Datatable extends Component {
         );
         newData.push({
           CustomerId: order.customer,
-          Name: userObj ? userObj.displayName : null,
+          Name: userObj && userObj.displayName,
           Carton: order.cartonNo,
+          booking: order.bookingId ? order.bookingId : "None",
           Product: order.productName,
           Quantity: order.quantity,
           CBM: order.totalCbm,
@@ -123,18 +124,33 @@ export class Datatable extends Component {
 
   handleInvoiceButtonClick = async (parcelObj) => {
     const ratePerKg = this.state[parcelObj.parcelId];
+    const total = parseInt(
+      parseInt(ratePerKg) * parseInt(parcelObj.grossWeight)
+    );
+    console.log(total);
     console.log(ratePerKg);
     if (ratePerKg) {
+      const insurance =
+        parcelObj.insurance && parcelObj.insurance !== ""
+          ? parseInt(parseInt(parcelObj.productsValue) * (3 / 100))
+          : 0;
+      const total = parseInt(
+        parseInt(ratePerKg) * parseInt(parcelObj.grossWeight)
+      );
       const updatedOrder = await this.props.updateOrderRedux({
         ...parcelObj,
         ratePerKg,
         invoiceGenerated: true,
         invoiceStatus: "Not Paid",
+        total,
+        insurance,
+        subTotal:
+          parseInt(insurance) +
+          parseInt(total) +
+          parseInt(parcelObj.packagingCost) +
+          parseInt(parcelObj.deliveryCost ? parcelObj.deliveryCost : 0),
       });
       if (updatedOrder) {
-        toast.success(
-          `Successfully generated invoice for ${parcelObj.parcelId}`
-        );
         this.props.history.push(
           `${process.env.PUBLIC_URL}/invoice-by-orderId/${parcelObj.shipmentMethod}-${parcelObj.parcelId}`
         );
@@ -156,14 +172,33 @@ export class Datatable extends Component {
     );
     console.log(filteredArray);
     const updatedArrayOfOrder = filteredArray.map((order) => {
-      order.ratePerKg = this.state[order.parcelId];
-      order.invoiceGenerated = true;
-      order.invoiceStatus = "Not Paid";
-      return order;
+      if (this.state[order.parcelId]) {
+        order.ratePerKg = this.state[order.parcelId];
+        order.invoiceGenerated = true;
+        order.invoiceStatus = "Not Paid";
+        order.total = parseInt(
+          parseInt(order.ratePerKg) * parseInt(order.grossWeight)
+        );
+        order.insurance =
+          order.insurance && order.insurance !== ""
+            ? parseInt(parseInt(order.productsValue) * (3 / 100))
+            : 0;
+        order.subTotal =
+          parseInt(order.insurance) +
+          parseInt(order.total) +
+          parseInt(order.packagingCost) +
+          parseInt(order.deliveryCost ? order.deliveryCost : 0);
+        return order;
+      } else {
+        return order;
+      }
     });
     updatedArrayOfOrder.forEach(async (order) => {
-      await this.props.updateOrderRedux(order);
+      if (order.ratePerKg) {
+        await this.props.updateOrderRedux(order);
+      }
     });
+    toast.success("Successfully generated invoices");
     console.log(updatedArrayOfOrder);
   };
 
@@ -172,27 +207,134 @@ export class Datatable extends Component {
       const lotNo = this.props.match.params.shipmentMethodLotNo.split("-")[1];
       const parcelId = `${lotNo}-${row.original.Carton}`;
       const parcelObj = array.find((parcel) => parcel.parcelId == parcelId);
-
-      if (parcelObj.invoiceGenerated) {
-        return (
-          <div>
-            <div
-              style={{
-                cursor: "pointer",
-                padding: "7px 5px",
-                color: "white",
-                backgroundColor: "darkgreen",
-                border: "1px solid white",
-                borderRadius: "1rem",
-              }}
-              onClick={() => {
-                this.handleInvoiceButtonClick(parcelObj);
-              }}
-            >
-              <i className="icofont-tick-mark">&nbsp;ready to pay</i>
+      if (parcelObj.deliveryAddress === "ALG Office") {
+        if (parcelObj.invoiceStatus === "Not Paid") {
+          return (
+            <div>
+              <div
+                style={{
+                  cursor: "pointer",
+                  padding: "7px 5px",
+                  color: "white",
+                  backgroundColor: "purple",
+                  border: "1px solid white",
+                  borderRadius: "1rem",
+                }}
+                onClick={() => {
+                  this.handleInvoiceButtonClick(parcelObj);
+                }}
+              >
+                <i className="icofont-tick-mark">&nbsp;ready to pay</i>
+              </div>
             </div>
-          </div>
-        );
+          );
+        } else if (parcelObj.invoiceStatus === "Not Created") {
+          return (
+            <div>
+              <div
+                style={{
+                  cursor: "pointer",
+                  padding: "7px 5px",
+                  color: "white",
+                  backgroundColor: "darkorange",
+                  border: "1px solid white",
+                  borderRadius: "1rem",
+                }}
+                onClick={() => {
+                  this.handleInvoiceButtonClick(parcelObj);
+                }}
+              >
+                <i className="icofont-spinner">&nbsp;generate</i>
+              </div>
+            </div>
+          );
+        } else if (parcelObj.invoiceStatus === "Paid") {
+          return (
+            <div>
+              <div
+                style={{
+                  cursor: "pointer",
+                  padding: "7px 5px",
+                  color: "white",
+                  backgroundColor: "green",
+                  border: "1px solid white",
+                  borderRadius: "1rem",
+                }}
+                onClick={() => {
+                  this.props.history.push(
+                    `${process.env.PUBLIC_URL}/invoice-by-orderId/${parcelObj.shipmentMethod}-${parcelObj.parcelId}`
+                  );
+                }}
+              >
+                <i className="icofont-spinner">&nbsp;paid</i>
+              </div>
+            </div>
+          );
+        }
+      } else if (parcelObj.deliveryCost) {
+        if (parcelObj.invoiceStatus === "Not Paid") {
+          return (
+            <div>
+              <div
+                style={{
+                  cursor: "pointer",
+                  padding: "7px 5px",
+                  color: "white",
+                  backgroundColor: "purple",
+                  border: "1px solid white",
+                  borderRadius: "1rem",
+                }}
+                onClick={() => {
+                  this.handleInvoiceButtonClick(parcelObj);
+                }}
+              >
+                <i className="icofont-tick-mark">&nbsp;ready to pay</i>
+              </div>
+            </div>
+          );
+        } else if (parcelObj.invoiceStatus === "Not Created") {
+          return (
+            <div>
+              <div
+                style={{
+                  cursor: "pointer",
+                  padding: "7px 5px",
+                  color: "white",
+                  backgroundColor: "darkorange",
+                  border: "1px solid white",
+                  borderRadius: "1rem",
+                }}
+                onClick={() => {
+                  this.handleInvoiceButtonClick(parcelObj);
+                }}
+              >
+                <i className="icofont-spinner">&nbsp;generate</i>
+              </div>
+            </div>
+          );
+        } else if (parcelObj.invoiceStatus === "Paid") {
+          return (
+            <div>
+              <div
+                style={{
+                  cursor: "pointer",
+                  padding: "7px 5px",
+                  color: "white",
+                  backgroundColor: "green",
+                  border: "1px solid white",
+                  borderRadius: "1rem",
+                }}
+                onClick={() => {
+                  this.props.history.push(
+                    `${process.env.PUBLIC_URL}/invoice-by-orderId/${parcelObj.shipmentMethod}-${parcelObj.parcelId}`
+                  );
+                }}
+              >
+                <i className="icofont-spinner">&nbsp;paid</i>
+              </div>
+            </div>
+          );
+        }
       } else {
         return (
           <div>
@@ -201,15 +343,15 @@ export class Datatable extends Component {
                 cursor: "pointer",
                 padding: "7px 5px",
                 color: "white",
-                backgroundColor: "darkorange",
+                backgroundColor: "gray",
                 border: "1px solid white",
                 borderRadius: "1rem",
               }}
               onClick={() => {
-                this.handleInvoiceButtonClick(parcelObj);
+                alert("Update delivery Cost before generating invoice.");
               }}
             >
-              <i className="icofont-spinner">&nbsp;generate</i>
+              <i className="icofont-money">&nbsp;Cost</i>
             </div>
           </div>
         );
@@ -219,7 +361,38 @@ export class Datatable extends Component {
 
   handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(value);
+    this.setState(
+      {
+        [name]: value,
+      },
+      () => {
+        console.log(this.state);
+      }
+    );
+  };
+
+  renderInputButton = (parcelObj) => {
+    if (parcelObj.deliveryAddress === "ALG Office") {
+      return (
+        <input
+          name={parcelObj.parcelId}
+          type="number"
+          defaultValue={this.state[parcelObj.parcelId]}
+          onChange={this.handleChange}
+        />
+      );
+    } else if (parcelObj.deliveryCost) {
+      return (
+        <input
+          name={parcelObj.parcelId}
+          type="number"
+          defaultValue={this.state[parcelObj.parcelId]}
+          onChange={this.handleChange}
+        />
+      );
+    } else {
+      return null;
+    }
   };
 
   render() {
@@ -235,8 +408,9 @@ export class Datatable extends Component {
         );
         newData.push({
           CustomerId: order.customer,
-          Name: userObj ? userObj.displayName : null,
+          Name: userObj && userObj.displayName,
           Carton: order.cartonNo,
+          booking: order.bookingId ? order.bookingId : "None",
           Product: order.productName,
           Quantity: order.quantity,
           CBM: order.totalCbm,
@@ -318,25 +492,14 @@ export class Datatable extends Component {
           id: "delete",
           accessor: (str) => "delete",
           Cell: (row) => {
-            const [
-              shipmentMethod,
-              lotNo,
-            ] = this.props.match.params.shipmentMethodLotNo.split("-");
+            const [shipmentMethod, lotNo] =
+              this.props.match.params.shipmentMethodLotNo.split("-");
             const parcelId = `${lotNo}-${row.original.Carton}`;
-            return (
-              // <input
-              //   type="number"
-              //   name={`${parcelId}`}
-              //   value={this.state[parcelId]}
-              //   onChange={this.handleChange}
-              // />
-              <input
-                id={parcelId}
-                type="number"
-                ref={this.input}
-                defaultValue={this.state[parcelId]}
-              />
+            const parcelObj = myData.find(
+              (parcel) => parcel.parcelId === parcelId
             );
+
+            return <>{this.renderInputButton(parcelObj)}</>;
           },
           style: {
             textAlign: "center",

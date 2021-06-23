@@ -17,7 +17,7 @@ class AdditionalInfoModal extends Component {
 
     const updatedOrder = await this.props.updateOrderRedux({
       ...parcelObj,
-      localDeliveryCost: this.state.localDeliveryCost,
+      deliveryCost: this.state.localDeliveryCost,
       from: "Delivery",
     });
     if (updatedOrder) {
