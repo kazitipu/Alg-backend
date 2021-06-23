@@ -151,7 +151,6 @@ export class RechargeHistoryByDate extends Component {
                         onSubmit={this.handleSubmit}
                       >
                         <div
-                          // className="form-group"
                           style={{
                             display: "flex",
                             flexDirection: "row",
@@ -169,10 +168,7 @@ export class RechargeHistoryByDate extends Component {
                             placeholder="Search Recharge"
                             onChange={this.handleSearchBarChange}
                           />
-                          <span
-                            // className="d-sm-none mobile-search"
-                            onClick={() => this.handleSearchClick()}
-                          >
+                          <span onClick={() => this.handleSearchClick()}>
                             <Search
                               style={{
                                 marginTop: "5px",

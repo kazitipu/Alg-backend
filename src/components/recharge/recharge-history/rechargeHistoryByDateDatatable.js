@@ -41,15 +41,16 @@ export class Datatable extends Component {
   };
 
   renderEditable = (cellInfo) => {
-    const { myData } = this.props;
+    const { myData, users } = this.props;
     if (myData.length > 0) {
       const newData = [];
       myData.forEach((recharge) => {
+        const userObj = users.find((user) => user.uid === recharge.uid);
         newData.push({
-          Id: recharge.Id,
-          Name: recharge.Name,
-          Mobile: recharge.Mobile,
-          Amount: recharge.amount,
+          Id: userObj && userObj.userId,
+          Name: userObj && userObj.displayName,
+          Mobile: userObj && userObj.mobileNo,
+          Amount: `${recharge.amount}Tk`,
           Method: recharge.paymentMethod,
           RechargeId: recharge.rechargeId,
           Receit: recharge.receitNo,
@@ -81,18 +82,20 @@ export class Datatable extends Component {
   }
 
   render() {
-    const { pageSize, myClass, multiSelectOption, pagination } = this.props;
+    const { pageSize, myClass, multiSelectOption, pagination, users } =
+      this.props;
     console.log(this.props);
     const { myData } = this.props;
     console.log(myData);
     const newData = [];
     if (myData.length > 0) {
       myData.forEach((recharge) => {
+        const userObj = users.find((user) => user.uid === recharge.uid);
         newData.push({
-          Id: recharge.Id,
-          Name: recharge.Name,
-          Mobile: recharge.Mobile,
-          Amount: recharge.amount,
+          Id: userObj && userObj.userId,
+          Name: userObj && userObj.displayName,
+          Mobile: userObj && userObj.mobileNo,
+          Amount: `${recharge.amount}Tk`,
           Method: recharge.paymentMethod,
           RechargeId: recharge.rechargeId,
           Receit: recharge.receitNo,
@@ -144,4 +147,9 @@ export class Datatable extends Component {
   }
 }
 
-export default withRouter(connect(null)(Datatable));
+const mapStateToProps = (state) => {
+  return {
+    users: state.users.users,
+  };
+};
+export default withRouter(connect(mapStateToProps)(Datatable));

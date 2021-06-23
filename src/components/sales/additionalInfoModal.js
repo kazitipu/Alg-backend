@@ -11,12 +11,14 @@ class CreateOrderModal extends Component {
     this.state = {
       imageUrl: man,
       file: "",
+      loading: false,
     };
   }
 
   componentWillReceiveProps = (nextProps) => {
     const { parcelObj } = nextProps;
-    if (parcelObj && parcelObj.editApproved) {
+    if (parcelObj) {
+      console.log(parcelObj);
       this.setState({
         imageUrl: parcelObj.imageUrl ? parcelObj.imageUrl : man,
       });
@@ -25,7 +27,9 @@ class CreateOrderModal extends Component {
 
   _handleImgChange = async (e, i) => {
     e.preventDefault();
-
+    this.setState({
+      loading: true,
+    });
     let reader = new FileReader();
     let file = e.target.files[0];
     const { imageUrl } = this.state;
@@ -45,12 +49,19 @@ class CreateOrderModal extends Component {
         imageUrl: imgUrl,
       });
       console.log(imageUrl);
+      this.setState({
+        loading: false,
+      });
     }
   };
 
   handleSubmit = async (event) => {
     event.preventDefault();
     const { parcelObj } = this.props;
+    if (this.state.loading) {
+      alert("Please wait for the image to be uploaded");
+      return;
+    }
 
     const updatedOrder = await this.props.updateOrderRedux({
       ...parcelObj,
@@ -138,7 +149,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -161,7 +172,7 @@ class CreateOrderModal extends Component {
                                     <label
                                       style={{
                                         color: "white",
-                                        marginBottom: "0px",
+                                        marginBottom: "5px",
                                         fontSize: "130%",
                                       }}
                                     >
@@ -182,7 +193,7 @@ class CreateOrderModal extends Component {
                                     <label
                                       style={{
                                         color: "white",
-                                        marginBottom: "0px",
+                                        marginBottom: "5px",
                                         fontSize: "130%",
                                       }}
                                     >
@@ -204,7 +215,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -226,7 +237,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -236,9 +247,9 @@ class CreateOrderModal extends Component {
                                     type="text"
                                     className="form-control"
                                     value={
-                                      parcelObj.problem
-                                        ? parcelObj.problem
-                                        : "No"
+                                      parcelObj.chineseNote
+                                        ? parcelObj.chineseNote
+                                        : "No Problems"
                                     }
                                     readOnly
                                     required
@@ -248,7 +259,7 @@ class CreateOrderModal extends Component {
                                   <label
                                     style={{
                                       color: "white",
-                                      marginBottom: "0px",
+                                      marginBottom: "5px",
                                       fontSize: "130%",
                                     }}
                                   >
@@ -270,52 +281,63 @@ class CreateOrderModal extends Component {
                                     <label
                                       style={{
                                         color: "white",
-                                        marginBottom: "0px",
+                                        marginBottom: "5px",
                                         fontSize: "130%",
                                       }}
                                     >
                                       Products Image:
                                     </label>
                                     <div className="form-row mb-4">
-                                      <div
-                                        className="box-input-file"
-                                        style={{
-                                          display: "flex",
-                                          justifyContent: "center",
-                                        }}
-                                      >
-                                        <img
-                                          className="img-100 lazyloaded blur-up"
-                                          src={this.state.imageUrl}
-                                          alt="#"
+                                      {this.state.loading ? (
+                                        <div
+                                          class="spinner-border text-light"
+                                          role="status"
+                                        >
+                                          <span class="sr-only">
+                                            Loading...
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        <div
+                                          className="box-input-file"
                                           style={{
-                                            zIndex: 10,
-                                            cursor: "pointer",
+                                            display: "flex",
+                                            justifyContent: "center",
                                           }}
-                                          onClick={() => {
-                                            document
-                                              .getElementById(
-                                                "upload-image-input"
-                                              )
-                                              .click();
-                                          }}
-                                        />
+                                        >
+                                          <img
+                                            className="img-100 lazyloaded blur-up"
+                                            src={this.state.imageUrl}
+                                            alt="#"
+                                            style={{
+                                              zIndex: 10,
+                                              cursor: "pointer",
+                                            }}
+                                            onClick={() => {
+                                              document
+                                                .getElementById(
+                                                  "upload-image-input"
+                                                )
+                                                .click();
+                                            }}
+                                          />
 
-                                        <input
-                                          id="upload-image-input"
-                                          className="upload"
-                                          type="file"
-                                          style={{
-                                            position: "absolute",
-                                            zIndex: 5,
-                                            maxWidth: "50px",
-                                            marginTop: "20px",
-                                          }}
-                                          onChange={(e) =>
-                                            this._handleImgChange(e, 0)
-                                          }
-                                        />
-                                      </div>
+                                          <input
+                                            id="upload-image-input"
+                                            className="upload"
+                                            type="file"
+                                            style={{
+                                              position: "absolute",
+                                              zIndex: 5,
+                                              maxWidth: "50px",
+                                              marginTop: "20px",
+                                            }}
+                                            onChange={(e) =>
+                                              this._handleImgChange(e, 0)
+                                            }
+                                          />
+                                        </div>
+                                      )}
                                     </div>
                                   </>
                                 ) : null}

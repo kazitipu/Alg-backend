@@ -785,14 +785,14 @@ export const getAllOrdersOfSingleLot = async (lotObj) => {
 };
 
 export const getAllRechargesOfSingleDate = async (date) => {
-  const rechargesDocumentRef = firestore.doc(`rechargeHistory/${date}`);
+  const rechargesCollectionRef = firestore
+    .collection(`rechargeHistory`)
+    .where("rechargedAt", "==", date);
   try {
-    const snapShot = await rechargesDocumentRef.get();
-    if (snapShot.exists) {
-      return snapShot.data().recharges;
-    } else {
-      return [];
-    }
+    const recharges = await rechargesCollectionRef.get();
+    let rechargesArray = [];
+    recharges.forEach((doc) => rechargesArray.push(doc.data()));
+    return rechargesArray;
   } catch (error) {
     alert(error);
     return [];
