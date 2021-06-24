@@ -5,51 +5,81 @@ import { Link } from "react-router-dom";
 
 export class Notification extends Component {
   render() {
+    const { allRechargeRequest, allRefundRequest, allBookingRequest } =
+      this.props;
+    const totalNotificationCount =
+      allRechargeRequest.length +
+      allRefundRequest.length +
+      allBookingRequest.length;
     return (
       <Fragment>
         <ul className="notification-dropdown onhover-show-div p-0">
           <li>
-            Notification{" "}
+            Notification
             <span className="badge badge-pill badge-primary pull-right">
-              {this.props.totalNotificationCount}
+              {totalNotificationCount}
             </span>
           </li>
-          <li>
-            <Link to="/sales/order_pending">
-              <div className="media">
-                <div className="media-body">
-                  <h6 className="mt-0">
-                    <span>
-                      <ShoppingBag />
-                    </span>
-                    Pending Orders..!
-                  </h6>
-                  <p className="mb-0">
-                    Globalbuybd has {this.props.pendingOrders.length} pending
-                    Orders.
-                  </p>
+          {allBookingRequest.length > 0 && (
+            <li>
+              <Link to={`${process.env.PUBLIC_URL}/booking-request/Pending`}>
+                <div className="media">
+                  <div className="media-body">
+                    <h6 className="mt-0">
+                      <span>
+                        <ShoppingBag />
+                      </span>
+                      Booking Requests..!
+                    </h6>
+                    <p className="mb-0">
+                      ALG Cargos has {allBookingRequest.length} pending
+                      Bookings.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </li>
-          <li>
-            <Link to="/payments/unVerified">
-              <div className="media">
-                <div className="media-body">
-                  <h6 className="mt-0 txt-success">
-                    <span>
-                      <DollarSign />
-                    </span>
-                    Unverified Payments
-                  </h6>
-                  <p className="mb-0">
-                    {this.props.unverifiedPayments.length} unverified Payments
-                    needs to be reviewed
-                  </p>
+              </Link>
+            </li>
+          )}
+          {allRechargeRequest.length > 0 && (
+            <li>
+              <Link to={`${process.env.PUBLIC_URL}/recharge/recharge-request`}>
+                <div className="media">
+                  <div className="media-body">
+                    <h6 className="mt-0 txt-success">
+                      <span>
+                        <DollarSign />
+                      </span>
+                      Recharge Requests
+                    </h6>
+                    <p className="mb-0">
+                      {allRechargeRequest.length} unverified recharge requests
+                      needs to be reviewed
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </li>
+              </Link>
+            </li>
+          )}
+          {allRefundRequest.length > 0 && (
+            <li>
+              <Link to={`${process.env.PUBLIC_URL}/refund/refund-request`}>
+                <div className="media">
+                  <div className="media-body">
+                    <h6 className="mt-0 txt-success">
+                      <span>
+                        <DollarSign />
+                      </span>
+                      Refund Requests
+                    </h6>
+                    <p className="mb-0">
+                      {allRefundRequest.length} Refund Requests needs to be
+                      reviewed
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </li>
+          )}
         </ul>
       </Fragment>
     );
@@ -57,17 +87,11 @@ export class Notification extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const unVerifiedPaymentsArray = [];
-  // state.payments.payments.forEach((payment)=>{
-  //     payment.payments.forEach(inPayment=>{
-  //     if (inPayment.paymentStatus === 'unVerified'){
-  //         unVerifiedPaymentsArray.push(inPayment)
-  //     }
-  //     })
-  // })
   return {
-    pendingOrders: [],
-    unverifiedPayments: unVerifiedPaymentsArray,
+    allRechargeRequest: state.recharge.rechargeRequestArray,
+    allRefundRequest: state.refunds.refunds,
+    allBookingRequest: state.bookings.bookings,
   };
 };
+
 export default connect(mapStateToProps)(Notification);

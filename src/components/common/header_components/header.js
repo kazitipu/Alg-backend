@@ -74,11 +74,12 @@ export class Header extends Component {
     }
   };
   render() {
-    var totalNotifacationCount = "";
-    if (this.props.pendingOrders && this.props.unverifiedPayments) {
-      totalNotifacationCount +=
-        this.props.pendingOrders.length + this.props.unverifiedPayments.length;
-    }
+    const { allRechargeRequest, allRefundRequest, allBookingRequest } =
+      this.props;
+    const totalNotificationCount =
+      allRechargeRequest.length +
+      allRefundRequest.length +
+      allBookingRequest.length;
 
     return (
       <Fragment>
@@ -123,11 +124,11 @@ export class Header extends Component {
                 <li className="onhover-dropdown">
                   <Bell />
                   <span className="badge badge-pill badge-primary pull-right notification-badge">
-                    {totalNotifacationCount}
+                    {totalNotificationCount}
                   </span>
                   <span className="dot"></span>
                   <Notification
-                    totalNotifacationCount={totalNotifacationCount}
+                    totalNotificationCount={totalNotificationCount}
                   />
                 </li>
                 <li>
@@ -153,17 +154,10 @@ export class Header extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const unVerifiedPaymentsArray = [];
-  // state.payments.payments.forEach((payment) => {
-  //   payment.payments.forEach((inPayment) => {
-  //     if (inPayment.paymentStatus === "unVerified") {
-  //       unVerifiedPaymentsArray.push(inPayment);
-  //     }
-  //   });
-  // });
   return {
-    pendingOrders: [],
-    unverifiedPayments: unVerifiedPaymentsArray,
+    allRechargeRequest: state.recharge.rechargeRequestArray,
+    allRefundRequest: state.refunds.refunds,
+    allBookingRequest: state.bookings.bookings,
   };
 };
 
