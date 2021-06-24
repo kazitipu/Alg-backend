@@ -6,6 +6,7 @@ import {
 import { connect } from "react-redux";
 import "./css/invoice-by-order.css";
 import Alg from "./alg.png";
+import Paid from "./paid.png";
 import { withRouter } from "react-router-dom";
 
 export class OnlyInvoieToPrint extends Component {
@@ -177,8 +178,7 @@ export class OnlyInvoieToPrint extends Component {
 
                   <td>{orderObj && orderObj.grossWeight}</td>
                   <td>
-                    {orderObj &&
-                      Math.round(orderObj.grossWeight * orderObj.ratePerKg)}
+                    {orderObj && orderObj.total}
                     Tk
                   </td>
                 </tr>
@@ -234,7 +234,12 @@ export class OnlyInvoieToPrint extends Component {
 
                 <tr data-hide-on-quote="true">
                   <th>TOTAL </th>
-                  <td>{orderObj && orderObj.subTotal}tk</td>
+                  <td>
+                    {orderObj && orderObj.finalTotal
+                      ? orderObj.finalTotal
+                      : orderObj.subTotal}
+                    tk
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -301,6 +306,20 @@ export class OnlyInvoieToPrint extends Component {
 
           <div className="clearfix"></div>
         </div>
+        {orderObj && orderObj.invoiceStatus === "Paid" ? (
+          <div>
+            <img
+              style={{
+                position: "absolute",
+                height: "220px",
+                width: "220px",
+                top: "50%",
+                left: "25%",
+              }}
+              src={Paid}
+            ></img>
+          </div>
+        ) : null}
       </div>
     );
   }

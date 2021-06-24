@@ -8,7 +8,7 @@ class ChangeStatusModal extends Component {
     super(props);
     this.state = {
       refundStatus: "",
-      refundAmount: "",
+      refundAmount: 0,
     };
   }
 
@@ -26,10 +26,10 @@ class ChangeStatusModal extends Component {
         ...this.state,
       });
     });
-    toast.success("successfully updated booking status");
+    toast.success("refund amount is given to the user.");
     this.setState({
       refundStatus: "",
-      refundAmount: "",
+      refundAmount: 0,
     });
     this.props.startToggleModal(null);
   };
@@ -56,7 +56,7 @@ class ChangeStatusModal extends Component {
             role="document"
           >
             <div
-              className="modal-content visible-modal-content-2"
+              className="modal-content visible-modal-content-3"
               style={{ backgroundColor: "rgb(68 0 97)" }}
             >
               <div className="modal-body p-0">
@@ -123,28 +123,30 @@ class ChangeStatusModal extends Component {
                                 </select>
                               </div>
                             </div>
-                            <div className="form-row mb-4">
-                              <div className="col">
-                                <label
-                                  style={{
-                                    color: "white",
-                                    marginBottom: "5px",
-                                  }}
-                                >
-                                  Refund Amount
-                                </label>
-                                <input
-                                  type="number"
-                                  name="refundAmount"
-                                  className="form-control"
-                                  placeholder="Enter Refund Amount"
-                                  style={{ fontSize: "1rem" }}
-                                  onChange={this.handleChange}
-                                  value={this.state.refundAmount}
-                                  required
-                                />
+                            {this.state.refundStatus === "Claimed" && (
+                              <div className="form-row mb-4">
+                                <div className="col">
+                                  <label
+                                    style={{
+                                      color: "white",
+                                      marginBottom: "5px",
+                                    }}
+                                  >
+                                    Refund Amount
+                                  </label>
+                                  <input
+                                    type="number"
+                                    name="refundAmount"
+                                    className="form-control"
+                                    placeholder="Enter Refund Amount"
+                                    style={{ fontSize: "1rem" }}
+                                    onChange={this.handleChange}
+                                    value={this.state.refundAmount}
+                                    required
+                                  />
+                                </div>
                               </div>
-                            </div>
+                            )}
 
                             <div className="form-row">
                               <div

@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from "react";
 import Breadcrumb from "../../components/common/breadcrumb";
-import {
-  getSingleOrderRedux,
-  updateOrderAfterInvoiceRedux,
-} from "../../actions/index";
+import { getSingleOrderRedux, updateOrderRedux } from "../../actions/index";
 import "./css/invoice-by-order.css";
 import Alg from "./alg.png";
 import { withRouter } from "react-router-dom";
@@ -13,8 +10,8 @@ import Print from "./print";
 export class InvoiceByOrder extends Component {
   state = {
     userObj: null,
-    discountInvoice: "",
-    otherCharges: "",
+    discountInvoice: 0,
+    otherCharges: 0,
   };
   componentDidMount = async () => {
     const [shipmentMethod, lotNo, cartonNo] =
@@ -50,33 +47,33 @@ export class InvoiceByOrder extends Component {
     const { orderObj } = this.props;
     const { userObj } = this.state;
     if (userObj && orderObj) {
-      const updatedOrder = await this.props.updateOrderAfterInvoiceRedux({
-        ...orderObj,
-        invoiceGenerated: true,
-        discountInvoice: this.state.discountInvoice,
-        otherCharges: this.state.otherCharges,
-      });
-      if (updatedOrder) {
-        const [shipmentMethod, lotNo, cartonNo] =
-          this.props.match.params.orderId.split("-");
+      const discountInvoice = orderObj.discountInvoice
+        ? orderObj.discountInvoice + parseInt(this.state.discountInvoice)
+        : parseInt(this.state.discountInvoice);
+      const otherCharges = orderObj.otherCharges
+        ? orderObj.otherCharges + parseInt(this.state.otherCharges)
+        : parseInt(this.state.otherCharges);
 
-        if (shipmentMethod.includes("D2D")) {
-          await this.props.getSingleOrderRedux({
-            shipmentMethod: "D2D",
-            orderId: `${lotNo}-${cartonNo}`,
-          });
-        } else {
-          await this.props.getSingleOrderRedux({
-            shipmentMethod: "Freight",
-            orderId: `${lotNo}-${cartonNo}`,
-          });
-        }
-      }
-      this.setState({ discountInvoice: "", otherCharges: "" });
+      await this.props.updateOrderRedux({
+        ...orderObj,
+        discountInvoice,
+        otherCharges,
+        subTotal: orderObj.subTotal + parseInt(this.state.otherCharges),
+        finalTotal: orderObj.finalTotal
+          ? orderObj.finalTotal -
+            parseInt(this.state.discountInvoice) +
+            parseInt(this.state.otherCharges)
+          : orderObj.subTotal -
+            parseInt(this.state.discountInvoice) +
+            parseInt(this.state.otherCharges),
+      });
+      await this.props.getSingleOrderRedux(orderObj.parcelId);
+      this.setState({ discountInvoice: 0, otherCharges: 0 });
     }
   };
 
   render() {
+    const { orderObj } = this.props;
     return (
       <Fragment>
         <Breadcrumb title="Invoice" parent="Invoice" />
@@ -99,76 +96,78 @@ export class InvoiceByOrder extends Component {
                       borderRadius: "10px",
                     }}
                   >
-                    <form
-                      className="form"
-                      onSubmit={this.handleSubmit}
-                      style={{
-                        padding: "15px",
-                        background: "#8a0368",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <div className="form-row">
-                        <div className="col">
-                          <label
-                            style={{
-                              color: "white",
-                              marginBottom: "5px",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            Discount Amount
-                          </label>
-                          <input
-                            style={{
-                              padding: "10px",
-                              marginTop: "2px",
-                              outline: "none",
-                            }}
-                            className="form-control"
-                            name="discountInvoice"
-                            value={this.state.discountInvoice}
-                            type="number"
-                            placeholder="Enter Amount"
-                            onChange={this.handleChange}
-                          />
-                        </div>
-                        <div className="col">
-                          <label
-                            style={{
-                              color: "white",
-                              marginBottom: "5px",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            Other charges
-                          </label>
-
-                          <input
-                            style={{
-                              padding: "10px",
-                              marginTop: "2px",
-                              outline: "none",
-                            }}
-                            className="form-control"
-                            name="otherCharges"
-                            value={this.state.otherCharges}
-                            type="number"
-                            placeholder="Enter Amount"
-                            onChange={this.handleChange}
-                          />
-                        </div>
-                      </div>
-                      <div
-                        className="form-row mt-3"
+                    {orderObj && orderObj.invoiceStatus !== "Paid" && (
+                      <form
+                        className="form"
+                        onSubmit={this.handleSubmit}
                         style={{
-                          justifyContent: "flex-end",
-                          marginRight: "4px",
+                          padding: "15px",
+                          background: "#8a0368",
+                          borderRadius: "10px",
                         }}
                       >
-                        <button className="btn btn-secondary">UPDATE!</button>
-                      </div>
-                    </form>
+                        <div className="form-row">
+                          <div className="col">
+                            <label
+                              style={{
+                                color: "white",
+                                marginBottom: "5px",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              Discount Amount
+                            </label>
+                            <input
+                              style={{
+                                padding: "10px",
+                                marginTop: "2px",
+                                outline: "none",
+                              }}
+                              className="form-control"
+                              name="discountInvoice"
+                              value={this.state.discountInvoice}
+                              type="number"
+                              placeholder="Enter Amount"
+                              onChange={this.handleChange}
+                            />
+                          </div>
+                          <div className="col">
+                            <label
+                              style={{
+                                color: "white",
+                                marginBottom: "5px",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              Other charges
+                            </label>
+
+                            <input
+                              style={{
+                                padding: "10px",
+                                marginTop: "2px",
+                                outline: "none",
+                              }}
+                              className="form-control"
+                              name="otherCharges"
+                              value={this.state.otherCharges}
+                              type="number"
+                              placeholder="Enter Amount"
+                              onChange={this.handleChange}
+                            />
+                          </div>
+                        </div>
+                        <div
+                          className="form-row mt-3"
+                          style={{
+                            justifyContent: "flex-end",
+                            marginRight: "4px",
+                          }}
+                        >
+                          <button className="btn btn-secondary">UPDATE!</button>
+                        </div>
+                      </form>
+                    )}
                   </div>
                 </div>
                 <div className="card-body">
@@ -192,6 +191,6 @@ const mapStateToProps = (state, ownProps) => {
 export default withRouter(
   connect(mapStateToProps, {
     getSingleOrderRedux,
-    updateOrderAfterInvoiceRedux,
+    updateOrderRedux,
   })(InvoiceByOrder)
 );

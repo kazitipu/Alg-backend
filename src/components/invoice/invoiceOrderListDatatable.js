@@ -149,6 +149,11 @@ export class Datatable extends Component {
           parseInt(total) +
           parseInt(parcelObj.packagingCost) +
           parseInt(parcelObj.deliveryCost ? parcelObj.deliveryCost : 0),
+        finalTotal:
+          parseInt(insurance) +
+          parseInt(total) +
+          parseInt(parcelObj.packagingCost) +
+          parseInt(parcelObj.deliveryCost ? parcelObj.deliveryCost : 0),
       });
       if (updatedOrder) {
         this.props.history.push(
@@ -184,6 +189,11 @@ export class Datatable extends Component {
             ? parseInt(parseInt(order.productsValue) * (3 / 100))
             : 0;
         order.subTotal =
+          parseInt(order.insurance) +
+          parseInt(order.total) +
+          parseInt(order.packagingCost) +
+          parseInt(order.deliveryCost ? order.deliveryCost : 0);
+        order.finalTotal =
           parseInt(order.insurance) +
           parseInt(order.total) +
           parseInt(order.packagingCost) +
@@ -266,7 +276,7 @@ export class Datatable extends Component {
                   );
                 }}
               >
-                <i className="icofont-spinner">&nbsp;paid</i>
+                <i className="icofont-money">&nbsp;paid</i>
               </div>
             </div>
           );
@@ -330,7 +340,7 @@ export class Datatable extends Component {
                   );
                 }}
               >
-                <i className="icofont-spinner">&nbsp;paid</i>
+                <i className="icofont-money">&nbsp;paid</i>
               </div>
             </div>
           );

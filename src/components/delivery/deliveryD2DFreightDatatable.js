@@ -170,7 +170,7 @@ export class Datatable extends Component {
         icofont = "icofont-hand";
       }
       if (lotObj.shipmentStatus === "Local Warehouse") {
-        backgroundColor = "darkgreen";
+        backgroundColor = "purple";
         icofont = "icofont-tick-boxed";
       }
       if (lotObj.shipmentStatus === "Ready to Fly") {
@@ -396,20 +396,29 @@ export class Datatable extends Component {
           style: {
             textAlign: "center",
           },
-          Cell: (row) => (
-            <div>
-              <span>
-                <input
-                  type="checkbox"
-                  name={row.original["Parcel Id"]}
-                  defaultChecked={this.state.checkedValues.includes(
-                    row.original["Parcel Id"]
-                  )}
-                  onChange={(e) => this.selectRow(e, row.original["Parcel Id"])}
-                />
-              </span>
-            </div>
-          ),
+          Cell: (row) => {
+            const parcelObj = myData.find(
+              (parcel) => parcel.parcelId === row.original["Parcel Id"]
+            );
+            return (
+              <div>
+                {parcelObj.invoiceStatus === "Paid" && (
+                  <span>
+                    <input
+                      type="checkbox"
+                      name={row.original["Parcel Id"]}
+                      defaultChecked={this.state.checkedValues.includes(
+                        row.original["Parcel Id"]
+                      )}
+                      onChange={(e) =>
+                        this.selectRow(e, row.original["Parcel Id"])
+                      }
+                    />
+                  </span>
+                )}
+              </div>
+            );
+          },
           accessor: key,
           style: {
             textAlign: "center",

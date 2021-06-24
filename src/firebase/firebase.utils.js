@@ -1106,16 +1106,11 @@ export const updateBooking = async (bookingObj) => {
 export const updateRefund = async (refundObj) => {
   try {
     // update refundStatus in main ordersArray
-    const lotOrdersRef = firestore.doc(
-      `orders${refundObj.shipmentMethod}/${refundObj.lotNo}`
-    );
-    const lotOrders = await lotOrdersRef.get();
-    const filteredParcelArray = lotOrders
-      .data()
-      .orders.filter((parcel) => parcel.parcelId !== refundObj.parcelId);
-    await lotOrdersRef.update({
-      lotNo: refundObj.lotNo,
-      orders: [refundObj, ...filteredParcelArray],
+    const orderRef = firestore.doc(`orders/${refundObj.parcelId}`);
+    const order = await orderRef.get();
+
+    await orderRef.update({
+      ...refundObj,
     });
     // create a recharge object
 

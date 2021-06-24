@@ -59,9 +59,9 @@ export class Datatable extends Component {
         newData.push({
           "Parcel Id": parcel.parcelId,
           Products: parcel.productName,
-          Weight: parcel.grossWeight,
-          "Per Kg": parcel.ratePerKg,
-          "Total Bill": parcel.invoiceTotal,
+          Weight: `${parcel.grossWeight}kg`,
+          "Per Kg": `${parcel.ratePerKg}tk`,
+          "Total Bill": `${parcel.finalTotal}tk`,
         });
       });
       return (
@@ -97,9 +97,9 @@ export class Datatable extends Component {
         newData.push({
           "Parcel Id": parcel.parcelId,
           Products: parcel.productName,
-          Weight: parcel.grossWeight,
-          "Per Kg": parcel.ratePerKg,
-          "Total Bill": parcel.invoiceTotal,
+          Weight: `${parcel.grossWeight}kg`,
+          "Per Kg": `${parcel.ratePerKg}tk`,
+          "Total Bill": `${parcel.finalTotal}tk`,
         });
       });
     }
@@ -177,7 +177,7 @@ export class Datatable extends Component {
             className="btn btn-sm btn-delete mb-0 b-r-4"
             style={{ background: "rgb(68 0 97)", color: "white" }}
             onClick={(e) => {
-              if (this.state.checkedValues.length > 0) {
+              if (this.state.checkedValues.length === 1) {
                 const parcelArray = myData.filter((parcel) =>
                   this.state.checkedValues.includes(parcel.parcelId)
                 );
@@ -185,8 +185,11 @@ export class Datatable extends Component {
                   this.state.checkedValues,
                   parcelArray
                 );
+                this.setState({ checkedValues: [] });
+              } else if (this.state.checkedValues.length > 1) {
+                alert("you can only update one refund amount at a single time");
               } else {
-                alert("Select a Booking first to change its status");
+                alert("Select an item first to change its status");
               }
 
               //   this.changeStatusOfSelectedRow();

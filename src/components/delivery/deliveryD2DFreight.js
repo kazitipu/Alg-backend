@@ -24,10 +24,8 @@ export class DeliveryD2DFreight extends Component {
   }
 
   componentDidMount = async () => {
-    const [
-      shipmentMethod,
-      lotNo,
-    ] = this.props.match.params.shipmentMethodLotNo.split("-");
+    const [shipmentMethod, lotNo] =
+      this.props.match.params.shipmentMethodLotNo.split("-");
     await this.props.getAllOrdersOfSingleLotRedux({ shipmentMethod, lotNo });
     this.setState({ allOrders: this.props.orders });
   };
@@ -79,7 +77,7 @@ export class DeliveryD2DFreight extends Component {
     const filterByTrackingNoAndShippingMark = allOrders.filter(
       (order) =>
         order.trackingNo.toLowerCase().includes(searchFor.toLowerCase()) ||
-        order.shippingMark.toLowerCase().includes(searchFor.toLowerCase())
+        order.parcelId.toLowerCase().includes(searchFor.toLowerCase())
     );
 
     return [...filterByTrackingNoAndShippingMark];
