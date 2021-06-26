@@ -125,7 +125,7 @@ export class Datatable extends Component {
   handleInvoiceButtonClick = async (parcelObj) => {
     const ratePerKg = this.state[parcelObj.parcelId];
     const total = parseInt(
-      parseInt(ratePerKg) * parseInt(parcelObj.grossWeight)
+      parseInt(ratePerKg) * parseFloat(parcelObj.grossWeight)
     );
     console.log(total);
     console.log(ratePerKg);
@@ -134,8 +134,9 @@ export class Datatable extends Component {
         parcelObj.insurance && parcelObj.insurance !== ""
           ? parseInt(parseInt(parcelObj.productsValue) * (3 / 100))
           : 0;
+      console.log(insurance);
       const total = parseInt(
-        parseInt(ratePerKg) * parseInt(parcelObj.grossWeight)
+        parseInt(ratePerKg) * parseFloat(parcelObj.grossWeight)
       );
       const updatedOrder = await this.props.updateOrderRedux({
         ...parcelObj,
@@ -147,15 +148,17 @@ export class Datatable extends Component {
         subTotal:
           parseInt(insurance) +
           parseInt(total) +
-          parseInt(parcelObj.packagingCost) +
+          parseInt(parcelObj.packagingCost ? parcelObj.packagingCost : 0) +
           parseInt(parcelObj.deliveryCost ? parcelObj.deliveryCost : 0),
         finalTotal:
           parseInt(insurance) +
           parseInt(total) +
-          parseInt(parcelObj.packagingCost) +
+          parseInt(parcelObj.packagingCost ? parcelObj.packagingCost : 0) +
           parseInt(parcelObj.deliveryCost ? parcelObj.deliveryCost : 0),
       });
       if (updatedOrder) {
+        console.log(updatedOrder.subTotal);
+        console.log(updatedOrder.finalTotal);
         this.props.history.push(
           `${process.env.PUBLIC_URL}/invoice-by-orderId/${parcelObj.shipmentMethod}-${parcelObj.parcelId}`
         );
@@ -191,12 +194,12 @@ export class Datatable extends Component {
         order.subTotal =
           parseInt(order.insurance) +
           parseInt(order.total) +
-          parseInt(order.packagingCost) +
+          parseInt(order.packagingCost ? order.packagingCost : 0) +
           parseInt(order.deliveryCost ? order.deliveryCost : 0);
         order.finalTotal =
           parseInt(order.insurance) +
           parseInt(order.total) +
-          parseInt(order.packagingCost) +
+          parseInt(order.packagingCost ? order.packagingCost : 0) +
           parseInt(order.deliveryCost ? order.deliveryCost : 0);
         return order;
       } else {

@@ -196,7 +196,12 @@ export class OnlyInvoieToPrint extends Component {
 
                 <tr data-iterate="tax">
                   <th>Packaging Charge</th>
-                  <td>{orderObj && orderObj.packagingCost}Tk</td>
+                  <td>
+                    {orderObj && orderObj.packagingCost
+                      ? orderObj.packagingCost
+                      : 0}
+                    Tk
+                  </td>
                 </tr>
                 <tr data-iterate="tax">
                   <th>Insurance</th>

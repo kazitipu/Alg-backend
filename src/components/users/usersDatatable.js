@@ -193,6 +193,13 @@ export class Datatable extends Component {
                   </div>
                 );
               }
+              if (userObj.status === "Merchant") {
+                return (
+                  <div style={{ color: "green" }}>
+                    <i className="icofont-disc"></i>&nbsp;{userObj.status}
+                  </div>
+                );
+              }
               if (userObj.status === "Agent") {
                 return (
                   <div style={{ color: "green" }}>

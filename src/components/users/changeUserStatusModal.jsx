@@ -101,7 +101,7 @@ class ChangeUserStatusModal extends Component {
                                 <option value="">Select Status</option>
                                 <option value="Vip Partner">Vip Partner</option>
                                 <option value="Corporate">Corporate</option>
-                                <option value="Agent">Agent</option>
+                                <option value="Merchant">Merchant</option>
                                 <option value="Customer">Customer</option>
                               </select>
                             </div>
