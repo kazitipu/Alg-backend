@@ -248,15 +248,17 @@ export class Datatable extends Component {
             Header: <b style={{ color: "red" }}>Total Expense</b>,
             id: "delete",
             accessor: (str) => "delete",
-            Cell: (row) => (
-              <div style={{ color: "red" }}>
-                {myData.length > 0
-                  ? myData.find((lot) => lot.lotNo === row.original.Lot)
-                      .totalExpense
-                  : "0"}
-                Tk
-              </div>
-            ),
+            Cell: (row) => {
+              const lotObj = myData.find(
+                (lot) => lot.lotNo === row.original.Lot
+              );
+              return (
+                <div style={{ color: "red" }}>
+                  {lotObj && lotObj.totalExpense ? lotObj.totalExpense : "0"}
+                  Tk
+                </div>
+              );
+            },
             style: {
               textAlign: "center",
             },
@@ -266,15 +268,17 @@ export class Datatable extends Component {
             Header: <b style={{ color: "green" }}>Total Revenue</b>,
             id: "delete",
             accessor: (str) => "delete",
-            Cell: (row) => (
-              <div style={{ color: "green" }}>
-                {myData.length > 0
-                  ? myData.find((lot) => lot.lotNo === row.original.Lot)
-                      .totalRevenue
-                  : "0"}
-                Tk
-              </div>
-            ),
+            Cell: (row) => {
+              const lotObj = myData.find(
+                (lot) => lot.lotNo === row.original.Lot
+              );
+              return (
+                <div style={{ color: "green" }}>
+                  {lotObj && lotObj.totalRevenue ? lotObj.totalRevenue : "0"}
+                  Tk
+                </div>
+              );
+            },
             style: {
               textAlign: "center",
             },
@@ -306,7 +310,7 @@ export class Datatable extends Component {
                     <div style={{ color: "red" }}>{lotObj.totalLoss}Tk </div>
                   );
                 }
-                return null;
+                return "0Tk";
               }
               return null;
             },

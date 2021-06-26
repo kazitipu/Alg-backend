@@ -32,9 +32,16 @@ class CreateOrderModal extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const { singleLot } = nextProps;
+    const { singleLot, calculation } = nextProps;
     console.log(singleLot);
     console.log("create Lot modal component will receive props is called");
+    if (calculation && singleLot) {
+      this.setState({
+        cAndFBill: singleLot.cAndFBill ? singleLot.cAndFBill : "",
+        freightCharge: singleLot.freightCharge ? singleLot.freightCharge : "",
+        otherCharge: singleLot.otherCharge ? singleLot.otherCharge : "",
+      });
+    }
   };
 
   handleSubmit = async (event) => {
@@ -108,11 +115,7 @@ class CreateOrderModal extends Component {
       parseInt(cAndFBill ? cAndFBill : 0) +
       parseInt(freightCharge ? freightCharge : 0) +
       parseInt(otherCharge ? otherCharge : 0);
-    let totalExpense =
-      expense +
-      parseInt(
-        singleLot.totalInvoiceDiscount ? singleLot.totalInvoiceDiscount : 0
-      );
+    let totalExpense = expense;
     if (totalRevenue && parseInt(totalRevenue) > totalExpense) {
       totalProfit = parseInt(totalRevenue) - totalExpense;
     } else {

@@ -817,30 +817,25 @@ export const getAllPaymentsOfSingleDate = async (date) => {
 };
 
 export const getAllOrdersInvoiceRateSingleLot = async (lotObj) => {
-  let ordersDocumentRef;
-  if (lotObj.shipmentMethod.includes("D2D")) {
-    ordersDocumentRef = firestore.doc(`ordersD2D/${lotObj.lotNo}`);
-  }
-  if (lotObj.shipmentMethod.includes("Freight")) {
-    ordersDocumentRef = firestore.doc(`ordersFreight/${lotObj.lotNo}`);
-  }
-
   try {
-    const snapShot = await ordersDocumentRef.get();
-    console.log(snapShot.data());
-    const ordersArray = snapShot.data().orders;
+    const ordersCollectionRef = firestore
+      .collection("orders")
+      .where("lotNo", "==", lotObj.lotNo)
+      .where("invoiceStatus", "==", "Paid");
+
+    const orders = await ordersCollectionRef.get();
+    let paidOrdersArray = [];
+    orders.forEach((snapShot) => {
+      paidOrdersArray.push(snapShot.data());
+    });
     let totalRevenue = 0;
-    if (ordersArray.length > 0) {
-      const invoicedOrdersArray = ordersArray.filter(
-        (order) => order.invoiceTotal
-      );
-      invoicedOrdersArray.forEach(
-        (order) => (totalRevenue += order.invoiceTotal)
-      );
-    }
+    paidOrdersArray.forEach((order) => {
+      totalRevenue = totalRevenue + order.finalTotal;
+      return totalRevenue;
+    });
+    console.log(totalRevenue);
     return totalRevenue;
   } catch (error) {
-    alert(error);
     return 0;
   }
 };
