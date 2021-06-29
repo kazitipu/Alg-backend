@@ -13,7 +13,6 @@ export class MyProfile extends Component {
       pictures: [man],
       file: "",
       toggleModal: true,
-      currentAdmin: null,
     };
   }
 
@@ -29,7 +28,6 @@ export class MyProfile extends Component {
       this.setState({
         file: file,
         pictures,
-        currentAdmin: null,
       });
     };
     if (file) {
@@ -48,12 +46,10 @@ export class MyProfile extends Component {
     if (currentAdmin == null) {
       this.setState({
         toggleModal: !this.state.toggleModal,
-        currentAdmin: null,
       });
     } else {
       this.setState({
         toggleModal: !this.state.toggleModal,
-        currentAdmin: currentAdmin,
       });
     }
   };
@@ -66,7 +62,7 @@ export class MyProfile extends Component {
         <UpdateProfileModal
           toggleModal={this.state.toggleModal}
           startToggleModal={this.startToggleModal}
-          currentAdmin={this.state.currentAdmin}
+          currentAdmin={this.props.currentAdmin}
         />
         <div className="container-fluid">
           <div className="row">

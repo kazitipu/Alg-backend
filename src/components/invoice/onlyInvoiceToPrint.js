@@ -222,6 +222,12 @@ export class OnlyInvoieToPrint extends Component {
                     <td>{orderObj.otherCharges}tk</td>
                   </tr>
                 ) : null}
+                {orderObj && orderObj.qcCheck === "true" ? (
+                  <tr data-hide-on-quote="true">
+                    <th>QC Check</th>
+                    <td>100tk</td>
+                  </tr>
+                ) : null}
                 <tr className="amount-total">
                   <th>TOTAL</th>
                   <td>{orderObj && orderObj.subTotal}tk</td>

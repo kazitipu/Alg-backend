@@ -12,10 +12,6 @@ export class Tabset_profile extends Component {
 
   render() {
     const { currentAdmin } = this.props;
-    if (currentAdmin) {
-      console.log(this.toDateTime(currentAdmin.createdAt.seconds));
-      console.log(typeof this.toDateTime(currentAdmin.createdAt.seconds));
-    }
 
     return (
       <Fragment>
@@ -97,6 +93,7 @@ export class Tabset_profile extends Component {
                 </label>
                 <div className="col-xl-8 col-md-7">
                   {currentAdmin &&
+                    currentAdmin.createdAt &&
                     this.toDateTime(currentAdmin.createdAt.seconds)}
                 </div>
               </div>

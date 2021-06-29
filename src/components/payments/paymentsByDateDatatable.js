@@ -51,6 +51,7 @@ export class Datatable extends Component {
           Mobile: payment.Mobile,
           Amount: `${payment.amount}Tk`,
           PaymentId: payment.paymentId,
+          Invoices: payment.paidInvoice.map((invoice) => `${invoice},`),
         });
       });
       return (
@@ -91,6 +92,7 @@ export class Datatable extends Component {
           Mobile: payment.Mobile,
           Amount: `${payment.amount}Tk`,
           PaymentId: payment.paymentId,
+          Invoices: payment.paidInvoice.map((invoice) => `${invoice},`),
         });
       });
     }

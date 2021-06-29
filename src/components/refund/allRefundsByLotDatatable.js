@@ -48,9 +48,9 @@ export class Datatable extends Component {
       myData.forEach((parcel) => {
         newData.push({
           "Parcel Id": parcel.parcelId,
-          "Total Bill": parcel.invoiceTotal,
+          "Total Bill": `${parcel.finalTotal}Tk`,
           "Refund Status": parcel.refundStatus,
-          "Refund Amount": parcel.refundAmount,
+          "Refund Amount": `${parcel.refundAmount}Tk`,
         });
       });
       return (
@@ -85,9 +85,9 @@ export class Datatable extends Component {
       myData.forEach((parcel) => {
         newData.push({
           "Parcel Id": parcel.parcelId,
-          "Total Bill": parcel.invoiceTotal,
+          "Total Bill": `${parcel.finalTotal}Tk`,
           "Refund Status": parcel.refundStatus,
-          "Refund Amount": parcel.refundAmount,
+          "Refund Amount": `${parcel.refundAmount}Tk`,
         });
       });
     }

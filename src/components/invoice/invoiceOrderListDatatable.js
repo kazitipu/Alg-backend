@@ -138,6 +138,8 @@ export class Datatable extends Component {
       const total = parseInt(
         parseInt(ratePerKg) * parseFloat(parcelObj.grossWeight)
       );
+      const qcCheck =
+        parcelObj.qcCheck && parcelObj.qcCheck === "true" ? 100 : 0;
       const updatedOrder = await this.props.updateOrderRedux({
         ...parcelObj,
         ratePerKg,
@@ -149,12 +151,14 @@ export class Datatable extends Component {
           parseInt(insurance) +
           parseInt(total) +
           parseInt(parcelObj.packagingCost ? parcelObj.packagingCost : 0) +
-          parseInt(parcelObj.deliveryCost ? parcelObj.deliveryCost : 0),
+          parseInt(parcelObj.deliveryCost ? parcelObj.deliveryCost : 0) +
+          qcCheck,
         finalTotal:
           parseInt(insurance) +
           parseInt(total) +
           parseInt(parcelObj.packagingCost ? parcelObj.packagingCost : 0) +
-          parseInt(parcelObj.deliveryCost ? parcelObj.deliveryCost : 0),
+          parseInt(parcelObj.deliveryCost ? parcelObj.deliveryCost : 0) +
+          qcCheck,
       });
       if (updatedOrder) {
         console.log(updatedOrder.subTotal);
@@ -181,6 +185,11 @@ export class Datatable extends Component {
     console.log(filteredArray);
     const updatedArrayOfOrder = filteredArray.map((order) => {
       if (this.state[order.parcelId]) {
+        const qcCheck =
+          this.state[order.parcelId].qcCheck &&
+          this.state[order.parcelId].qcCheck === "true"
+            ? 100
+            : 0;
         order.ratePerKg = this.state[order.parcelId];
         order.invoiceGenerated = true;
         order.invoiceStatus = "Not Paid";
@@ -195,12 +204,14 @@ export class Datatable extends Component {
           parseInt(order.insurance) +
           parseInt(order.total) +
           parseInt(order.packagingCost ? order.packagingCost : 0) +
-          parseInt(order.deliveryCost ? order.deliveryCost : 0);
+          parseInt(order.deliveryCost ? order.deliveryCost : 0) +
+          qcCheck;
         order.finalTotal =
           parseInt(order.insurance) +
           parseInt(order.total) +
           parseInt(order.packagingCost ? order.packagingCost : 0) +
-          parseInt(order.deliveryCost ? order.deliveryCost : 0);
+          parseInt(order.deliveryCost ? order.deliveryCost : 0) +
+          qcCheck;
         return order;
       } else {
         return order;

@@ -512,14 +512,14 @@ export const updateAdmin = async (currentAdmin) => {
   const snapShot = await adminRef.get();
   console.log(snapShot.data());
   try {
-    adminRef.update({
+    await adminRef.update({
       ...currentAdmin,
     });
+    const updatedSnapShot = await adminRef.get();
+    return updatedSnapShot.data();
   } catch (error) {
     alert(error);
   }
-  const updatedSnapShot = await adminRef.get();
-  return updatedSnapShot.data();
 };
 
 export const getAllNotices = async () => {

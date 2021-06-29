@@ -155,9 +155,15 @@ export class Header extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    allRechargeRequest: state.recharge.rechargeRequestArray,
-    allRefundRequest: state.refunds.refunds,
-    allBookingRequest: state.bookings.bookings,
+    allRechargeRequest: state.recharge.rechargeRequestArray.filter(
+      (recharge) => recharge.status === "pending"
+    ),
+    allRefundRequest: state.refunds.refunds.filter(
+      (refund) => refund.refundStatus === "Pending"
+    ),
+    allBookingRequest: state.bookings.bookings.filter(
+      (booking) => booking.bookingStatus === "Pending"
+    ),
   };
 };
 

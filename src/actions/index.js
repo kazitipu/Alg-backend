@@ -482,6 +482,7 @@ export const uploadImageRedux = (currentAdmin, file) => async (dispatch) => {
 };
 
 export const updateAdminRedux = (updatedAdmin) => async (dispatch) => {
+  console.log(updatedAdmin);
   const updatedUserObj = await updateAdmin(updatedAdmin);
   dispatch({
     type: "UPDATE_ADMIN",
