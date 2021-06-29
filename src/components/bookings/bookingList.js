@@ -160,10 +160,7 @@ export class BookingList extends Component {
                             placeholder="Search Booking"
                             onChange={this.handleSearchBarChange}
                           />
-                          <span
-                            // className="d-sm-none mobile-search"
-                            onClick={() => this.handleSearchClick()}
-                          >
+                          <span onClick={() => this.handleSearchClick()}>
                             <Search
                               style={{
                                 marginTop: "5px",
