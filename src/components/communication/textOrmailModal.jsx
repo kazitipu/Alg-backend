@@ -7,12 +7,13 @@ import {
 } from "../../actions/index";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-
+import { SendSingleSms, SendBulkSms } from "../adnSms";
 class TextOrMailModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       messageBody: "",
+      campaign_title: "",
     };
   }
 
@@ -22,77 +23,123 @@ class TextOrMailModal extends Component {
     console.log(this.props);
     if (singleLot) {
       console.log(singleLot);
-      const ordersArrayOfSinlgeLot = await this.props.getAllOrdersOfSingleLotRedux(
-        {
+      const ordersArrayOfSinlgeLot =
+        await this.props.getAllOrdersOfSingleLotRedux({
           lotNo: singleLot.Lot,
           shipmentMethod: singleLot.Shipment_Method.includes("D2D")
             ? "D2D"
             : "Freight",
+        });
+      if (ordersArrayOfSinlgeLot.length > 0) {
+        const allCustomersUid = ordersArrayOfSinlgeLot.map(
+          (order) => order.customerUid
+        );
+        const uniqueCustomerUids = [...new Set(allCustomersUid)];
+        console.log(uniqueCustomerUids);
+
+        const usersArray = this.props.allUsers.filter((user) =>
+          uniqueCustomerUids.includes(user.uid)
+        );
+
+        const numberArray = usersArray
+          .filter((user) => user.mobileNo)
+          .map((user) => user.mobileNo);
+        const numbers = [...new Set(numberArray)];
+        // alert(numberArray);
+        // alert(numbers);
+        const emailArray = usersArray
+          .filter((user) => user.email)
+          .map((user) => user.email);
+        // alert(emailArray);
+
+        if (singleLot.action === "text") {
+          // send text message to numbers
+          console.log(numbers.toString());
+          const response = await SendBulkSms(
+            numbers.toString(),
+            this.state.messageBody,
+            this.state.campaign_title
+          );
+          if (response.data.api_response_code == 200) {
+            toast.success("Message was sent successfully!");
+          } else {
+            toast.error("There was an error.Please try again.");
+          }
+          console.log(response);
+        } else {
+          // send email to emailArray
         }
-      );
-      const allCustomersUid = ordersArrayOfSinlgeLot.map(
-        (order) => order.customerUid
-      );
-      const uniqueCustomerUids = [...new Set(allCustomersUid)];
-      console.log(uniqueCustomerUids);
-
-      const usersArray = this.props.allUsers.filter((user) =>
-        uniqueCustomerUids.includes(user.uid)
-      );
-
-      const numberArray = usersArray
-        .filter((user) => user.mobileNo)
-        .map((user) => user.mobileNo);
-      alert(numberArray);
-
-      const emailArray = usersArray
-        .filter((user) => user.email)
-        .map((user) => user.email);
-      alert(emailArray);
-
-      if (singleLot.action === "text") {
-        // send text message to numberArray
       } else {
-        // send email to emailArray
+        alert(
+          "There is no number added in this Lot's customer's profile to send sms."
+        );
       }
     }
-
     this.setState({
       messageBody: "",
     });
     this.props.startToggleModal(null);
   };
 
-  handleSubmitForCustomers = (event) => {
+  handleSubmitForCustomers = async (event) => {
     event.preventDefault();
     const { singleLot } = this.props;
+
     if (singleLot.allCustomers) {
+      // send message to all Users
       const allUsers = this.props.allUsers;
       const numberArray = allUsers
         .filter((user) => user.mobileNo)
         .map((user) => user.mobileNo);
-      alert(numberArray);
+      const numbers = [...new Set(numberArray)];
+      // alert(numberArray);
+      // alert(numbers);
+
       const emailArray = allUsers
         .filter((user) => user.email)
         .map((user) => user.email);
 
-      alert(emailArray);
+      // alert(emailArray);
       if (singleLot.action === "text") {
         //  send text message to numberArray
+        console.log(numbers.toString());
+        const response = await SendBulkSms(
+          numbers.toString(),
+          this.state.messageBody,
+          this.state.campaign_title
+        );
+        if (response.data.api_response_code == 200) {
+          toast.success("Message was sent successfully!");
+        } else {
+          toast.error("There was an error.Please try again.");
+        }
+        console.log(response);
       } else {
         // send email to emailArray
       }
     } else {
+      // send message or email to single User
       const userObj = this.props.allUsers.find(
         (user) => user.userId === singleLot["SL no"]
       );
       const number = userObj.mobileNo;
       const email = userObj.email;
-      alert(number);
-      alert(email);
+      // alert(number);
+      // alert(email);
 
       if (number && singleLot.action === "text") {
         // send text message to this number
+        const response = await SendSingleSms(number, this.state.messageBody);
+        if (response.data.api_response_code == 200) {
+          toast.success("Message was sent successfully!");
+        } else {
+          toast.error(
+            "An error occurred while sending message to this receipient. "
+          );
+        }
+        console.log(response);
+      } else {
+        alert("This user don't have a number");
       }
       if (email && singleLot.action === "mail") {
         // send email to this number
@@ -130,7 +177,7 @@ class TextOrMailModal extends Component {
             role="document"
           >
             <div
-              className="modal-content visible-modal-content-2"
+              className="modal-content visible-modal-content-4"
               style={{
                 backgroundColor:
                   this.props.singleLot && this.props.singleLot.action === "text"
@@ -175,7 +222,7 @@ class TextOrMailModal extends Component {
                             {this.props.singleLot &&
                             this.props.singleLot.action === "text"
                               ? "Send Message"
-                              : "Send E-Mail"}
+                              : "Send Email"}
                           </h2>
                           <form
                             onSubmit={
@@ -186,6 +233,40 @@ class TextOrMailModal extends Component {
                             }
                             className="rounded-field mt-4"
                           >
+                            {this.props.singleLot &&
+                              this.props.singleLot.allCustomers && (
+                                <div className="form-row mb-4">
+                                  <input
+                                    type="text"
+                                    name="campaign_title"
+                                    className="form-control"
+                                    placeholder="Campaign Title"
+                                    style={{
+                                      fontSize: "1rem",
+                                    }}
+                                    onChange={this.handleChange}
+                                    value={this.state.campaign_title}
+                                    required
+                                  />
+                                </div>
+                              )}
+                            {this.props.singleLot &&
+                              this.props.singleLot.from === "lots" && (
+                                <div className="form-row mb-4">
+                                  <input
+                                    type="text"
+                                    name="campaign_title"
+                                    className="form-control"
+                                    placeholder="Campaign Title"
+                                    style={{
+                                      fontSize: "1rem",
+                                    }}
+                                    onChange={this.handleChange}
+                                    value={this.state.campaign_title}
+                                    required
+                                  />
+                                </div>
+                              )}
                             <div className="form-row mb-4">
                               <textarea
                                 type="text"
