@@ -17,7 +17,7 @@ import {
   CreditCard,
 } from "react-feather";
 
-const countries = [
+const countriesAir = [
   "china",
   "india",
   "thailand",
@@ -27,6 +27,7 @@ const countries = [
   "malaysia",
   "pakistan",
 ];
+const countriesSea = ["china", "thailand", "singapore", "hongkong", "malaysia"];
 export const MENUITEMSFORADMIN = [
   {
     path: "/dashboard",
@@ -214,7 +215,7 @@ export const MENUITEMSFORADMIN = [
         title: "Air",
         type: "sub",
         active: false,
-        children: countries.map((country) => {
+        children: countriesAir.map((country) => {
           return {
             path: `/d2d-rates/air-${country}`,
             title: country,
@@ -226,7 +227,7 @@ export const MENUITEMSFORADMIN = [
         title: "Sea",
         type: "sub",
         active: false,
-        children: countries.map((country) => {
+        children: countriesSea.map((country) => {
           return {
             path: `/d2d-rates/sea-${country}`,
             title: country,
@@ -575,7 +576,7 @@ export const MENUITEMSFOROFFICER = [
         title: "Air",
         type: "sub",
         active: false,
-        children: countries.map((country) => {
+        children: countriesAir.map((country) => {
           return {
             path: `/d2d-rates/air-${country}`,
             title: country,
@@ -587,7 +588,7 @@ export const MENUITEMSFOROFFICER = [
         title: "Sea",
         type: "sub",
         active: false,
-        children: countries.map((country) => {
+        children: countriesSea.map((country) => {
           return {
             path: `/d2d-rates/sea-${country}`,
             title: country,
