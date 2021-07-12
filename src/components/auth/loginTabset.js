@@ -53,12 +53,13 @@ export class LoginTabset extends Component {
           if (snapShot.exists) {
             this.props.setCurrentAdmin({ id: snapShot.id, ...snapShot.data() });
             this.props.history.push(`${process.env.PUBLIC_URL}/dashboard`);
+          } else {
+            alert("you are not an admin");
           }
         } else {
           alert("your email is not authenticated");
         }
       });
-      this.props.history.push(`${process.env.PUBLIC_URL}/dashboard`);
     } catch (error) {
       alert(error);
     }
