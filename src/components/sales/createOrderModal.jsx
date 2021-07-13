@@ -146,22 +146,28 @@ class CreateOrderModal extends Component {
   };
   handleChangeCustomer = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value, showSuggestion: true });
+    this.setState({ [name]: value, showSuggestion: true, cursor: -1 });
   };
 
   renderShowSuggestion = () => {
+    let suggestionArray = [];
+    console.log(this.state.customer);
     if (this.state.customer) {
-      let suggestionArray;
+      console.log(this.state.customer);
       const suggestionById = this.props.allUsers.filter((user) =>
         user.userId.includes(this.state.customer)
       );
-      const suggestionByName = this.props.allUsers.filter((user) =>
-        user.displayName
-          .toLowerCase()
-          .includes(this.state.customer.toLowerCase())
+      const suggestionByName = this.props.allUsers.filter(
+        (user) =>
+          user.displayName &&
+          user.displayName
+            .toLowerCase()
+            .includes(this.state.customer.toLowerCase())
       );
       suggestionArray = [...suggestionByName, ...suggestionById];
-      return suggestionArray.slice(0, 10).map((user, index) => (
+      const uniqueUser = [...new Set(suggestionArray)];
+      console.log(suggestionArray);
+      return uniqueUser.slice(0, 10).map((user, index) => (
         <li
           key={user.userId}
           style={{
@@ -179,22 +185,22 @@ class CreateOrderModal extends Component {
           {user.userId}-{user.displayName ? user.displayName.slice(0, 13) : ""}
         </li>
       ));
-    } else {
-      return null;
     }
   };
 
   handleKeyDown = (e) => {
     const { cursor } = this.state;
+    let result = [];
     if (this.state.customer) {
-      let result;
       const suggestionById = this.props.allUsers.filter((user) =>
         user.userId.includes(this.state.customer)
       );
-      const suggestionByName = this.props.allUsers.filter((user) =>
-        user.displayName
-          .toLowerCase()
-          .includes(this.state.customer.toLowerCase())
+      const suggestionByName = this.props.allUsers.filter(
+        (user) =>
+          user.displayName &&
+          user.displayName
+            .toLowerCase()
+            .includes(this.state.customer.toLowerCase())
       );
       result = [...suggestionByName, ...suggestionById].slice(0, 10);
 
@@ -214,6 +220,8 @@ class CreateOrderModal extends Component {
           showSuggestion: false,
         });
       }
+    } else {
+      result = [];
     }
   };
   render() {
@@ -350,17 +358,18 @@ class CreateOrderModal extends Component {
                                     autoComplete="off"
                                     onKeyDown={this.handleKeyDown}
                                   />
-
-                                  <ul
-                                    className="below-searchbar-recommendation"
-                                    style={{
-                                      display: this.state.showSuggestion
-                                        ? "flex"
-                                        : "none",
-                                    }}
-                                  >
-                                    {this.renderShowSuggestion()}
-                                  </ul>
+                                  {this.state.customer && (
+                                    <ul
+                                      className="below-searchbar-recommendation"
+                                      style={{
+                                        display: this.state.showSuggestion
+                                          ? "flex"
+                                          : "none",
+                                      }}
+                                    >
+                                      {this.renderShowSuggestion()}
+                                    </ul>
+                                  )}
                                 </div>
                                 <div className="col">
                                   <label
