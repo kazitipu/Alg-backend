@@ -164,7 +164,7 @@ class CreateOrderModal extends Component {
             .toLowerCase()
             .includes(this.state.customer.toLowerCase())
       );
-      suggestionArray = [...suggestionByName, ...suggestionById];
+      suggestionArray = [...suggestionById, ...suggestionByName];
       const uniqueUser = [...new Set(suggestionArray)];
       console.log(suggestionArray);
       return uniqueUser.slice(0, 10).map((user, index) => (
@@ -202,7 +202,7 @@ class CreateOrderModal extends Component {
             .toLowerCase()
             .includes(this.state.customer.toLowerCase())
       );
-      result = [...suggestionByName, ...suggestionById].slice(0, 10);
+      result = [...suggestionById, ...suggestionByName].slice(0, 10);
 
       // arrow up/down button should select next/previous list element
       if (e.keyCode === 38 && cursor > -1) {
