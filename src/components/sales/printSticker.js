@@ -14,9 +14,18 @@ class PrintableSticker extends React.PureComponent {
 
 class PrintSticker extends React.PureComponent {
   render() {
+    // const pageStyle = `{ size: 100mm 150mm}`;
     return (
       <div>
         <ReactToPrint
+          pageStyle={`
+          @page {
+            size: 100mm 150mm;
+          }
+          @media print {
+            size: 100mm 150mm;
+          }
+          `}
           trigger={() => {
             return (
               <button
