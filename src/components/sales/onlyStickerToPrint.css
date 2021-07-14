@@ -8,6 +8,7 @@
   -o-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   transform: rotate(90deg);
+  margin-left: -90px;
 }
 
 .flex-box {
@@ -45,12 +46,6 @@
   justify-content: center;
 }
 
-.main-sticker {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-
 @media print {
   html,
   body {
@@ -63,6 +58,7 @@
     width: 570px;
     background-color: white;
     margin-top: 100px;
+    margin-left: -90px;
 
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
