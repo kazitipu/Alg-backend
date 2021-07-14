@@ -405,7 +405,7 @@ class CreateOrderModal extends Component {
                                     Carton No:
                                   </label>
                                   <input
-                                    type="text"
+                                    type="number"
                                     name="cartonNo"
                                     className="form-control"
                                     placeholder="Enter Carton No"
