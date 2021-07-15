@@ -231,7 +231,10 @@ export class Datatable extends Component {
       const lotNo = this.props.match.params.shipmentMethodLotNo.split("-")[1];
       const parcelId = `${lotNo}-${row.original.Carton}`;
       const parcelObj = array.find((parcel) => parcel.parcelId == parcelId);
-      if (parcelObj.deliveryAddress === "ALG Office") {
+      if (
+        parcelObj.deliveryAddress === "ALG Office" ||
+        !parcelObj.deliveryAddress
+      ) {
         if (parcelObj.invoiceStatus === "Not Paid") {
           return (
             <div>
@@ -396,7 +399,10 @@ export class Datatable extends Component {
   };
 
   renderInputButton = (parcelObj) => {
-    if (parcelObj.deliveryAddress === "ALG Office") {
+    if (
+      parcelObj.deliveryAddress === "ALG Office" ||
+      !parcelObj.deliveryAddress
+    ) {
       return (
         <input
           name={parcelObj.parcelId}
