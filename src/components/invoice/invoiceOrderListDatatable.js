@@ -192,7 +192,8 @@ export class Datatable extends Component {
             : 0;
         order.ratePerKg = this.state[order.parcelId];
         order.invoiceGenerated = true;
-        order.invoiceStatus = "Not Paid";
+        order.invoiceStatus =
+          order.invoiceStatus === "Paid" ? "Paid" : "Not Paid";
         order.total = parseInt(
           parseInt(order.ratePerKg) * parseInt(order.grossWeight)
         );
@@ -217,8 +218,11 @@ export class Datatable extends Component {
         return order;
       }
     });
+    console.log(updatedArrayOfOrder);
     updatedArrayOfOrder.forEach(async (order) => {
+      console.log(order.ratePerKg);
       if (order.ratePerKg) {
+        console.log(order.ratePerKg);
         await this.props.updateOrderRedux(order);
       }
     });
@@ -399,6 +403,9 @@ export class Datatable extends Component {
   };
 
   renderInputButton = (parcelObj) => {
+    if (parcelObj.invoiceStatus === "Paid") {
+      return `${parcelObj.ratePerKg}Tk`;
+    }
     if (
       parcelObj.deliveryAddress === "ALG Office" ||
       !parcelObj.deliveryAddress
@@ -407,7 +414,7 @@ export class Datatable extends Component {
         <input
           name={parcelObj.parcelId}
           type="number"
-          defaultValue={this.state[parcelObj.parcelId]}
+          value={this.state[parcelObj.parcelId]}
           onChange={this.handleChange}
         />
       );
@@ -416,7 +423,7 @@ export class Datatable extends Component {
         <input
           name={parcelObj.parcelId}
           type="number"
-          defaultValue={this.state[parcelObj.parcelId]}
+          value={this.state[parcelObj.parcelId]}
           onChange={this.handleChange}
         />
       );

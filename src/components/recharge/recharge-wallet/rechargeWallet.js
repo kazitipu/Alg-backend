@@ -131,19 +131,7 @@ export class RechargeWallet extends Component {
                         </div>
                       </form>
                     </li>
-                    <li>
-                      {/* <button
-                        className="btn"
-                        style={{
-                          backgroundColor: "rgb(68, 0, 97)",
-                          color: "white",
-                        }}
-                        type="button"
-                        onClick={() => this.startToggleModal(null)}
-                      >
-                        Text
-                      </button> */}
-                    </li>
+                    <li></li>
                   </div>
                 </div>
                 <div className="card-body">
@@ -158,11 +146,12 @@ export class RechargeWallet extends Component {
                           ? this.props.allUser
                           : this.props.allUser.filter(
                               (user) =>
-                                user.displayName
-                                  .toLowerCase()
-                                  .includes(
-                                    this.state.searchFor.toLowerCase()
-                                  ) ||
+                                (user.displayName &&
+                                  user.displayName
+                                    .toLowerCase()
+                                    .includes(
+                                      this.state.searchFor.toLowerCase()
+                                    )) ||
                                 user.userId.includes(this.state.searchFor)
                             )
                       }
