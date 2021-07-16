@@ -56,7 +56,9 @@ export class Datatable extends Component {
           Quantity: order.quantity,
           CBM: order.totalCbm,
           grossWeight: `${order.grossWeight}kg`,
-          "Delivery Address": order.deliveryAddress,
+          "Delivery Address": order.deliveryAddress
+            ? order.deliveryAddress
+            : "ALG Office",
           "Delivery Cost": `${
             order.deliveryCost ? order.deliveryCost : "0"
           } Tk`,
@@ -257,7 +259,9 @@ export class Datatable extends Component {
           Quantity: order.quantity,
           CBM: order.totalCbm,
           grossWeight: `${order.grossWeight}kg`,
-          "Delivery Address": order.deliveryAddress,
+          "Delivery Address": order.deliveryAddress
+            ? order.deliveryAddress
+            : "ALG Office",
           "Delivery Cost": `${
             order.deliveryCost ? order.deliveryCost : "0"
           } Tk`,
@@ -402,12 +406,12 @@ export class Datatable extends Component {
             );
             return (
               <div>
-                {parcelObj.invoiceStatus === "Paid" && (
+                {parcelObj.invoiceStatus === "Paid" && !parcelObj.parcelStatus && (
                   <span>
                     <input
                       type="checkbox"
                       name={row.original["Parcel Id"]}
-                      defaultChecked={this.state.checkedValues.includes(
+                      checked={this.state.checkedValues.includes(
                         row.original["Parcel Id"]
                       )}
                       onChange={(e) =>
